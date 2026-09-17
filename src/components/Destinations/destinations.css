@@ -1,0 +1,305 @@
+/* ==========================================================================
+   Tourisma Destinations Page Stylesheet
+   The profile of every destination and central drill-down hub
+   ========================================================================== */
+
+.destinations-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px 18px 48px 18px;
+  width: 100%;
+  box-sizing: border-box;
+  color: #0f172a;
+}
+
+.dest-section-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.dest-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 8px;
+}
+
+.dest-section-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dest-section-title {
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.dest-section-subtitle {
+  font-size: 0.76rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   Top: Cluster Overview (Quadrant Scatter Plot)
+   -------------------------------------------------------------------------- */
+.dest-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.dest-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dest-card-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dest-card-title {
+  font-size: 0.94rem;
+  font-weight: 750;
+  color: #0f172a;
+  margin: 0;
+}
+
+.dest-card-desc {
+  font-size: 0.74rem;
+  color: #64748b;
+}
+
+.dest-cluster-stage {
+  width: 100%;
+  height: 380px;
+  position: relative;
+}
+
+.cluster-methodology-note {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #f8fafc;
+  border-left: 3px solid #0b57d0;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.72rem;
+  color: #475569;
+  line-height: 1.4;
+}
+
+/* --------------------------------------------------------------------------
+   Middle: Destination Cards Grid (16 Cards)
+   -------------------------------------------------------------------------- */
+.dest-toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.dest-filter-chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.dest-chip-btn {
+  padding: 4px 10px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.dest-chip-btn:hover {
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.dest-chip-btn.active {
+  background: #0b57d0;
+  color: #ffffff;
+  border-color: #0b57d0;
+}
+
+.dest-sort-select {
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #0f172a;
+  background: #ffffff;
+  outline: none;
+}
+
+.destinations-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.destination-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.destination-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(11, 87, 208, 0.09);
+  border-color: #0b57d0;
+}
+
+.dest-card-top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.dest-card-name-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.dest-card-name {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.dest-card-region {
+  font-size: 0.68rem;
+  color: #94a3b8;
+}
+
+.dest-card-cluster-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.dest-figures-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 6px;
+  padding: 6px 8px;
+  margin: 6px 0 10px 0;
+}
+
+.dest-figure-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.dest-figure-label {
+  font-size: 0.62rem;
+  color: #64748b;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.dest-figure-val {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* 4-Segment Profile Mini-Bar */
+.dest-profile-bar-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dest-profile-bar-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.64rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.dest-four-seg-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+  height: 6px;
+}
+
+.dest-seg-cell {
+  height: 100%;
+  border-radius: 2px;
+  background: #e2e8f0;
+  overflow: hidden;
+  position: relative;
+}
+
+.dest-seg-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+
+.dest-seg-fill.demand { background-color: #0b57d0; }
+.dest-seg-fill.capacity { background-color: #10b981; }
+.dest-seg-fill.value { background-color: #06b6d4; }
+.dest-seg-fill.pressure { background-color: #f59e0b; }
+.dest-seg-fill.pressure.critical { background-color: #dc2626; }
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .destinations-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .destinations-grid {
+    grid-template-columns: 1fr;
+  }
+}

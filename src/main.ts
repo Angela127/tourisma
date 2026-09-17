@@ -2,6 +2,14 @@ import './style.css';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { Header } from './components/Header/Header';
 import { Footer } from './components/Footer/Footer';
+import { OverviewPage } from './components/Overview/OverviewPage';
+import { TourismDemandPage } from './components/TourismDemand/TourismDemandPage';
+import { InfrastructurePage } from './components/Infrastructure/InfrastructurePage';
+import { SustainabilityPage } from './components/Sustainability/SustainabilityPage';
+import { DestinationsPage } from './components/Destinations/DestinationsPage';
+import { ReportsPage } from './components/Reports/ReportsPage';
+import { DataSourcesPage } from './components/DataSources/DataSourcesPage';
+import { SettingsPage } from './components/Settings/SettingsPage';
 
 function initializeApp(): void {
   const appRoot = document.getElementById('app');
@@ -15,15 +23,39 @@ function initializeApp(): void {
 
   // Instantiate modular Sidebar component
   const sidebar = new Sidebar((navId) => {
-    // Navigation handler ready for future routing / page switching
     console.log(`Navigation changed to: ${navId}`);
+    if (navId === 'overview') {
+      header.setTitle('NATIONAL OVERVIEW', 'Tourism Performance & State Capacity Diagnostic');
+      renderOverview();
+    } else if (navId === 'tourism-demand') {
+      header.setTitle('TOURISM DEMAND & ORIGINS', 'Source Market Dynamics, Seasonality Heatmaps & Predictive Forecasts');
+      renderTourismDemand();
+    } else if (navId === 'infrastructure') {
+      header.setTitle('INFRASTRUCTURE & ACCOMMODATION CAPACITY', 'Can Destinations Physically Accommodate More Visitors?');
+      renderInfrastructure();
+    } else if (navId === 'sustainability') {
+      header.setTitle('SUSTAINABILITY & CARRY-CAPACITY', 'Where is Tourism Growth Creating Critical Pressure?');
+      renderSustainability();
+    } else if (navId === 'destinations') {
+      header.setTitle('DESTINATION PROFILES & DRILL-DOWN', 'Strategic Clustering & Deep Performance Diagnostic');
+      renderDestinations();
+    } else if (navId === 'reports') {
+      header.setTitle('REPORTS & POLICY BRIEFS', 'Turn Live Analytical Findings into Printable Briefs and Decks');
+      renderReports();
+    } else if (navId === 'data-sources') {
+      header.setTitle('DATA SOURCES, LINEAGE & METHODOLOGY', 'Registry of Administrative Datasets, Pipeline Lineage & Model Specifications');
+      renderDataSources();
+    } else if (navId === 'settings') {
+      header.setTitle('SETTINGS & MODEL PARAMETERS', 'Threshold Sensitivity, Multi-Criteria Index Weights & Ingestion Controls');
+      renderSettings();
+    }
   });
 
   // Instantiate modular Header component
   const header = new Header({
     titleProps: {
-      initialTitle: 'GLOBAL OVERVIEW',
-      initialSubtitle: 'Tourism Performance at a Glance',
+      initialTitle: 'NATIONAL OVERVIEW',
+      initialSubtitle: 'Tourism Performance & State Capacity Diagnostic',
       onMenuToggle: () => {
         sidebar.toggleCollapse();
       },
@@ -47,19 +79,81 @@ function initializeApp(): void {
   });
 
   // Instantiate modular Footer component
-  const footer = new Footer();
+  const footer = new Footer({
+    copyrightText: 'Tourisma © 2026',
+    taglineText: 'Tourism Intelligence for a Better Tomorrow',
+    dataAsOfText: 'Data as of Dec 2026',
+  });
 
   // Right-hand content wrapper
   const contentWrapper = document.createElement('div');
   contentWrapper.className = 'content-wrapper';
 
-  // Blank main content area for page views
+  // Main content area for page views
   const mainContent = document.createElement('main');
   mainContent.id = 'main-content';
   mainContent.className = 'main-content';
   mainContent.setAttribute('role', 'main');
 
-  // Assemble content wrapper: Header on top, blank main canvas in middle, Footer at bottom
+  // Render overview page
+  const renderOverview = () => {
+    mainContent.innerHTML = '';
+    const overview = new OverviewPage();
+    mainContent.appendChild(overview.element);
+  };
+
+  // Render tourism demand page
+  const renderTourismDemand = () => {
+    mainContent.innerHTML = '';
+    const demandPage = new TourismDemandPage();
+    mainContent.appendChild(demandPage.element);
+  };
+
+  // Render infrastructure capacity page
+  const renderInfrastructure = () => {
+    mainContent.innerHTML = '';
+    const infraPage = new InfrastructurePage();
+    mainContent.appendChild(infraPage.element);
+  };
+
+  // Render sustainability page
+  const renderSustainability = () => {
+    mainContent.innerHTML = '';
+    const susPage = new SustainabilityPage();
+    mainContent.appendChild(susPage.element);
+  };
+
+  // Render destinations page
+  const renderDestinations = () => {
+    mainContent.innerHTML = '';
+    const destPage = new DestinationsPage();
+    mainContent.appendChild(destPage.element);
+  };
+
+  // Render reports page
+  const renderReports = () => {
+    mainContent.innerHTML = '';
+    const reportsPage = new ReportsPage();
+    mainContent.appendChild(reportsPage.element);
+  };
+
+  // Render data sources page
+  const renderDataSources = () => {
+    mainContent.innerHTML = '';
+    const dataSourcesPage = new DataSourcesPage();
+    mainContent.appendChild(dataSourcesPage.element);
+  };
+
+  // Render settings page
+  const renderSettings = () => {
+    mainContent.innerHTML = '';
+    const settingsPage = new SettingsPage();
+    mainContent.appendChild(settingsPage.element);
+  };
+
+  renderOverview();
+
+  // Assemble content wrapper: Header on top, main canvas in middle, Footer at bottom
   contentWrapper.appendChild(header.element);
   contentWrapper.appendChild(mainContent);
   contentWrapper.appendChild(footer.element);
