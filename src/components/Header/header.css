@@ -1,0 +1,203 @@
+/* Header Component Styles */
+
+.header-container {
+  height: 70px;
+  min-height: 70px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #eef2f6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  box-sizing: border-box;
+  user-select: none;
+  position: relative;
+  z-index: 5;
+}
+
+/* Left Title Section */
+.header-title-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-menu-btn {
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #475569;
+  padding: 0;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.header-menu-btn:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.header-menu-btn:focus-visible {
+  outline: 2px solid #93c5fd;
+}
+
+.header-text-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header-main-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #172554;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.header-sub-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+  margin: 2px 0 0 0;
+  letter-spacing: -0.1px;
+}
+
+/* Right Actions Section */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Common Header Button Style (Date Range & Export) */
+.header-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #1e293b;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+.header-btn:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.header-btn:focus-visible {
+  box-shadow: 0 0 0 2px #bfdbfe;
+}
+
+.header-btn-icon {
+  width: 15px;
+  height: 15px;
+  stroke: #475569;
+  flex-shrink: 0;
+}
+
+.header-chevron-icon {
+  width: 13px;
+  height: 13px;
+  stroke: #64748b;
+  margin-left: 2px;
+  flex-shrink: 0;
+}
+
+/* Notification Bell Button */
+.header-icon-btn {
+  position: relative;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #475569;
+  padding: 0;
+  transition: all 0.15s ease;
+}
+
+.header-icon-btn:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.header-icon-btn:focus-visible {
+  outline: 2px solid #93c5fd;
+}
+
+.header-bell-icon {
+  width: 19px;
+  height: 19px;
+  stroke: #334155;
+}
+
+/* Blue Notification Badge Dot */
+.notification-dot {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  width: 7px;
+  height: 7px;
+  background-color: #2563eb;
+  border: 1.5px solid #ffffff;
+  border-radius: 50%;
+  display: block;
+}
+
+/* User Avatar */
+.header-avatar-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.header-avatar-btn:hover {
+  transform: scale(1.04);
+}
+
+.header-avatar-btn:focus-visible {
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.header-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #e0edfe;
+  color: #1d4ed8;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: -0.2px;
+}

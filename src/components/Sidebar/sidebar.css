@@ -1,0 +1,190 @@
+/* Sidebar Component Styles */
+
+.sidebar-container {
+  width: 252px;
+  min-width: 252px;
+  height: 100vh;
+  background-color: #ffffff;
+  border-right: 1px solid #eef2f6;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  user-select: none;
+  position: relative;
+  z-index: 10;
+  transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-container.collapsed {
+  margin-left: -252px;
+}
+
+/* Header & Brand Logo */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 18px 18px 18px;
+}
+
+.sidebar-logo-icon {
+  width: 36px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.sidebar-logo-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sidebar-brand-name {
+  font-size: 21px;
+  font-weight: 700;
+  color: #1e3a8a;
+  letter-spacing: -0.3px;
+  margin: 0;
+  line-height: 1.15;
+}
+
+.sidebar-brand-tagline {
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+  margin-top: 2px;
+  letter-spacing: -0.1px;
+  white-space: nowrap;
+}
+
+/* Navigation Menu */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 14px;
+  scrollbar-width: thin;
+  scrollbar-color: #e2e8f0 transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 4px;
+}
+
+.sidebar-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar-nav-item-wrapper {
+  margin: 0;
+  padding: 0;
+}
+
+/* Individual Nav Item Button */
+.sidebar-nav-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 10.5px 14px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: #334155;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.16s ease-in-out;
+  outline: none;
+}
+
+.sidebar-nav-item:hover:not(.active) {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.sidebar-nav-item:focus-visible {
+  box-shadow: 0 0 0 2px #bfdbfe;
+}
+
+/* Nav Icons */
+.sidebar-nav-icon {
+  width: 19.5px;
+  height: 19.5px;
+  flex-shrink: 0;
+  stroke: #2563eb;
+  transition: transform 0.15s ease, stroke 0.15s ease;
+}
+
+.sidebar-nav-item:hover:not(.active) .sidebar-nav-icon {
+  stroke: #1d4ed8;
+  transform: scale(1.05);
+}
+
+.sidebar-nav-label {
+  flex: 1;
+  letter-spacing: -0.15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Active Nav Item */
+.sidebar-nav-item.active {
+  background-color: #0b57d0;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 3px 10px rgba(11, 87, 208, 0.22);
+}
+
+.sidebar-nav-item.active .sidebar-nav-icon {
+  stroke: #ffffff;
+}
+
+/* Bottom Card / Illustration */
+.sidebar-bottom {
+  padding: 12px 14px 18px 14px;
+  flex-shrink: 0;
+}
+
+.sidebar-illustration-card {
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.1);
+  background-color: #eaf2fd;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sidebar-illustration-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px -2px rgba(37, 99, 235, 0.16);
+}
+
+.illustration-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
