@@ -7,9 +7,7 @@ import { TourismDemandPage } from './components/TourismDemand/TourismDemandPage'
 import { InfrastructurePage } from './components/Infrastructure/InfrastructurePage';
 import { SustainabilityPage } from './components/Sustainability/SustainabilityPage';
 import { DestinationsPage } from './components/Destinations/DestinationsPage';
-import { ReportsPage } from './components/Reports/ReportsPage';
-import { DataSourcesPage } from './components/DataSources/DataSourcesPage';
-import { SettingsPage } from './components/Settings/SettingsPage';
+
 
 function initializeApp(): void {
   const appRoot = document.getElementById('app');
@@ -39,15 +37,6 @@ function initializeApp(): void {
     } else if (navId === 'destinations') {
       header.setTitle('DESTINATION PROFILES & DRILL-DOWN', 'Strategic Clustering & Deep Performance Diagnostic');
       renderDestinations();
-    } else if (navId === 'reports') {
-      header.setTitle('REPORTS & POLICY BRIEFS', 'Turn Live Analytical Findings into Printable Briefs and Decks');
-      renderReports();
-    } else if (navId === 'data-sources') {
-      header.setTitle('DATA SOURCES, LINEAGE & METHODOLOGY', 'Registry of Administrative Datasets, Pipeline Lineage & Model Specifications');
-      renderDataSources();
-    } else if (navId === 'settings') {
-      header.setTitle('SETTINGS & MODEL PARAMETERS', 'Threshold Sensitivity, Multi-Criteria Index Weights & Ingestion Controls');
-      renderSettings();
     }
   });
 
@@ -130,26 +119,7 @@ function initializeApp(): void {
     mainContent.appendChild(destPage.element);
   };
 
-  // Render reports page
-  const renderReports = () => {
-    mainContent.innerHTML = '';
-    const reportsPage = new ReportsPage();
-    mainContent.appendChild(reportsPage.element);
-  };
 
-  // Render data sources page
-  const renderDataSources = () => {
-    mainContent.innerHTML = '';
-    const dataSourcesPage = new DataSourcesPage();
-    mainContent.appendChild(dataSourcesPage.element);
-  };
-
-  // Render settings page
-  const renderSettings = () => {
-    mainContent.innerHTML = '';
-    const settingsPage = new SettingsPage();
-    mainContent.appendChild(settingsPage.element);
-  };
 
   renderOverview();
 
