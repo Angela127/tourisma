@@ -1,0 +1,883 @@
+/* ==========================================================================
+   Tourisma Accessibility Stylesheet
+   Road Connectivity & Public Transport Spatial Access
+   ========================================================================== */
+
+.accessibility-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 24px 32px 24px;
+  box-sizing: border-box;
+  color: #0f172a;
+  background-color: #f8fafc;
+  min-height: 100%;
+}
+
+[data-theme="dark"] .accessibility-page {
+  background-color: #0b0f19;
+  color: #f1f5f9;
+}
+
+/* --------------------------------------------------------------------------
+   1. Top KPI Row - 4 Cards Grid
+   -------------------------------------------------------------------------- */
+.accessibility-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .accessibility-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .accessibility-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.access-kpi-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.access-kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--card-accent, #2563eb);
+}
+
+.access-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  border-color: #cbd5e1;
+}
+
+[data-theme="dark"] .access-kpi-card {
+  background: var(--bg-card, #111827);
+  border-color: var(--border-card, #1f2937);
+}
+
+[data-theme="dark"] .access-kpi-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  border-color: #374151;
+}
+
+.access-kpi-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.access-kpi-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="dark"] .access-kpi-title {
+  color: #94a3b8;
+}
+
+.access-kpi-value-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  margin: 2px 0;
+}
+
+.access-kpi-value {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="dark"] .access-kpi-value {
+  color: #f8fafc;
+}
+
+.access-kpi-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1.2;
+}
+
+.access-kpi-badge.blue {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.access-kpi-badge.emerald {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.access-kpi-badge.purple {
+  background: #f5f3ff;
+  color: #6d28d9;
+}
+
+.access-kpi-badge.orange {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+[data-theme="dark"] .access-kpi-badge.blue {
+  background: rgba(37, 99, 235, 0.18);
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .access-kpi-badge.emerald {
+  background: rgba(16, 185, 129, 0.18);
+  color: #34d399;
+}
+
+[data-theme="dark"] .access-kpi-badge.purple {
+  background: rgba(124, 58, 237, 0.18);
+  color: #a78bfa;
+}
+
+[data-theme="dark"] .access-kpi-badge.orange {
+  background: rgba(234, 88, 12, 0.18);
+  color: #fb923c;
+}
+
+.access-kpi-subtext {
+  font-size: 11.5px;
+  color: #64748b;
+  margin-top: 1px;
+  line-height: 1.3;
+}
+
+[data-theme="dark"] .access-kpi-subtext {
+  color: #94a3b8;
+}
+
+.access-kpi-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--icon-bg, #eff6ff);
+  color: var(--icon-color, #2563eb);
+}
+
+[data-theme="dark"] .access-kpi-icon-wrap {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* --------------------------------------------------------------------------
+   Common Card Styling
+   -------------------------------------------------------------------------- */
+.access-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .access-card {
+  background: var(--bg-card, #111827);
+  border-color: var(--border-card, #1f2937);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.access-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.access-card-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.access-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 2px;
+}
+
+.access-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.access-card-title {
+  font-size: 15.5px;
+  font-weight: 750;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+[data-theme="dark"] .access-card-title {
+  color: #f8fafc;
+}
+
+.access-card-subtitle {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+}
+
+[data-theme="dark"] .access-card-subtitle {
+  color: #94a3b8;
+}
+
+/* Segmented Control (Toggle) */
+.access-segmented-control {
+  display: inline-flex;
+  background: #f1f5f9;
+  padding: 3px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .access-segmented-control {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.access-segment-btn {
+  padding: 5px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #475569;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+[data-theme="dark"] .access-segment-btn {
+  color: #94a3b8;
+}
+
+.access-segment-btn:hover:not(.active) {
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+[data-theme="dark"] .access-segment-btn:hover:not(.active) {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.access-segment-btn.active {
+  background: #0b57d0;
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(11, 87, 208, 0.3);
+}
+
+[data-theme="dark"] .access-segment-btn.active {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   2. Middle Grid: Accessibility Map (Left) + Ring Chart (Right)
+   -------------------------------------------------------------------------- */
+.access-middle-grid {
+  display: grid;
+  grid-template-columns: 1.12fr 1fr;
+  gap: 16px;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .access-middle-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Map Card */
+.access-map-card {
+  min-height: 380px;
+}
+
+.access-map-stage {
+  position: relative;
+  width: 100%;
+  height: 290px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.access-map-svg-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.access-malaysia-svg {
+  width: 100%;
+  height: 100%;
+  max-height: 250px;
+  overflow: visible;
+}
+
+.access-state-path {
+  cursor: pointer;
+  stroke: #ffffff;
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+  transition: fill 0.25s ease, filter 0.2s ease, stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+[data-theme="dark"] .access-state-path {
+  stroke: #1e293b;
+}
+
+.access-state-path:hover {
+  filter: brightness(1.1) drop-shadow(0 2px 8px rgba(15, 23, 42, 0.35));
+  stroke: #0f172a;
+  stroke-width: 1.8;
+}
+
+[data-theme="dark"] .access-state-path:hover {
+  stroke: #f8fafc;
+}
+
+.access-state-path.selected {
+  stroke: #0f172a !important;
+  stroke-width: 2.4 !important;
+  filter: drop-shadow(0 4px 10px rgba(15, 23, 42, 0.5)) !important;
+}
+
+[data-theme="dark"] .access-state-path.selected {
+  stroke: #60a5fa !important;
+  filter: drop-shadow(0 4px 10px rgba(96, 165, 250, 0.6)) !important;
+}
+
+/* Map Legend */
+.access-map-legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 6px 12px 0 12px;
+  box-sizing: border-box;
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.access-legend-scale {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.access-legend-steps {
+  display: flex;
+  gap: 3px;
+}
+
+.access-legend-block {
+  width: 28px;
+  height: 9px;
+  border-radius: 2px;
+}
+
+/* Floating Map Tooltip */
+.access-floating-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: #0f172a;
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  z-index: 50;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 240px;
+  transition: opacity 0.15s ease;
+  transform: translate(-50%, -100%);
+  margin-top: -10px;
+}
+
+[data-theme="dark"] .access-floating-tooltip {
+  background: #1e293b;
+  border: 1px solid #334155;
+}
+
+.access-tooltip-title {
+  font-weight: 750;
+  font-size: 12.5px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 4px;
+}
+
+.access-tooltip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: #cbd5e1;
+  gap: 12px;
+}
+
+.access-tooltip-row strong {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+/* Ring Charts Card */
+.access-ring-card {
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+}
+
+.access-rings-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  flex: 1;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .access-rings-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.access-ring-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+}
+
+[data-theme="dark"] .access-ring-item {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.access-ring-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+[data-theme="dark"] .access-ring-title {
+  color: #f1f5f9;
+}
+
+.access-ring-svg-wrap {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.access-ring-center-stat {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+}
+
+.access-ring-center-val {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="dark"] .access-ring-center-val {
+  color: #f8fafc;
+}
+
+.access-ring-center-sub {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-top: 2px;
+}
+
+.access-ring-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.access-ring-legend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 11px;
+  color: #475569;
+  width: 100%;
+}
+
+[data-theme="dark"] .access-ring-legend-row {
+  color: #94a3b8;
+}
+
+.access-ring-legend-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.access-ring-tier-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: #334155;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .access-ring-tier-name {
+  color: #e2e8f0;
+}
+
+.access-legend-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.access-ring-legend-val {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: 11px;
+}
+
+.access-ring-pct {
+  font-weight: 750;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .access-ring-pct {
+  color: #f8fafc;
+}
+
+.access-ring-count {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+[data-theme="dark"] .access-ring-count {
+  color: #94a3b8;
+}
+
+.access-reset-btn {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.access-reset-btn:hover {
+  background: #dbeafe;
+}
+
+[data-theme="dark"] .access-reset-btn {
+  background: rgba(37, 99, 235, 0.2);
+  border-color: rgba(37, 99, 235, 0.4);
+  color: #93c5fd;
+}
+
+/* --------------------------------------------------------------------------
+   3. Bottom Section: 100% Stacked Bar Chart ⭐
+   -------------------------------------------------------------------------- */
+.access-stacked-bar-card {
+  width: 100%;
+}
+
+.access-stacked-legend-strip {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+[data-theme="dark"] .access-stacked-legend-strip {
+  color: #94a3b8;
+}
+
+.access-stacked-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.access-stacked-legend-pill {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.access-stacked-bars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.access-bar-row {
+  display: grid;
+  grid-template-columns: 160px 1fr 140px;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+
+.access-bar-row:hover {
+  background: #f1f5f9;
+  transform: translateX(2px);
+}
+
+[data-theme="dark"] .access-bar-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.access-bar-row.selected {
+  background: #eff6ff;
+  outline: 1.5px solid #2563eb;
+}
+
+[data-theme="dark"] .access-bar-row.selected {
+  background: rgba(37, 99, 235, 0.18);
+  outline: 1.5px solid #60a5fa;
+}
+
+.access-bar-state-label {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.access-bar-state-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="dark"] .access-bar-state-name {
+  color: #f1f5f9;
+}
+
+.access-bar-row.selected .access-bar-state-name {
+  color: #2563eb;
+}
+
+[data-theme="dark"] .access-bar-row.selected .access-bar-state-name {
+  color: #60a5fa;
+}
+
+.access-bar-state-sub {
+  font-size: 11px;
+  color: #64748b;
+}
+
+[data-theme="dark"] .access-bar-state-sub {
+  color: #94a3b8;
+}
+
+/* 100% Track & Segments */
+.access-bar-track {
+  height: 22px;
+  background-color: #f1f5f9;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  width: 100%;
+  position: relative;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .access-bar-track {
+  background-color: #1e293b;
+}
+
+.access-bar-segment {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  position: relative;
+}
+
+.access-bar-segment.good,
+.access-bar-segment.high {
+  background: #10b981;
+}
+
+.access-bar-segment.moderate {
+  background: #eab308;
+}
+
+.access-bar-segment.limited,
+.access-bar-segment.low {
+  background: #f97316;
+}
+
+.access-bar-segment.remote {
+  background: #ef4444;
+}
+
+.access-segment-pct-text {
+  font-size: 10.5px;
+  font-weight: 750;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+  padding: 0 4px;
+}
+
+/* Numbers Column */
+.access-bar-meta-col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.access-meta-good {
+  font-weight: 750;
+  color: #059669;
+}
+
+[data-theme="dark"] .access-meta-good {
+  color: #34d399;
+}
+
+.access-meta-sep {
+  color: #cbd5e1;
+  font-size: 10px;
+}
+
+.access-meta-limited {
+  font-weight: 700;
+  color: #d97706;
+}
+
+[data-theme="dark"] .access-meta-limited {
+  color: #fbbf24;
+}
