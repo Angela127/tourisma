@@ -61,10 +61,10 @@ export class HealthcareAccessStackedBar {
       </div>
       <div class="hc-mode-toggle-group">
         <button type="button" class="hc-toggle-pill ${this.currentMode === 'primary' ? 'active' : ''}" data-mode="primary">
-          Primary Care (≤2km / 2–5km / &gt;5km)
+          Primary Care
         </button>
         <button type="button" class="hc-toggle-pill ${this.currentMode === 'emergency' ? 'active' : ''}" data-mode="emergency">
-          Hospital Emergency (≤5km / 5–15km / &gt;15km)
+          Emergency Reach
         </button>
       </div>
     `;

@@ -73,14 +73,6 @@ export class HealthcareCapacityBarChart {
     barsContainer.id = 'hc-capacity-bars-wrap';
     this.element.appendChild(barsContainer);
 
-    // Footer note
-    const footerNote = document.createElement('div');
-    footerNote.className = 'hc-capacity-footer-note';
-    footerNote.innerHTML = `
-      <span>💡 Ward breakdowns not published by MOH; metric toggle provides official Hospital Beds, Total Facilities, and Hospitals.</span>
-    `;
-    this.element.appendChild(footerNote);
-
     this.renderBars();
   }
 
@@ -123,7 +115,9 @@ export class HealthcareCapacityBarChart {
           <span class="hc-cap-name" title="${st.stateName}">${st.stateName}</span>
         </div>
         <div class="hc-cap-track-col">
-          <div class="hc-cap-bar" style="width: ${pctWidth}%; background-color: ${barColor};"></div>
+          <div class="hc-cap-bar-bg">
+            <div class="hc-cap-bar" style="width: ${pctWidth}%; background-color: ${barColor};"></div>
+          </div>
           <span class="hc-cap-bar-val">${val.toLocaleString()}</span>
         </div>
       `;

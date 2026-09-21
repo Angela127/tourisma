@@ -34,25 +34,13 @@ export class BedOccupancyRateBarChart {
           <span>SERVICE UTILISATION</span>
         </div>
         <h3 class="hc-card-title">Hospital Bed Occupancy Rate (BOR)</h3>
-        <span class="hc-card-desc">State clinical bed utilisation (resident population & healthcare load)</span>
-      </div>
-      <div class="hc-bor-national-pill">
-        National BOR: <strong>${NATIONAL_HEALTHCARE_SUMMARY.bedOccupancyRate}%</strong>
+        <span class="hc-card-desc">State clinical bed utilisation (resident population &amp; healthcare load)</span>
+        <div class="hc-bor-national-pill">
+          National BOR: <strong>${NATIONAL_HEALTHCARE_SUMMARY.bedOccupancyRate}%</strong>
+        </div>
       </div>
     `;
     this.element.appendChild(header);
-
-    // Compact Analytical Callout
-    const callout = document.createElement('div');
-    callout.className = 'hc-bor-callout';
-    callout.innerHTML = `
-      <span class="hc-callout-icon">💡</span>
-      <div class="hc-callout-body">
-        <strong>Capacity vs. Utilisation:</strong>
-        Hospital beds represent installed capacity; bed occupancy reflects overall health service load from resident admissions and epidemiology, not tourist-isolated pressure.
-      </div>
-    `;
-    this.element.appendChild(callout);
 
     // Bars container
     const barsContainer = document.createElement('div');
@@ -77,13 +65,15 @@ export class BedOccupancyRateBarChart {
       const bor = st.bedOccupancyRate;
       const isSelected = this.selectedStateId === st.stateId;
 
-      // Color coding
+      // Color coding by BOR severity
       const barColor =
         bor >= 75
-          ? '#e11d48'
-          : bor >= 50
-            ? '#d97706'
-            : '#0284c7';
+          ? '#dc2626'
+          : bor >= 65
+            ? '#ea580c'
+            : bor >= 50
+              ? '#d97706'
+              : '#0284c7';
 
       const row = document.createElement('div');
       row.className = `hc-bor-row ${isSelected ? 'selected' : ''}`;
@@ -96,7 +86,7 @@ export class BedOccupancyRateBarChart {
         </div>
         <div class="hc-bor-track-col">
           <div class="hc-bor-bg-track">
-            <div class="hc-bor-benchmark-line" style="left: ${NATIONAL_HEALTHCARE_SUMMARY.bedOccupancyRate}%;" title="National Average (${NATIONAL_HEALTHCARE_SUMMARY.bedOccupancyRate}%)"></div>
+            <div class="hc-bor-benchmark-line" style="left: ${NATIONAL_HEALTHCARE_SUMMARY.bedOccupancyRate}%;" title="National Avg (${NATIONAL_HEALTHCARE_SUMMARY.bedOccupancyRate}%)"></div>
             <div class="hc-bor-bar" style="width: ${bor}%; background-color: ${barColor};"></div>
           </div>
           <span class="hc-bor-val-tag">${bor.toFixed(1)}%</span>

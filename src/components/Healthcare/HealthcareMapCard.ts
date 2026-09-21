@@ -1,664 +1,457 @@
 import { MALAYSIA_GEO_DATA } from '../../data/malaysiaGeo';
 import {
-  getAllStateHealthcare,
   getStateHealthcare,
+  type StateHealthcareData,
 } from '../../data/healthcareData';
+
+export type HealthcareMapMode = 'access' | 'bor';
 
 export class HealthcareMapCard {
   public readonly element: HTMLElement;
+  private currentMode: HealthcareMapMode = 'access';
   private selectedStateId: string | null = null;
-  private showAssets: boolean = true;
-  private showFacilities: boolean = true;
-  private showRadius: boolean = true;
-  private svgWrapper!: HTMLElement;
-  private svgElement!: SVGSVGElement;
-  private tooltip!: HTMLElement;
-  private stateSelectEl!: HTMLSelectElement;
   private onSelectStateCallback?: (stateId: string | null) => void;
-
-  // ViewBox animation state for smooth camera fly-in / zoom
-  private currentViewBox: [number, number, number, number] = [0, 0, 1000, 440];
-  private animFrameId: number | null = null;
+  private tooltipElement!: HTMLElement;
+  private legendElement!: HTMLElement;
 
   constructor(onSelectState?: (stateId: string | null) => void) {
     this.onSelectStateCallback = onSelectState;
     this.element = document.createElement('div');
     this.element.className = 'hc-card hc-map-card';
 
-    this.createTooltip();
+    // Tooltip mounted to document.body
+    document.querySelectorAll('.hc-floating-tooltip').forEach((el) => el.remove());
+    this.tooltipElement = document.createElement('div');
+    this.tooltipElement.className = 'map-floating-tooltip hc-floating-tooltip';
+    this.tooltipElement.style.display = 'none';
+    document.body.appendChild(this.tooltipElement);
+
     this.render();
   }
 
-  private createTooltip(): void {
-    this.tooltip = document.createElement('div');
-    this.tooltip.className = 'hc-floating-tooltip';
-    this.tooltip.style.display = 'none';
-    document.body.appendChild(this.tooltip);
+  public setSelectedState(stateId: string | null): void {
+    this.selectedStateId = stateId;
 
-    this.element.addEventListener('mouseleave', () => this.hideTooltip());
+    const paths = this.element.querySelectorAll<SVGPathElement>('.hc-state-path');
+    paths.forEach((path) => {
+      const pid = path.getAttribute('data-state-id');
+      if (pid === this.selectedStateId) {
+        path.classList.add('selected');
+        path.style.stroke = '#0f172a';
+        path.style.strokeWidth = '2.4';
+        path.style.filter = 'drop-shadow(0 4px 10px rgba(15, 23, 42, 0.45))';
+      } else {
+        path.classList.remove('selected');
+        path.style.stroke = '#ffffff';
+        path.style.strokeWidth = '1.1';
+        path.style.filter = 'none';
+      }
+    });
+
+    if (stateId) {
+      const data = getStateHealthcare(stateId);
+      if (data) this.showTooltip(data);
+    } else {
+      this.hideTooltip();
+    }
   }
 
   public hideTooltip(): void {
-    if (this.tooltip) {
-      this.tooltip.style.display = 'none';
+    if (this.tooltipElement) {
+      this.tooltipElement.style.display = 'none';
     }
   }
 
-  public setSelectedState(stateId: string | null): void {
-    const prev = this.selectedStateId;
-    this.selectedStateId = stateId;
-    if (this.stateSelectEl) {
-      this.stateSelectEl.value = stateId || 'malaysia';
-    }
-    this.hideTooltip();
+  public setMode(mode: HealthcareMapMode): void {
+    if (this.currentMode === mode) return;
+    this.currentMode = mode;
 
-    if (prev !== stateId) {
-      this.updateMapSvg();
-      this.zoomToTargetState();
+    // Update toggle button active states
+    const btns = this.element.querySelectorAll<HTMLButtonElement>('.hc-segment-btn');
+    btns.forEach((btn) => {
+      btn.classList.toggle('active', btn.getAttribute('data-mode') === mode);
+    });
+
+    // Update subtitle text
+    const subEl = this.element.querySelector<HTMLElement>('.hc-map-subtitle');
+    if (subEl) {
+      subEl.textContent =
+        mode === 'access'
+          ? 'Share of core tourism assets within ≤ 5 km of primary healthcare facilities'
+          : 'State hospital bed occupancy rate (clinical utilisation load)';
     }
-    this.updateStateStats();
+
+    this.updateMapColors();
+    this.renderLegend();
+  }
+
+  private getColorForState(data: StateHealthcareData): string {
+    if (this.currentMode === 'access') {
+      const rate = data.healthcareAccessRate5km;
+      if (rate >= 90) return '#047857'; // Deep Emerald (Melaka 100%, Putrajaya 100%, Penang 99.4%, KL 99.2%)
+      if (rate >= 75) return '#059669'; // Emerald (Selangor 88.5%, Perlis 78.3%)
+      if (rate >= 60) return '#10b981'; // Medium Emerald (Kedah 66.8%)
+      if (rate >= 45) return '#6ee7b7'; // Light Emerald (Johor 59.5%, Perak 53.6%, Kelantan 51.4%, Terengganu 49.6%, Labuan 47.2%)
+      return '#d1fae5';               // Soft Mint (<45%: Pahang 42.1%, Sabah 38.4%, Sarawak 35.1%)
+    } else {
+      const bor = data.bedOccupancyRate;
+      if (bor >= 75) return '#b91c1c'; // Critical / High Load
+      if (bor >= 65) return '#ea580c'; // Elevated
+      if (bor >= 55) return '#f59e0b'; // Moderate
+      if (bor >= 45) return '#38bdf8'; // Comfortable
+      return '#bae6fd';               // Headroom (<45%)
+    }
+  }
+
+  private updateMapColors(): void {
+    const paths = this.element.querySelectorAll<SVGPathElement>('.hc-state-path');
+    paths.forEach((path) => {
+      const stateId = path.getAttribute('data-state-id');
+      if (!stateId) return;
+      const data = getStateHealthcare(stateId);
+      if (data) {
+        path.setAttribute('fill', this.getColorForState(data));
+      }
+    });
+  }
+
+  private renderLegend(): void {
+    if (!this.legendElement) return;
+
+    if (this.currentMode === 'access') {
+      this.legendElement.innerHTML = `
+        <span class="legend-label-readiness">Healthcare Access Rate (≤ 5 km)</span>
+        <div class="legend-scale-row">
+          <span class="legend-bound">&lt; 45%</span>
+          <div class="legend-step-blocks">
+            <div class="step-block" style="width: 24px; height: 10px; border-radius: 2px; background-color: #d1fae5;" title="Extensive (&lt; 45%)"></div>
+            <div class="step-block" style="width: 24px; height: 10px; border-radius: 2px; background-color: #6ee7b7;" title="Moderate (45–60%)"></div>
+            <div class="step-block" style="width: 24px; height: 10px; border-radius: 2px; background-color: #10b981;" title="Moderate-High (60–75%)"></div>
+            <div class="step-block" style="width: 24px; height: 10px; border-radius: 2px; background-color: #059669;" title="High (75–90%)"></div>
+            <div class="step-block" style="width: 24px; height: 10px; border-radius: 2px; background-color: #047857;" title="Ultra-High (90%+) "></div>
+          </div>
+          <span class="legend-bound">90%+</span>
+        </div>
+      `;
+    } else {
+      this.legendElement.innerHTML = `
+        <span class="legend-label-readiness">Bed Occupancy Rate (BOR)</span>
+        <div class="legend-scale-row">
+          <span class="legend-bound">&lt; 45%</span>
+          <div class="legend-step-blocks">
+            <div class="step-block" style="width: 24px; height: 10px; border-radius: 2px; background-color: #bae6fd;" title="Headroom (&lt; 45%)"></div>
+            <div class="step-block" style="width: 24px; height: 10px; border-radius: 2px; background-color: #38bdf8;" title="Comfortable (45–55%)"></div>
+            <div class="step-block" style="width: 24px; height: 10px; border-radius: 2px; background-color: #f59e0b;" title="Moderate (55–65%)"></div>
+            <div class="step-block" style="width: 24px; height: 10px; border-radius: 2px; background-color: #ea580c;" title="Elevated (65–75%)"></div>
+            <div class="step-block" style="width: 24px; height: 10px; border-radius: 2px; background-color: #b91c1c;" title="Critical / High Load (75%+)"></div>
+          </div>
+          <span class="legend-bound">75%+</span>
+        </div>
+      `;
+    }
+  }
+
+  private renderMapSvg(): string {
+    const pathsSvg = MALAYSIA_GEO_DATA.map((geo) => {
+      const data = getStateHealthcare(geo.id);
+      const fill = data ? this.getColorForState(data) : '#e2e8f0';
+      const isSelected = geo.id === this.selectedStateId;
+
+      return `
+        <path
+          class="hc-state-path ${isSelected ? 'selected' : ''}"
+          data-state-id="${geo.id}"
+          d="${geo.svgPath}"
+          fill="${fill}"
+          stroke="${isSelected ? '#0f172a' : '#ffffff'}"
+          stroke-width="${isSelected ? '2.4' : '1.1'}"
+          stroke-linejoin="round"
+          style="cursor: pointer; transition: fill 0.25s ease, filter 0.2s ease, stroke 0.2s ease, stroke-width 0.2s ease; ${
+            isSelected ? 'filter: drop-shadow(0 4px 10px rgba(15, 23, 42, 0.45));' : ''
+          }"
+        />
+      `;
+    }).join('');
+
+    const keyLabels = [
+      { id: 'perlis', name: 'Perlis', x: 45, y: 78 },
+      { id: 'kedah', name: 'Kedah', x: 65, y: 110 },
+      { id: 'penang', name: 'Penang', x: 26, y: 138 },
+      { id: 'perak', name: 'Perak', x: 88, y: 180 },
+      { id: 'kelantan', name: 'Kelantan', x: 136, y: 145 },
+      { id: 'terengganu', name: 'Terengganu', x: 190, y: 175 },
+      { id: 'pahang', name: 'Pahang', x: 165, y: 255 },
+      { id: 'selangor', name: 'Selangor', x: 68, y: 275 },
+      { id: 'kuala_lumpur', name: 'KL', x: 95, y: 290 },
+      { id: 'negeri_sembilan', name: 'N. Sembilan', x: 98, y: 320 },
+      { id: 'melaka', name: 'Melaka', x: 130, y: 350 },
+      { id: 'johor', name: 'Johor', x: 195, y: 355 },
+      { id: 'sarawak', name: 'Sarawak', x: 674, y: 340 },
+      { id: 'sabah', name: 'Sabah', x: 840, y: 160 },
+    ];
+
+    const labelsSvg = keyLabels
+      .map(
+        (lbl) => `
+      <text
+        x="${lbl.x}"
+        y="${lbl.y}"
+        class="hc-map-state-label"
+        font-size="9.5"
+        font-weight="750"
+        fill="#0f172a"
+        text-anchor="middle"
+        style="pointer-events: none; paint-order: stroke; stroke: #ffffff; stroke-width: 3px; stroke-linejoin: round;"
+      >
+        ${lbl.name}
+      </text>
+    `
+      )
+      .join('');
+
+    return `
+      <svg
+        viewBox="0 0 1000 440"
+        preserveAspectRatio="xMidYMid meet"
+        class="hc-malaysia-svg"
+      >
+        <g class="hc-paths-group">${pathsSvg}</g>
+        <g class="hc-labels-group">${labelsSvg}</g>
+      </svg>
+    `;
   }
 
   private render(): void {
     this.element.innerHTML = '';
 
-    // Card Header
+    // 1. Header with Badge, Title, Segmented Toggle & Compass
     const header = document.createElement('div');
     header.className = 'hc-card-header hc-map-header';
 
     const titleGroup = document.createElement('div');
-    titleGroup.className = 'hc-title-group';
+    titleGroup.className = 'hc-card-title-group';
     titleGroup.innerHTML = `
-      <div class="hc-badge-header">
-        <span class="hc-badge-dot"></span>
-        <span>SPATIAL CONGRUENCE MAP</span>
+      <div class="hc-card-badge">
+        <span class="hc-badge-dot" style="background-color: #059669;"></span>
+        <span>SPATIAL CONGRUENCE DIAGNOSTIC</span>
       </div>
-      <h3 class="hc-card-title">Tourism & Healthcare Access Map</h3>
-      <span class="hc-card-desc">Geospatial proximity from destinations to nearest medical care</span>
+      <h3 class="hc-card-title">MALAYSIA HEALTHCARE ACCESS & CAPACITY</h3>
+      <p class="hc-card-subtitle hc-map-subtitle">
+        ${this.currentMode === 'access' ? 'Share of core tourism assets within ≤ 5 km of primary healthcare facilities' : 'State hospital bed occupancy rate (clinical utilisation load)'}
+      </p>
     `;
 
-    // Map Controls: State Dropdown + Layer Toggles
-    const controlsWrap = document.createElement('div');
-    controlsWrap.className = 'hc-map-controls-wrap';
+    // Segmented Mode Toggle + Compass
+    const headerActions = document.createElement('div');
+    headerActions.className = 'hc-header-actions';
 
-    // State Selector Dropdown
-    const selectWrapper = document.createElement('div');
-    selectWrapper.className = 'hc-select-wrapper';
+    const toggleWrap = document.createElement('div');
+    toggleWrap.className = 'hc-segmented-control';
+    toggleWrap.setAttribute('role', 'radiogroup');
 
-    this.stateSelectEl = document.createElement('select');
-    this.stateSelectEl.className = 'hc-state-select';
-    this.stateSelectEl.id = 'hc-state-select-dropdown';
+    const accessBtn = document.createElement('button');
+    accessBtn.className = `hc-segment-btn ${this.currentMode === 'access' ? 'active' : ''}`;
+    accessBtn.setAttribute('data-mode', 'access');
+    accessBtn.textContent = 'Healthcare Access (≤5km)';
+    accessBtn.addEventListener('click', () => this.setMode('access'));
 
-    const defaultOpt = document.createElement('option');
-    defaultOpt.value = 'malaysia';
-    defaultOpt.textContent = '🇲🇾 Malaysia (Overview)';
-    this.stateSelectEl.appendChild(defaultOpt);
+    const borBtn = document.createElement('button');
+    borBtn.className = `hc-segment-btn ${this.currentMode === 'bor' ? 'active' : ''}`;
+    borBtn.setAttribute('data-mode', 'bor');
+    borBtn.textContent = 'Bed Occupancy (BOR)';
+    borBtn.addEventListener('click', () => this.setMode('bor'));
 
-    const states = getAllStateHealthcare().sort((a, b) => a.stateName.localeCompare(b.stateName));
-    states.forEach((st) => {
-      const opt = document.createElement('option');
-      opt.value = st.stateId;
-      opt.textContent = `${st.stateName} (${st.code})`;
-      this.stateSelectEl.appendChild(opt);
-    });
+    toggleWrap.appendChild(accessBtn);
+    toggleWrap.appendChild(borBtn);
 
-    this.stateSelectEl.addEventListener('change', () => {
-      const val = this.stateSelectEl.value;
-      const targetState = val === 'malaysia' ? null : val;
-      if (this.onSelectStateCallback) {
-        this.onSelectStateCallback(targetState);
-      } else {
-        this.setSelectedState(targetState);
-      }
-    });
-
-    selectWrapper.appendChild(this.stateSelectEl);
-
-    // Layer toggles (clean previous pill design)
-    const layerGroup = document.createElement('div');
-    layerGroup.className = 'hc-layer-toggles';
-
-    // 1. Assets Toggle
-    const assetBtn = document.createElement('button');
-    assetBtn.type = 'button';
-    assetBtn.className = `hc-layer-btn ${this.showAssets ? 'active' : ''}`;
-    assetBtn.innerHTML = `<span class="hc-btn-dot dot-asset"></span> Assets`;
-    assetBtn.title = 'Toggle tourism asset points';
-    assetBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.showAssets = !this.showAssets;
-      assetBtn.classList.toggle('active', this.showAssets);
-      this.updateLayerVisibility();
-    });
-
-    // 2. Facilities Toggle
-    const facBtn = document.createElement('button');
-    facBtn.type = 'button';
-    facBtn.className = `hc-layer-btn ${this.showFacilities ? 'active' : ''}`;
-    facBtn.innerHTML = `<span class="hc-btn-dot dot-facility"></span> Facilities`;
-    facBtn.title = 'Toggle healthcare facilities (hospitals & clinics)';
-    facBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.showFacilities = !this.showFacilities;
-      facBtn.classList.toggle('active', this.showFacilities);
-      this.updateLayerVisibility();
-    });
-
-    // 3. 5km Radius Buffer
-    const radiusBtn = document.createElement('button');
-    radiusBtn.type = 'button';
-    radiusBtn.className = `hc-layer-btn ${this.showRadius ? 'active' : ''}`;
-    radiusBtn.innerHTML = `<span class="hc-btn-dot dot-buffer"></span> 5km Radius`;
-    radiusBtn.title = 'Toggle 5km emergency & primary care catchment buffer';
-    radiusBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.showRadius = !this.showRadius;
-      radiusBtn.classList.toggle('active', this.showRadius);
-      this.updateLayerVisibility();
-    });
-
-    layerGroup.appendChild(assetBtn);
-    layerGroup.appendChild(facBtn);
-    layerGroup.appendChild(radiusBtn);
-
-    controlsWrap.appendChild(selectWrapper);
-    controlsWrap.appendChild(layerGroup);
-
-    header.appendChild(titleGroup);
-    header.appendChild(controlsWrap);
-
-    // Canvas Wrap
-    const canvasWrap = document.createElement('div');
-    canvasWrap.className = 'hc-map-canvas-wrap';
-
-    this.svgWrapper = document.createElement('div');
-    this.svgWrapper.className = 'hc-svg-container';
-    canvasWrap.appendChild(this.svgWrapper);
-
-    // State stats footer strip
-    const statsStrip = document.createElement('div');
-    statsStrip.className = 'hc-map-stats-strip';
-    statsStrip.id = 'hc-map-stats-strip';
-
-    this.element.appendChild(header);
-    this.element.appendChild(canvasWrap);
-    this.element.appendChild(statsStrip);
-
-    this.updateMapSvg();
-    this.updateStateStats();
-  }
-
-  private updateLayerVisibility(): void {
-    const buffersLayer = this.svgWrapper.querySelector<SVGGElement>('#hc-buffers-layer');
-    const facilitiesLayer = this.svgWrapper.querySelector<SVGGElement>('#hc-facilities-layer');
-    const assetsLayer = this.svgWrapper.querySelector<SVGGElement>('#hc-assets-layer');
-
-    if (buffersLayer) {
-      buffersLayer.classList.toggle('layer-hidden', !this.showRadius);
-      buffersLayer.classList.toggle('layer-visible', this.showRadius);
-    }
-    if (facilitiesLayer) {
-      facilitiesLayer.classList.toggle('layer-hidden', !this.showFacilities);
-      facilitiesLayer.classList.toggle('layer-visible', this.showFacilities);
-    }
-    if (assetsLayer) {
-      assetsLayer.classList.toggle('layer-hidden', !this.showAssets);
-      assetsLayer.classList.toggle('layer-visible', this.showAssets);
-    }
-  }
-
-  private zoomToTargetState(): void {
-    const isStateMode = !!this.selectedStateId;
-    const currentState = isStateMode ? getStateHealthcare(this.selectedStateId!) : undefined;
-
-    let target: [number, number, number, number] = [0, 0, 1000, 440];
-    if (isStateMode && currentState) {
-      const [bx1, by1, bx2, by2] = currentState.bbox;
-      const w = Math.max(30, bx2 - bx1);
-      const h = Math.max(30, by2 - by1);
-      const padX = w * 0.16;
-      const padY = h * 0.16;
-      const vx = Math.max(0, bx1 - padX);
-      const vy = Math.max(0, by1 - padY);
-      const vw = w + 2 * padX;
-      const vh = h + 2 * padY;
-      target = [vx, vy, vw, vh];
-    }
-
-    this.animateViewBox(target, 450);
-  }
-
-  private animateViewBox(target: [number, number, number, number], duration: number): void {
-    if (this.animFrameId) {
-      cancelAnimationFrame(this.animFrameId);
-    }
-
-    const start = [...this.currentViewBox] as [number, number, number, number];
-    const startTime = performance.now();
-
-    const step = (now: number) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(1, elapsed / duration);
-
-      // EaseInOutCubic
-      const ease =
-        progress < 0.5
-          ? 4 * progress * progress * progress
-          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-
-      const curX = start[0] + (target[0] - start[0]) * ease;
-      const curY = start[1] + (target[1] - start[1]) * ease;
-      const curW = start[2] + (target[2] - start[2]) * ease;
-      const curH = start[3] + (target[3] - start[3]) * ease;
-
-      this.currentViewBox = [curX, curY, curW, curH];
-      if (this.svgElement) {
-        this.svgElement.setAttribute(
-          'viewBox',
-          `${curX.toFixed(2)} ${curY.toFixed(2)} ${curW.toFixed(2)} ${curH.toFixed(2)}`
-        );
-      }
-
-      if (progress < 1) {
-        this.animFrameId = requestAnimationFrame(step);
-      } else {
-        this.currentViewBox = target;
-        this.animFrameId = null;
-      }
-    };
-
-    this.animFrameId = requestAnimationFrame(step);
-  }
-
-  private updateStateStats(): void {
-    const strip = this.element.querySelector('#hc-map-stats-strip');
-    if (!strip) return;
-
-    if (this.selectedStateId) {
-      const st = getStateHealthcare(this.selectedStateId);
-      if (st) {
-        strip.innerHTML = `
-          <div class="hc-stats-left">
-            <div class="hc-strip-stat">
-              <span class="hc-stat-k">State:</span>
-              <strong class="hc-stat-v">${st.stateName}</strong>
-            </div>
-            <div class="hc-strip-stat">
-              <span class="hc-stat-k">Assets:</span>
-              <strong class="hc-stat-v">${st.coreTourismAssets}</strong>
-            </div>
-            <div class="hc-strip-stat">
-              <span class="hc-stat-k">Facilities:</span>
-              <strong class="hc-stat-v">${st.totalFacilities}</strong>
-            </div>
-            <div class="hc-strip-stat">
-              <span class="hc-stat-k">5km Access:</span>
-              <strong class="hc-stat-v" style="color:#059669;">${st.healthcareAccessRate5km}%</strong>
-            </div>
-          </div>
-          <button type="button" class="hc-reset-btn" id="hc-reset-map-zoom" title="Return to Malaysia national map">
-            ✕ Reset Map
-          </button>
-        `;
-
-        strip.querySelector('#hc-reset-map-zoom')?.addEventListener('click', () => {
-          if (this.onSelectStateCallback) {
-            this.onSelectStateCallback(null);
-          } else {
-            this.setSelectedState(null);
-          }
-        });
-        return;
-      }
-    }
-
-    // National default
-    strip.innerHTML = `
-      <div class="hc-stats-left">
-        <div class="hc-strip-stat">
-          <span class="hc-stat-k">National Scope:</span>
-          <strong class="hc-stat-v">16 States & FTs</strong>
-        </div>
-        <div class="hc-strip-stat">
-          <span class="hc-stat-k">Screened Assets:</span>
-          <strong class="hc-stat-v">5,491</strong>
-        </div>
-        <div class="hc-strip-stat">
-          <span class="hc-stat-k">Facilities:</span>
-          <strong class="hc-stat-v">4,749</strong>
-        </div>
-        <div class="hc-strip-stat">
-          <span class="hc-stat-k">Catchment:</span>
-          <strong class="hc-stat-v" style="color:#0284c7;">75.1% within 5km</strong>
-        </div>
-      </div>
-      <span class="hc-strip-hint">Click a state on the map or choose from dropdown to zoom</span>
-    `;
-  }
-
-  private updateMapSvg(): void {
-    const isStateMode = !!this.selectedStateId;
-    const currentState = isStateMode ? getStateHealthcare(this.selectedStateId!) : undefined;
-
-    // Render State Polygons
-    const paths = MALAYSIA_GEO_DATA.map((geo) => {
-      const stData = getStateHealthcare(geo.id);
-      const isSelected = this.selectedStateId === geo.id;
-      const isOtherStateInZoom = isStateMode && !isSelected;
-
-      // Color coding for national overview
-      let fillColor = '#f8fafc';
-      if (stData) {
-        if (isSelected) {
-          fillColor = '#eff6ff';
-        } else if (isOtherStateInZoom) {
-          fillColor = '#f1f5f9';
-        } else {
-          const rate = stData.healthcareAccessRate5km;
-          if (rate >= 90) fillColor = '#dcfce7';
-          else if (rate >= 75) fillColor = '#ecfdf5';
-          else if (rate >= 50) fillColor = '#fef3c7';
-          else fillColor = '#fee2e2';
-        }
-      }
-
-      const strokeColor = isSelected ? '#1d4ed8' : isOtherStateInZoom ? '#cbd5e1' : '#64748b';
-      const strokeWidth = isSelected ? (isStateMode ? '1.2' : '1.8') : isStateMode ? '0.4' : '0.7';
-      const opacity = isOtherStateInZoom ? '0.35' : '1.0';
-
-      return `
-        <path
-          d="${geo.svgPath}"
-          id="hc-path-${geo.id}"
-          data-state-id="${geo.id}"
-          fill="${fillColor}"
-          stroke="${strokeColor}"
-          stroke-width="${strokeWidth}"
-          stroke-linejoin="round"
-          opacity="${opacity}"
-          style="cursor: pointer; transition: all 0.25s ease;"
-        />
-      `;
-    }).join('');
-
-    // State Centroid Labels (shown in national view)
-    let labels = '';
-    if (!isStateMode) {
-      labels = MALAYSIA_GEO_DATA.map((geo) => {
-        const offset = geo.labelOffset || { x: 0, y: 0 };
-        const lx = geo.centroid.x + offset.x;
-        const ly = geo.centroid.y + offset.y;
-        return `
-          <text
-            x="${lx}"
-            y="${ly}"
-            text-anchor="middle"
-            font-size="8"
-            font-weight="700"
-            fill="#334155"
-            style="pointer-events: none; text-shadow: 0 0 3px #ffffff, 0 0 3px #ffffff;"
-          >${geo.code}</text>
-        `;
-      }).join('');
-    }
-
-    // Markers: Buffers, Facilities, Assets
-    let buffersSvg = '';
-    let facilitiesSvg = '';
-    let assetsSvg = '';
-
-    const targetStates = isStateMode && currentState ? [currentState] : getAllStateHealthcare();
-
-    targetStates.forEach((st) => {
-      // 1. Buffers (5km service radius)
-      const radiusUnits = isStateMode ? 2.6 : 2.0;
-      const facsToBuffer = isStateMode ? st.facilities : st.facilities.filter((f) => f.type === 'Hospital');
-
-      facsToBuffer.forEach((f) => {
-        buffersSvg += `
-          <circle
-            cx="${f.x}"
-            cy="${f.y}"
-            r="${radiusUnits}"
-            class="hc-buffer-circle"
-            fill="rgba(59, 130, 246, 0.14)"
-            stroke="#3b82f6"
-            stroke-width="0.35"
-            stroke-dasharray="0.8, 0.4"
-            style="pointer-events: none;"
-          />
-        `;
-      });
-
-      // 2. Facilities
-      const facsToRender = isStateMode ? st.facilities : st.facilities.filter((f) => f.type === 'Hospital');
-      const facSize = isStateMode ? 1.4 : 1.7;
-
-      facsToRender.forEach((f) => {
-        const isHosp = f.type === 'Hospital';
-        const fill = isHosp ? '#ef4444' : '#0284c7';
-        facilitiesSvg += `
-          <circle
-            cx="${f.x}"
-            cy="${f.y}"
-            r="${facSize}"
-            fill="${fill}"
-            stroke="#ffffff"
-            stroke-width="0.35"
-            class="hc-facility-dot"
-            data-name="${escapeXml(f.name)}"
-            data-type="${f.type}"
-            data-lat="${f.lat}"
-            data-lon="${f.lon}"
-            style="cursor: pointer; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25));"
-          />
-        `;
-      });
-
-      // 3. Tourism Assets
-      const assetsToRender = isStateMode
-        ? st.assets
-        : st.assets.filter((_, idx) => idx % 4 === 0);
-      const assetSize = isStateMode ? 1.0 : 1.1;
-
-      assetsToRender.forEach((a) => {
-        const isHigh = a.distKm <= 2.0;
-        const isMod = a.distKm > 2.0 && a.distKm <= 5.0;
-        const fill = isHigh ? '#10b981' : isMod ? '#f59e0b' : '#64748b';
-
-        assetsSvg += `
-          <circle
-            cx="${a.x}"
-            cy="${a.y}"
-            r="${assetSize}"
-            fill="${fill}"
-            stroke="#ffffff"
-            stroke-width="0.25"
-            class="hc-asset-dot"
-            data-name="${escapeXml(a.name)}"
-            data-cat="${escapeXml(a.category)}"
-            data-fac="${escapeXml(a.nearestFacility)}"
-            data-dist="${a.distKm}"
-            data-tier="${a.tier}"
-            style="cursor: pointer; opacity: 0.95;"
-          />
-        `;
-      });
-    });
-
-    const vb = `${this.currentViewBox[0].toFixed(2)} ${this.currentViewBox[1].toFixed(2)} ${this.currentViewBox[2].toFixed(2)} ${this.currentViewBox[3].toFixed(2)}`;
-
-    this.svgWrapper.innerHTML = `
-      <svg viewBox="${vb}" class="hc-map-svg">
-        <rect x="-3000" y="-3000" width="8000" height="8000" fill="rgba(255, 255, 255, 0.001)" id="hc-map-blank-bg" pointer-events="all" style="cursor: ${isStateMode ? 'pointer' : 'default'};" />
-        <g id="hc-states-layer">${paths}</g>
-        <g id="hc-labels-layer">${labels}</g>
-        <g id="hc-buffers-layer" class="hc-animated-layer ${this.showRadius ? 'layer-visible' : 'layer-hidden'}">${buffersSvg}</g>
-        <g id="hc-facilities-layer" class="hc-animated-layer ${this.showFacilities ? 'layer-visible' : 'layer-hidden'}">${facilitiesSvg}</g>
-        <g id="hc-assets-layer" class="hc-animated-layer ${this.showAssets ? 'layer-visible' : 'layer-hidden'}">${assetsSvg}</g>
+    const compassIcon = document.createElement('div');
+    compassIcon.className = 'hc-compass-icon';
+    compassIcon.title = 'North orientation';
+    compassIcon.innerHTML = `
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="10" stroke="#a7f3d0" stroke-width="1.2" />
+        <polygon points="12 4 15 12 12 10 9 12" fill="#059669" />
+        <polygon points="12 20 15 12 12 14 9 12" fill="#cbd5e1" />
+        <text x="12" y="3.2" font-size="5" font-weight="900" fill="#059669" text-anchor="middle">N</text>
       </svg>
     `;
 
-    this.svgElement = this.svgWrapper.querySelector('svg')!;
+    headerActions.appendChild(toggleWrap);
+    headerActions.appendChild(compassIcon);
 
-    // Helper to zoom back out to whole map
-    const resetToWholeMap = () => {
-      if (this.selectedStateId !== null) {
-        if (this.onSelectStateCallback) {
-          this.onSelectStateCallback(null);
+    header.appendChild(titleGroup);
+    header.appendChild(headerActions);
+    this.element.appendChild(header);
+
+    // 2. Map Stage
+    const stage = document.createElement('div');
+    stage.className = 'hc-map-stage';
+
+    const svgWrap = document.createElement('div');
+    svgWrap.className = 'hc-map-svg-wrap';
+    svgWrap.innerHTML = this.renderMapSvg();
+    stage.appendChild(svgWrap);
+
+    // 3. Legend Step Bar
+    this.legendElement = document.createElement('div');
+    this.legendElement.className = 'map-legend-step-bar hc-map-legend';
+    this.renderLegend();
+    stage.appendChild(this.legendElement);
+
+    this.element.appendChild(stage);
+
+    this.attachSvgEvents();
+  }
+
+  private attachSvgEvents(): void {
+    const paths = this.element.querySelectorAll<SVGPathElement>('.hc-state-path');
+    const svgWrap = this.element.querySelector<HTMLElement>('.hc-map-svg-wrap');
+
+    paths.forEach((path) => {
+      const stateId = path.getAttribute('data-state-id');
+      if (!stateId) return;
+
+      path.addEventListener('mouseenter', (e: MouseEvent) => {
+        if (stateId !== this.selectedStateId) {
+          path.style.filter = 'brightness(1.12) drop-shadow(0 3px 8px rgba(5, 150, 105, 0.4))';
+          path.style.stroke = '#0f172a';
+          path.style.strokeWidth = '1.8';
+        }
+        const data = getStateHealthcare(stateId);
+        if (data) this.showTooltip(data, e);
+      });
+
+      path.addEventListener('mousemove', (e: MouseEvent) => {
+        this.updateTooltipPos(e);
+      });
+
+      path.addEventListener('mouseleave', () => {
+        if (stateId === this.selectedStateId) {
+          path.style.stroke = '#0f172a';
+          path.style.strokeWidth = '2.4';
+          path.style.filter = 'drop-shadow(0 4px 10px rgba(15, 23, 42, 0.45))';
         } else {
+          path.style.filter = 'none';
+          path.style.stroke = '#ffffff';
+          path.style.strokeWidth = '1.1';
+        }
+        this.hideTooltip();
+      });
+
+      path.addEventListener('click', (e: MouseEvent) => {
+        e.stopPropagation();
+        const next = this.selectedStateId === stateId ? null : stateId;
+        this.setSelectedState(next);
+        if (this.onSelectStateCallback) {
+          this.onSelectStateCallback(next);
+        }
+        const data = getStateHealthcare(stateId);
+        if (next && data) {
+          this.showTooltip(data, e);
+        } else {
+          this.hideTooltip();
+        }
+      });
+    });
+
+    // Clicking outside paths clears selection
+    svgWrap?.addEventListener('click', (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName !== 'path') {
+        if (this.selectedStateId !== null) {
           this.setSelectedState(null);
+          if (this.onSelectStateCallback) {
+            this.onSelectStateCallback(null);
+          }
+          this.hideTooltip();
         }
       }
-    };
-
-    // 1. Blank space click on map background rect
-    this.svgWrapper.querySelector('#hc-map-blank-bg')?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      resetToWholeMap();
-    });
-
-    // 2. Blank space click anywhere inside SVG that isn't a state path or marker
-    this.svgElement.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement | SVGElement | null;
-      if (!target) return;
-      if (
-        target.closest('[data-state-id]') ||
-        target.closest('.hc-facility-dot') ||
-        target.closest('.hc-asset-dot')
-      ) {
-        return;
-      }
-      resetToWholeMap();
-    });
-
-    // 3. Also clicking blank area of container resets map
-    const canvasWrap = this.element.querySelector('.hc-map-canvas-wrap');
-    canvasWrap?.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement | SVGElement | null;
-      if (!target) return;
-      if (
-        target.closest('[data-state-id]') ||
-        target.closest('.hc-facility-dot') ||
-        target.closest('.hc-asset-dot') ||
-        target.closest('.hc-layer-toggles') ||
-        target.closest('.hc-select-wrapper')
-      ) {
-        return;
-      }
-      resetToWholeMap();
-    });
-
-    // Hook state path clicks
-    this.svgWrapper.querySelectorAll<SVGPathElement>('#hc-states-layer path').forEach((path) => {
-      const stateId = path.getAttribute('data-state-id');
-      if (stateId) {
-        path.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const nextState = stateId === this.selectedStateId ? null : stateId;
-          if (this.onSelectStateCallback) {
-            this.onSelectStateCallback(nextState);
-          } else {
-            this.setSelectedState(nextState);
-          }
-        });
-      }
-    });
-
-    this.attachMarkerTooltips();
-  }
-
-  private attachMarkerTooltips(): void {
-    this.svgWrapper.querySelectorAll<SVGCircleElement>('.hc-facility-dot').forEach((dot) => {
-      dot.addEventListener('click', (e) => e.stopPropagation());
-      dot.addEventListener('mouseenter', (e) => {
-        const name = dot.getAttribute('data-name') || 'Healthcare Facility';
-        const type = dot.getAttribute('data-type') || 'Facility';
-        const lat = dot.getAttribute('data-lat') || '';
-        const lon = dot.getAttribute('data-lon') || '';
-
-        this.tooltip.innerHTML = `
-          <div class="hc-tt-header">
-            <strong>${name}</strong>
-            <span class="hc-tt-badge" style="background:${type === 'Hospital' ? '#fee2e2' : '#e0f2fe'}; color:${type === 'Hospital' ? '#dc2626' : '#0369a1'};">${type}</span>
-          </div>
-          <div class="hc-tt-body">
-            <div class="hc-tt-row">
-              <span>Service Type:</span>
-              <strong>${type === 'Hospital' ? 'Hospital & Emergency Care' : 'Outpatient Clinic & Primary Care'}</strong>
-            </div>
-            <div class="hc-tt-row">
-              <span>GPS:</span>
-              <span style="font-size:11px; color:#64748b;">${lat}, ${lon}</span>
-            </div>
-            <div class="hc-tt-row">
-              <span>Catchment:</span>
-              <span style="font-size:11px; color:#2563eb; font-weight:600;">5.0 km primary response buffer</span>
-            </div>
-          </div>
-        `;
-        this.tooltip.style.display = 'block';
-        this.positionTooltip(e);
-      });
-
-      dot.addEventListener('mousemove', (e) => this.positionTooltip(e));
-      dot.addEventListener('mouseleave', () => this.hideTooltip());
-    });
-
-    this.svgWrapper.querySelectorAll<SVGCircleElement>('.hc-asset-dot').forEach((dot) => {
-      dot.addEventListener('click', (e) => e.stopPropagation());
-      dot.addEventListener('mouseenter', (e) => {
-        const name = dot.getAttribute('data-name') || 'Tourism Destination';
-        const cat = dot.getAttribute('data-cat') || 'Tourism Asset';
-        const fac = dot.getAttribute('data-fac') || 'Medical Center';
-        const dist = dot.getAttribute('data-dist') || '0';
-        const tier = dot.getAttribute('data-tier') || 'Access';
-
-        const tierColor = tier.includes('High') ? '#10b981' : tier.includes('Moderate') ? '#f59e0b' : '#ef4444';
-
-        this.tooltip.innerHTML = `
-          <div class="hc-tt-header">
-            <strong>${name}</strong>
-            <span class="hc-tt-badge" style="background:#f1f5f9; color:#334155;">${cat}</span>
-          </div>
-          <div class="hc-tt-body">
-            <div class="hc-tt-row">
-              <span>Nearest Facility:</span>
-              <strong>${fac}</strong>
-            </div>
-            <div class="hc-tt-row">
-              <span>Distance:</span>
-              <strong style="color: ${tierColor}; font-size:13px;">${dist} km</strong>
-            </div>
-            <div class="hc-tt-row">
-              <span>Access Tier:</span>
-              <span style="font-weight:700; color:${tierColor};">${tier}</span>
-            </div>
-          </div>
-        `;
-        this.tooltip.style.display = 'block';
-        this.positionTooltip(e);
-      });
-
-      dot.addEventListener('mousemove', (e) => this.positionTooltip(e));
-      dot.addEventListener('mouseleave', () => this.hideTooltip());
     });
   }
 
-  private positionTooltip(e: MouseEvent): void {
-    if (!this.tooltip) return;
-    const x = e.clientX + 14;
-    const y = e.clientY + 14;
-    this.tooltip.style.left = `${x}px`;
-    this.tooltip.style.top = `${y}px`;
+  private showTooltip(data: StateHealthcareData, e?: MouseEvent): void {
+    const isSelected = this.selectedStateId === data.stateId;
+    const isAccess = this.currentMode === 'access';
+
+    const badgeClass = isAccess
+      ? data.healthcareAccessRate5km >= 90
+        ? 'safe'
+        : data.healthcareAccessRate5km >= 60
+        ? 'moderate'
+        : 'critical'
+      : data.bedOccupancyRate >= 75
+      ? 'critical'
+      : data.bedOccupancyRate >= 55
+      ? 'moderate'
+      : 'safe';
+
+    const badgeText = isAccess
+      ? `${data.healthcareAccessRate5km.toFixed(1)}% Access (≤5km)`
+      : `${data.bedOccupancyRate.toFixed(1)}% BOR`;
+
+    this.tooltipElement.innerHTML = `
+      <div class="map-tooltip-header">
+        <span class="map-tooltip-title">${data.stateName}</span>
+        <span class="map-tooltip-quadrant ${badgeClass}">${badgeText}</span>
+      </div>
+      <div class="map-tooltip-body">
+        <div class="map-tooltip-metric-row">
+          <span>Healthcare Access (≤ 5km):</span>
+          <strong>${data.healthcareAccessRate5km.toFixed(1)}%</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Primary Reach (≤ 2km):</span>
+          <strong>${data.primaryAccessTiers.highPct.toFixed(1)}% (${data.primaryAccessTiers.highCount} assets)</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Healthcare Facilities:</span>
+          <strong>${data.totalFacilities} (${data.hospitals} Hosp, ${data.clinics} Clin)</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Hospital Beds:</span>
+          <strong>${data.totalBeds.toLocaleString()} (${data.bedsIcu} ICU)</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Bed Occupancy Rate:</span>
+          <strong>${data.bedOccupancyRate.toFixed(1)}% BOR</strong>
+        </div>
+      </div>
+      <div class="map-tooltip-footer">
+        ${isSelected ? '● Active state • Click to deselect' : 'Click state to filter charts →'}
+      </div>
+    `;
+
+    this.tooltipElement.style.display = 'block';
+    if (e) {
+      this.updateTooltipPos(e);
+    }
+  }
+
+  private updateTooltipPos(e: MouseEvent): void {
+    const tooltipW = 230;
+    const tooltipH = 185;
+    const pad = 16;
+
+    let x = e.clientX + 16;
+    let y = e.clientY + 16;
+
+    if (x + tooltipW > window.innerWidth - pad) {
+      x = e.clientX - tooltipW - 12;
+    }
+    if (y + tooltipH > window.innerHeight - pad) {
+      y = e.clientY - tooltipH - 12;
+    }
+    if (x < pad) x = pad;
+    if (y < pad) y = pad;
+
+    this.tooltipElement.style.left = `${x}px`;
+    this.tooltipElement.style.top = `${y}px`;
+  }
+
+  public destroy(): void {
+    if (this.tooltipElement) {
+      this.tooltipElement.remove();
+    }
   }
 }
 
-function escapeXml(unsafe: string): string {
-  return unsafe
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
-}
