@@ -18,7 +18,7 @@ export class OverviewPage {
     // ------------------------------------------------------------------------
     const upperGrid = document.createElement('section');
     upperGrid.className = 'overview-upper-3col-grid';
-    upperGrid.setAttribute('aria-label', 'National Overview KPIs, Map, and Economic Contribution');
+    upperGrid.setAttribute('aria-label', 'National Overview KPIs, Map, Infrastructure Accessibility and Environmental Sensitivity');
 
     // 1. Left Column: 4 Vertical KPI Cards
     const leftKpis = new LeftKpiCards();
@@ -26,7 +26,7 @@ export class OverviewPage {
     // 2. Center Column: Malaysia Readiness Map
     const centerMap = new MalaysiaMap();
 
-    // 3. Right Column: GDP & Employment Gauges
+    // 3. Right Column: Infrastructure Accessibility & Environmental Sensitivity Gauges
     const rightGauges = new EconomicContributionCards();
 
     upperGrid.appendChild(leftKpis.element);

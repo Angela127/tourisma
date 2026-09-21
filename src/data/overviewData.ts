@@ -94,6 +94,18 @@ export interface NationalEconomyContribution {
   source: string;
 }
 
+export interface SpatialInfrastructureMetrics {
+  roadAccessRatePct: number; // 52.1%
+  ptAccessRatePct: number;   // 51.5%
+  totalTourismAssets: number; // 60,731
+  coreAssetCount: number;    // 5,491
+  supportingAssetCount: number; // 55,240
+  environmentalExposureRatePct: number; // 10.6%
+  terrestrialExposureRatePct: number;   // 8.5%
+  marineExposureRatePct: number;        // 2.3%
+  source: string;
+}
+
 export interface QuadrantProfileSummary {
   quadrant: QuadrantType;
   label: string;
@@ -859,6 +871,23 @@ export const NATIONAL_ECONOMY_CONTRIBUTION: NationalEconomyContribution = {
   tourismEmploymentM: 3.54,
   totalEmploymentM: 16.4,
   source: "Department of Statistics Malaysia (DOSM) - Tourism Satellite Account (TSA) & Labour Force Survey"
+};
+
+// ----------------------------------------------------------------------------
+// 3b. Spatial Infrastructure & Environmental Sensitivity (Project GIS Dataset)
+// Derived from tourism_pt_accessibility.csv, tourism_road_accessibility.csv,
+// environmentally_protected_areas.csv, and tourisma_state_master.csv.
+// ----------------------------------------------------------------------------
+export const SPATIAL_INFRASTRUCTURE_METRICS: SpatialInfrastructureMetrics = {
+  roadAccessRatePct: 52.1,
+  ptAccessRatePct: 51.5,
+  totalTourismAssets: 60731,
+  coreAssetCount: 5491,
+  supportingAssetCount: 55240,
+  environmentalExposureRatePct: 10.6,
+  terrestrialExposureRatePct: 8.5,
+  marineExposureRatePct: 2.3,
+  source: 'DOSM, PLANMalaysia & OpenStreetMap Spatial Tourism Infrastructure Database'
 };
 
 export const ECONOMY_SHARE = {

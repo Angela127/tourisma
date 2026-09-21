@@ -1,17 +1,17 @@
-import { NATIONAL_ECONOMY_CONTRIBUTION, type NationalEconomyContribution } from '../../../data/overviewData';
+import { SPATIAL_INFRASTRUCTURE_METRICS, type SpatialInfrastructureMetrics } from '../../../data/overviewData';
 
 export class EconomicContributionCards {
   public readonly element: HTMLElement;
-  private data: NationalEconomyContribution;
+  private data: SpatialInfrastructureMetrics;
 
-  constructor(data: NationalEconomyContribution = NATIONAL_ECONOMY_CONTRIBUTION) {
+  constructor(data: SpatialInfrastructureMetrics = SPATIAL_INFRASTRUCTURE_METRICS) {
     this.element = document.createElement('div');
     this.element.className = 'right-gauge-column-stack';
     this.data = data;
     this.render();
   }
 
-  public updateData(data: NationalEconomyContribution): void {
+  public updateData(data: SpatialInfrastructureMetrics): void {
     this.data = data;
     this.render();
   }
@@ -19,58 +19,78 @@ export class EconomicContributionCards {
   private render(): void {
     this.element.innerHTML = '';
 
-    // 1. Economic Contribution to GDP Card
-    const gdpCard = document.createElement('div');
-    gdpCard.className = 'economic-gauge-card';
-    gdpCard.innerHTML = `
+    // 1. Spatial Infrastructure Accessibility Card
+    const infraCard = document.createElement('div');
+    infraCard.className = 'economic-gauge-card';
+    infraCard.innerHTML = `
       <div class="gauge-card-header">
-        <h3 class="gauge-card-title">TOURISME ECONOMIC CONTRIBUTION</h3>
-        <span class="gauge-card-subtitle">% of Malaysia's GDP (Tourism Satellite Account)</span>
+        <h3 class="gauge-card-title">INFRASTRUCTURE ACCESSIBILITY</h3>
+        <span class="gauge-card-subtitle">Transit & road coverage (${this.data.totalTourismAssets.toLocaleString()} assets)</span>
       </div>
       <div class="gauge-card-body-row">
         <div class="gauge-visual-box">
-          ${this.renderSemiCircleGauge(this.data.gdpSharePct, 0, 30, `${this.data.gdpSharePct}%`, 'of GDP')}
+          ${this.renderSemiCircleGauge(
+            this.data.ptAccessRatePct,
+            0,
+            100,
+            `${this.data.ptAccessRatePct}%`,
+            'Transit Access',
+            '#0b57d0',
+            '#dbeafe'
+          )}
         </div>
         <div class="gauge-metrics-side">
           <div class="gauge-metric-tile">
-            <span class="gauge-metric-label">Total Tourism GDP</span>
-            <span class="gauge-metric-val">RM${this.data.tourismGdpRmB}B</span>
+            <span class="gauge-metric-label">Direct Road Access</span>
+            <span class="gauge-metric-val">${this.data.roadAccessRatePct}%</span>
+            <span class="gauge-metric-sub">31.7K assets connected</span>
           </div>
           <div class="gauge-metric-tile">
-            <span class="gauge-metric-label">Total Economy</span>
-            <span class="gauge-metric-val">RM${this.data.totalEconomyGdpRmB.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}B</span>
+            <span class="gauge-metric-label">Total Mapped Assets</span>
+            <span class="gauge-metric-val">${this.data.totalTourismAssets.toLocaleString()}</span>
+            <span class="gauge-metric-sub">5.5K Core · 55.2K Supp.</span>
           </div>
         </div>
       </div>
     `;
 
-    // 2. Tourism Employment Card
-    const empCard = document.createElement('div');
-    empCard.className = 'economic-gauge-card';
-    empCard.innerHTML = `
+    // 2. Environmental Sensitivity Card
+    const envCard = document.createElement('div');
+    envCard.className = 'economic-gauge-card';
+    envCard.innerHTML = `
       <div class="gauge-card-header">
-        <h3 class="gauge-card-title">TOURISME EMPLOYMENT</h3>
-        <span class="gauge-card-subtitle">% of Total Employment</span>
+        <h3 class="gauge-card-title">ENVIRONMENTAL SENSITIVITY</h3>
+        <span class="gauge-card-subtitle">Asset exposure to protected conservation zones</span>
       </div>
       <div class="gauge-card-body-row">
         <div class="gauge-visual-box">
-          ${this.renderSemiCircleGauge(this.data.employmentSharePct, 0, 40, `${this.data.employmentSharePct}%`, 'of total employment')}
+          ${this.renderSemiCircleGauge(
+            this.data.environmentalExposureRatePct,
+            0,
+            40,
+            `${this.data.environmentalExposureRatePct}%`,
+            'Eco-Exposure',
+            '#059669',
+            '#d1fae5'
+          )}
         </div>
         <div class="gauge-metrics-side">
           <div class="gauge-metric-tile">
-            <span class="gauge-metric-label">Tourism Employment</span>
-            <span class="gauge-metric-val">${this.data.tourismEmploymentM}M</span>
+            <span class="gauge-metric-label">Terrestrial Protected</span>
+            <span class="gauge-metric-val">${this.data.terrestrialExposureRatePct}%</span>
+            <span class="gauge-metric-sub">Forest reserves & parks</span>
           </div>
           <div class="gauge-metric-tile">
-            <span class="gauge-metric-label">Total Employment</span>
-            <span class="gauge-metric-val">${this.data.totalEmploymentM}M</span>
+            <span class="gauge-metric-label">Marine Protected</span>
+            <span class="gauge-metric-val">${this.data.marineExposureRatePct}%</span>
+            <span class="gauge-metric-sub">Islands & marine parks</span>
           </div>
         </div>
       </div>
     `;
 
-    this.element.appendChild(gdpCard);
-    this.element.appendChild(empCard);
+    this.element.appendChild(infraCard);
+    this.element.appendChild(envCard);
   }
 
   private renderSemiCircleGauge(
@@ -78,7 +98,9 @@ export class EconomicContributionCards {
     min: number,
     max: number,
     centerValue: string,
-    centerSub: string
+    centerSub: string,
+    strokeColor: string = '#0b57d0',
+    trackColor: string = '#dbeafe'
   ): string {
     const radius = 54;
     const strokeWidth = 14;
@@ -95,7 +117,7 @@ export class EconomicContributionCards {
         <path
           d="M ${cx - radius} ${cy} A ${radius} ${radius} 0 0 1 ${cx + radius} ${cy}"
           fill="none"
-          stroke="#dbeafe"
+          stroke="${trackColor}"
           stroke-width="${strokeWidth}"
           stroke-linecap="round"
         />
@@ -103,7 +125,7 @@ export class EconomicContributionCards {
         <path
           d="M ${cx - radius} ${cy} A ${radius} ${radius} 0 0 1 ${cx + radius} ${cy}"
           fill="none"
-          stroke="#0b57d0"
+          stroke="${strokeColor}"
           stroke-width="${strokeWidth}"
           stroke-linecap="round"
           stroke-dasharray="${circumference}"
@@ -121,3 +143,6 @@ export class EconomicContributionCards {
     `;
   }
 }
+
+export { EconomicContributionCards as SpatialInfrastructureCards };
+
