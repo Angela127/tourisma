@@ -32,7 +32,7 @@ function initializeApp(): void {
       header.setTitle('INFRASTRUCTURE & ACCOMMODATION CAPACITY', 'Can Destinations Physically Accommodate More Visitors?');
       renderInfrastructure();
     } else if (navId === 'sustainability') {
-      header.setTitle('SUSTAINABILITY & CARRY-CAPACITY', 'Where is Tourism Growth Creating Critical Pressure?');
+      header.setTitle('ENVIRONMENT & ECOLOGICAL SENSITIVITY', 'Asset Proximity Diagnostic across Terrestrial & Marine Protected Reserves');
       renderSustainability();
     } else if (navId === 'destinations') {
       header.setTitle('DESTINATION PROFILES & DRILL-DOWN', 'Strategic Clustering & Deep Performance Diagnostic');

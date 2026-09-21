@@ -1,68 +1,112 @@
 /* ==========================================================================
-   Tourisma Sustainability Page Stylesheet
-   Where is tourism growth creating pressure?
+   Tourisma Environment & Conservation Diagnostic Stylesheet
+   Geospatial proximity to protected land and marine ecosystems
    ========================================================================== */
 
-.sustainability-page {
+.sustainability-page.environment-page {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 16px 18px 48px 18px;
+  padding: 16px 20px 48px 20px;
   width: 100%;
   box-sizing: border-box;
   color: #0f172a;
 }
 
-.sus-section-block {
-  display: flex;
-  flex-direction: column;
+/* --------------------------------------------------------------------------
+   1. KPI Summary Ribbon
+   -------------------------------------------------------------------------- */
+.env-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
   width: 100%;
 }
 
-.sus-section-header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 8px;
-}
-
-.sus-section-title-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.sus-section-title {
-  font-size: 1.08rem;
-  font-weight: 800;
-  color: #0f172a;
-  letter-spacing: -0.02em;
-  margin: 0;
-}
-
-.sus-section-subtitle {
-  font-size: 0.76rem;
-  color: #64748b;
-  font-weight: 500;
-}
-
-/* --------------------------------------------------------------------------
-   Hero Section: Map & Pressure Signals (2 Columns)
-   -------------------------------------------------------------------------- */
-.sus-hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
-  gap: 14px;
-  width: 100%;
-}
-
-.sus-card {
+.env-kpi-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  padding: 14px 16px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.env-kpi-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.env-kpi-label {
+  font-size: 0.64rem;
+  font-weight: 800;
+  color: #64748b;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.env-kpi-value-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.env-kpi-num {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.env-kpi-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.env-kpi-badge.warning {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.env-kpi-badge.critical {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.env-kpi-badge.land {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.env-kpi-badge.marine {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.env-kpi-sub {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  line-height: 1.25;
+}
+
+/* --------------------------------------------------------------------------
+   Card Base Styles
+   -------------------------------------------------------------------------- */
+.env-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px 18px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
   display: flex;
   flex-direction: column;
@@ -71,378 +115,703 @@
   overflow: hidden;
 }
 
-.sus-card-header {
+.env-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   flex-wrap: wrap;
-  gap: 8px;
-}
-
-.sus-card-title-group {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.sus-card-title {
-  font-size: 0.94rem;
-  font-weight: 750;
-  color: #0f172a;
-  margin: 0;
-}
-
-.sus-card-desc {
-  font-size: 0.74rem;
-  color: #64748b;
-}
-
-/* Pressure Dimension Segmented Control */
-.pressure-dim-controls {
-  display: flex;
-  background: #f1f5f9;
-  padding: 3px;
-  border-radius: 8px;
-  gap: 2px;
-  flex-wrap: wrap;
-}
-
-.pressure-dim-btn {
-  padding: 4px 10px;
-  border: none;
-  background: transparent;
-  font-family: inherit;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: #475569;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-}
-
-.pressure-dim-btn:hover {
-  color: #0f172a;
-}
-
-.pressure-dim-btn.active {
-  background: #ffffff;
-  color: #0b57d0;
-  font-weight: 700;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-/* Map Canvas */
-.sus-map-canvas-wrap {
-  width: 100%;
-  height: 380px;
-  position: relative;
-}
-
-.sus-map-svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.sus-map-legend {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 10px;
-  padding-top: 8px;
-  border-top: 1px solid #f1f5f9;
-}
-
-.sus-legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: #475569;
-}
-
-.sus-legend-box {
-  width: 12px;
-  height: 12px;
-  border-radius: 3px;
-}
-.sus-legend-box.headroom { background-color: #10b981; }
-.sus-legend-box.strain { background-color: #f59e0b; }
-.sus-legend-box.critical { background-color: #dc2626; }
-
-/* Right Rail: Pressure Signals List */
-.signals-list-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-height: 460px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 4px;
-  min-width: 0;
-}
-
-.signal-accordion-card {
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  background: #ffffff;
-  overflow: hidden;
-  transition: all 0.15s ease;
-  min-width: 0;
-  flex-shrink: 0;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
-}
-
-.signal-accordion-card.critical {
-  border-left: 3px solid #dc2626;
-}
-
-.signal-accordion-card.strain {
-  border-left: 3px solid #f59e0b;
-}
-
-.signal-accordion-header {
-  padding: 10px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  background: #fafbfc;
-  box-sizing: border-box;
-  gap: 10px;
-  flex-shrink: 0;
-}
-
-.signal-accordion-header:hover {
-  background: #f1f5f9;
-}
-
-.signal-header-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  flex: 1;
-  overflow: hidden;
-}
-
-.signal-state-title {
-  font-size: 0.8rem;
-  font-weight: 750;
-  color: #0f172a;
-  white-space: nowrap;
-  flex-shrink: 0;
-  line-height: 1.2;
-}
-
-.signal-dim-badge {
-  font-size: 0.67rem;
-  color: #64748b;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0;
-  flex: 1;
-  line-height: 1.2;
-}
-
-.signal-header-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
-.signal-val-tag {
-  font-size: 0.74rem;
-  font-weight: 800;
-  white-space: nowrap;
-  line-height: 1.2;
-}
-.signal-val-tag.critical { color: #dc2626; }
-.signal-val-tag.strain { color: #d97706; }
-
-.signal-trend-pill {
-  font-size: 0.67rem;
-  font-weight: 800;
-  padding: 3px 6px;
-  border-radius: 4px;
-  background: #f1f5f9;
-  white-space: nowrap;
-  line-height: 1.2;
-  display: inline-flex;
-  align-items: center;
-}
-
-.signal-accordion-body {
-  padding: 12px 14px;
-  font-size: 0.72rem;
-  color: #334155;
-  line-height: 1.45;
-  border-top: 1px solid #f1f5f9;
-  background: #ffffff;
-  flex-shrink: 0;
-}
-
-/* --------------------------------------------------------------------------
-   Middle Band: Radar Comparison Chart
-   -------------------------------------------------------------------------- */
-.sus-middle-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  width: 100%;
-}
-
-.radar-controls-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-
-.radar-state-selectors {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.radar-select {
-  padding: 5px 10px;
-  border-radius: 6px;
-  border: 1px solid #cbd5e1;
-  font-family: inherit;
-  font-size: 0.74rem;
-  font-weight: 600;
-  color: #0f172a;
-  background: #ffffff;
-  outline: none;
-}
-
-.sus-radar-stage {
-  width: 100%;
-  height: 300px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* --------------------------------------------------------------------------
-   Lower Band: Scatter Plot & Trajectory Multi-Line (2 Columns)
-   -------------------------------------------------------------------------- */
-.sus-lower-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  width: 100%;
-}
-
-.sus-scatter-stage,
-.sus-trajectory-stage {
-  width: 100%;
-  height: 320px;
-  position: relative;
-}
-
-/* --------------------------------------------------------------------------
-   Collapsible Methodology Note (Open by default)
-   -------------------------------------------------------------------------- */
-.sus-methodology-panel {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.sus-methodology-header {
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  background: #f1f5f9;
-  user-select: none;
-}
-
-.sus-methodology-title {
-  font-size: 0.84rem;
-  font-weight: 800;
-  color: #0f172a;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.sus-methodology-content {
-  padding: 16px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  border-top: 1px solid #e2e8f0;
-}
-
-.sus-methodology-desc {
-  font-size: 0.76rem;
-  color: #475569;
-  line-height: 1.45;
-}
-
-.sus-weights-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 10px;
 }
 
-.sus-weight-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  padding: 8px 10px;
+.env-title-group {
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
 
-.sus-weight-pct {
-  font-size: 1rem;
+.env-badge-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.62rem;
   font-weight: 800;
-  color: #0b57d0;
+  color: #059669;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
-.sus-weight-name {
+.env-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.env-badge-dot.ring {
+  background: #f59e0b;
+}
+
+.env-badge-dot.bar {
+  background: #0284c7;
+}
+
+.env-card-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.env-card-desc {
+  font-size: 0.74rem;
+  color: #64748b;
+}
+
+/* --------------------------------------------------------------------------
+   2. Upper Grid (Map + Ring Chart)
+   -------------------------------------------------------------------------- */
+.env-upper-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1.05fr);
+  gap: 16px;
+  width: 100%;
+}
+
+/* Map Card Specific */
+.env-map-card {
+  min-height: 480px;
+}
+
+.env-layer-controls {
+  display: flex;
+  background: #f1f5f9;
+  padding: 3px;
+  border-radius: 6px;
+  gap: 2px;
+}
+
+.env-layer-btn {
+  background: transparent;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
   font-size: 0.72rem;
-  font-weight: 700;
-  color: #1e293b;
+  font-weight: 650;
+  color: #64748b;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
 }
 
-.sus-weight-sub {
+.env-layer-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.env-map-canvas-wrap {
+  flex: 1;
+  min-height: 330px;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+}
+
+.env-svg-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.env-map-svg {
+  width: 100%;
+  height: auto;
+  max-height: 340px;
+  filter: drop-shadow(0 4px 12px rgba(15, 23, 42, 0.04));
+}
+
+.env-map-svg path:hover {
+  stroke: #0f172a !important;
+  stroke-width: 1.6 !important;
+}
+
+.env-map-legend {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.7rem;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.env-legend-title {
+  font-weight: 700;
+  color: #475569;
+}
+
+.env-legend-steps {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.env-legend-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.env-legend-chip i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* --------------------------------------------------------------------------
+   Ring Chart Card Specific
+   -------------------------------------------------------------------------- */
+.env-ring-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.env-ring-controls-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.env-sim-scenario-toggle {
+  display: flex;
+  background: #f1f5f9;
+  padding: 3px;
+  border-radius: 6px;
+  gap: 2px;
+}
+
+.env-scenario-btn {
+  background: transparent;
+  border: none;
+  padding: 4px 9px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.env-scenario-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.env-scope-select-wrap {
+  position: relative;
+}
+
+.env-scope-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: #f8fafc url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 10px center;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 5px 30px 5px 12px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #0f172a;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.env-scope-select:focus {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.15);
+}
+
+.env-ring-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.env-ring-canvas-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.env-ring-wrapper-interactive {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.env-ring-svg {
+  overflow: visible;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.04));
+}
+
+.env-ring-segment {
+  transition: stroke-dasharray 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              stroke-dashoffset 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              stroke-width 0.2s ease,
+              opacity 0.2s ease;
+}
+
+.env-ring-segment:hover {
+  stroke-width: 30px;
+  opacity: 0.92;
+}
+
+/* --------------------------------------------------------------------------
+   Ring Chart Breakdown List (Executive Row Layout)
+   -------------------------------------------------------------------------- */
+.env-ring-breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.env-breakdown-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.env-breakdown-row:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateX(2px);
+}
+
+.env-breakdown-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.env-breakdown-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.env-breakdown-dot.inside {
+  background: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.env-breakdown-dot.near {
+  background: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+}
+
+.env-breakdown-dot.outside {
+  background: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.env-breakdown-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.env-breakdown-title {
+  font-size: 0.76rem;
+  font-weight: 750;
+  color: #0f172a;
+}
+
+.env-breakdown-sub {
   font-size: 0.65rem;
   color: #64748b;
-  line-height: 1.3;
 }
 
-.sus-disclaimer-note {
-  font-size: 0.7rem;
-  font-style: italic;
+.env-breakdown-stat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.env-breakdown-val {
+  font-size: 0.92rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.env-breakdown-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  min-width: 44px;
+  text-align: center;
+}
+
+.env-breakdown-badge.inside {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.env-breakdown-badge.near {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.env-breakdown-badge.outside {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* --------------------------------------------------------------------------
+   3. Lower Section: Horizontal Bar Chart
+   -------------------------------------------------------------------------- */
+.env-lower-section {
+  width: 100%;
+}
+
+.env-barchart-card {
+  width: 100%;
+}
+
+.env-bar-controls-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.env-segmented-toggle {
+  display: flex;
+  background: #f1f5f9;
+  padding: 3px;
+  border-radius: 6px;
+  gap: 2px;
+}
+
+.env-seg-btn {
+  background: transparent;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.env-seg-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.env-sort-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: #f8fafc url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 10px center;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 5px 28px 5px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0f172a;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.env-sort-select:focus {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.15);
+}
+
+.env-bar-legend-strip {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  border: 1px solid #f1f5f9;
+}
+
+.env-bar-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: #334155;
+}
+
+.env-legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.env-legend-color.land {
+  background: #10b981;
+}
+
+.env-legend-color.marine {
+  background: #0284c7;
+}
+
+.env-legend-sub {
   color: #94a3b8;
-  border-top: 1px solid #e2e8f0;
-  padding-top: 8px;
+  font-size: 0.68rem;
 }
 
-/* Responsive */
+/* Horizontal Bar List */
+.env-bars-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+}
+
+.env-bar-row {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) 95px;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.env-bar-row:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateX(2px);
+}
+
+.env-bar-row.selected {
+  background: #f0fdf4;
+  border-color: #10b981;
+  box-shadow: 0 0 0 1px #10b981;
+}
+
+.env-bar-state-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.env-state-code-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 3px 6px;
+  border-radius: 4px;
+  min-width: 32px;
+  text-align: center;
+}
+
+.env-state-name-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.env-bar-state-name {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.env-bar-state-total {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.env-bar-track-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.env-bar-channel {
+  position: relative;
+  height: 14px;
+  background: #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.env-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.env-bar-fill.land {
+  background: linear-gradient(90deg, #34d399 0%, #10b981 100%);
+}
+
+.env-bar-fill.marine {
+  background: linear-gradient(90deg, #38bdf8 0%, #0284c7 100%);
+}
+
+.env-bar-val-text {
+  position: absolute;
+  left: 8px;
+  font-size: 0.63rem;
+  font-weight: 800;
+  color: #0f172a;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+}
+
+.env-bar-total-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.env-bar-total-badge strong {
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.env-badge-pct {
+  font-size: 0.66rem;
+  font-weight: 750;
+  color: #ef4444;
+}
+
+/* --------------------------------------------------------------------------
+   Floating Tooltip (Light Theme / White Background)
+   -------------------------------------------------------------------------- */
+.env-floating-tooltip {
+  position: fixed;
+  pointer-events: none;
+  z-index: 5000;
+  background: #ffffff;
+  color: #0f172a;
+  padding: 12px 15px;
+  border-radius: 8px;
+  font-size: 0.73rem;
+  line-height: 1.45;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+  max-width: 300px;
+}
+
+.env-tooltip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 6px;
+  margin-bottom: 7px;
+  font-size: 0.8rem;
+  color: #0f172a;
+}
+
+.env-tooltip-rate {
+  font-size: 0.68rem;
+  font-weight: 800;
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  border: 1px solid #fecaca;
+}
+
+.env-tooltip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  color: #334155;
+}
+
+.env-tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.env-tooltip-row strong {
+  color: #0f172a;
+}
+
+.env-tooltip-footer {
+  font-size: 0.68rem;
+  color: #64748b;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 6px;
+  margin-top: 6px;
+  line-height: 1.35;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Breakpoints
+   -------------------------------------------------------------------------- */
 @media (max-width: 1200px) {
-  .sus-hero-grid,
-  .sus-lower-grid {
+  .env-kpi-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .env-upper-grid {
     grid-template-columns: 1fr;
   }
-  .sus-weights-grid {
-    grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 768px) {
+  .env-kpi-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .env-bar-row {
+    grid-template-columns: 130px minmax(0, 1fr) 75px;
   }
 }
