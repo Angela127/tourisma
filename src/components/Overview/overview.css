@@ -1,0 +1,899 @@
+/* ==========================================================================
+   Tourisma Overview Page Stylesheet - Complete Executive Layout
+   ========================================================================== */
+
+.overview-page-layout {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 96px);
+  min-height: 560px;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 16px 4px 16px;
+  box-sizing: border-box;
+  color: #0f172a;
+}
+
+/* --------------------------------------------------------------------------
+   Upper Section: 3-Column Grid (Left KPIs, Center Map, Right Gauges)
+   -------------------------------------------------------------------------- */
+.overview-upper-3col-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(420px, 2.25fr) minmax(260px, 1.15fr);
+  gap: 10px;
+  width: 100%;
+  flex: 1.35;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+/* 1. Left Column: Vertical KPI Cards Stack */
+.left-kpi-column-stack {
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  gap: 8px;
+  height: 100%;
+  min-height: 0;
+}
+
+.vertical-kpi-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+  min-width: 0;
+  height: 100%;
+}
+
+.vertical-kpi-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(11, 87, 208, 0.08);
+}
+
+.kpi-card-left-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.kpi-icon-bubble {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #eff6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kpi-data-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.kpi-title-label {
+  font-size: 0.64rem;
+  font-weight: 800;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.kpi-main-val {
+  font-size: 1.15rem;
+  font-weight: 850;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.kpi-trend-note {
+  display: flex;
+  align-items: center;
+  font-size: 0.64rem;
+  white-space: nowrap;
+}
+
+.trend-green-text {
+  font-weight: 750;
+  color: #16a34a;
+}
+
+.kpi-sparkline-box {
+  width: 72px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+/* 2. Center Column: Malaysia Readiness Map Card */
+.malaysia-map-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px 8px 14px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  justify-content: space-between;
+}
+
+.map-card-header-clean {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+  gap: 8px;
+}
+
+.map-title-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.map-main-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.map-sub-title {
+  font-size: 0.68rem;
+  color: #64748b;
+}
+
+.map-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.map-mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  background: #f1f5f9;
+  padding: 2.5px;
+  border-radius: 7px;
+  gap: 2px;
+  border: 1px solid #e2e8f0;
+}
+
+.map-mode-btn {
+  padding: 3.5px 12px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  line-height: 1.25;
+}
+
+.map-mode-btn:hover {
+  color: #0f172a;
+}
+
+.map-mode-btn.active {
+  background: #ffffff;
+  color: #0b57d0;
+  font-weight: 750;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+}
+
+.map-compass-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-stage-container {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 0;
+  justify-content: space-between;
+}
+
+.svg-map-wrapper {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.main-malaysia-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.map-floating-tooltip {
+  position: absolute;
+  z-index: 50;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px 14px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.12);
+  pointer-events: none;
+  min-width: 220px;
+  box-sizing: border-box;
+}
+
+.map-tooltip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.map-tooltip-title {
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: #0f172a;
+}
+
+.map-tooltip-quadrant {
+  font-size: 0.63rem;
+  font-weight: 600;
+  color: #64748b;
+  text-align: right;
+}
+
+.map-tooltip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.map-tooltip-metric-row {
+  font-size: 0.72rem;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.map-tooltip-metric-row strong {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.map-tooltip-footer {
+  font-size: 0.66rem;
+  color: #0b57d0;
+  font-weight: 700;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 6px;
+  margin-top: 4px;
+}
+
+/* Map Legend Step Bar */
+.map-legend-step-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.68rem;
+  color: #64748b;
+  margin-top: 6px;
+  padding-bottom: 2px;
+}
+
+.legend-label-readiness {
+  font-weight: 700;
+  color: #475569;
+}
+
+.legend-scale-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-step-blocks {
+  display: flex;
+  gap: 3px;
+}
+
+.step-block {
+  width: 16px;
+  height: 8px;
+  border-radius: 2px;
+}
+
+.legend-scale-text {
+  font-size: 0.64rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+/* 3. Right Column: GDP & Employment Gauges Stack */
+.right-gauge-column-stack {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  gap: 8px;
+  height: 100%;
+  min-height: 0;
+}
+
+.economic-gauge-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  justify-content: space-between;
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 0;
+}
+
+.gauge-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-bottom: 2px;
+}
+
+.gauge-card-title {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.gauge-card-subtitle {
+  font-size: 0.64rem;
+  color: #64748b;
+}
+
+.gauge-card-body-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex: 1;
+}
+
+.gauge-visual-box {
+  flex-shrink: 0;
+}
+
+.gauge-metrics-side {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.gauge-metric-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.gauge-metric-label {
+  font-size: 0.62rem;
+  color: #64748b;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.gauge-metric-val {
+  font-size: 0.92rem;
+  font-weight: 850;
+  color: #0f172a;
+}
+
+.gauge-metric-sub {
+  font-size: 0.58rem;
+  color: #94a3b8;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Lower Section: 3-Column Grid (Receipts, Profiles, Pressure)
+   -------------------------------------------------------------------------- */
+.overview-lower-3col-grid,
+.overview-lower-4col-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.bottom-insight-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  min-width: 0;
+  justify-content: space-between;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.bottom-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-bottom: 6px;
+}
+
+.bottom-card-header.flex-between {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.bottom-card-title {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.bottom-card-subtitle {
+  font-size: 0.66rem;
+  color: #64748b;
+}
+
+.bottom-card-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  flex: 1;
+  gap: 6px;
+  min-height: 0;
+}
+
+/* Receipts Bars */
+.receipts-bar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.receipts-label-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.7rem;
+}
+
+.state-name-text {
+  font-weight: 700;
+  color: #334155;
+}
+
+.state-receipt-val {
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.receipts-track {
+  width: 100%;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.receipts-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+.receipts-fill.primary {
+  background: #0b57d0;
+}
+
+.receipts-fill.secondary {
+  background: #93c5fd;
+}
+
+/* Destination Readiness Profiles */
+.profile-cluster-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.profile-header-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 0.65rem;
+}
+
+.profile-cluster-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: #334155;
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.cluster-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cluster-dot.high-demand-high-cap { background: #10b981; }
+.cluster-dot.high-demand-low-cap { background: #0b57d0; }
+.cluster-dot.low-demand-high-pot { background: #f59e0b; }
+.cluster-dot.low-demand-low-read { background: #8b5cf6; }
+
+.profile-cluster-pct {
+  font-weight: 800;
+  color: #0f172a;
+  flex-shrink: 0;
+  font-size: 0.68rem;
+}
+
+.profile-track {
+  width: 100%;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.profile-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+.profile-fill.high-demand-high-cap { background: #10b981; }
+.profile-fill.high-demand-low-cap { background: #0b57d0; }
+.profile-fill.low-demand-high-pot { background: #f59e0b; }
+.profile-fill.low-demand-low-read { background: #8b5cf6; }
+
+/* Tourism Pressure Chart */
+.pressure-header-left {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pressure-header-left .bottom-card-subtitle {
+  white-space: nowrap;
+}
+
+.pressure-chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.legend-item-solid {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #0b57d0;
+}
+
+.solid-line-icon {
+  width: 12px;
+  height: 2.5px;
+  background: #0b57d0;
+  border-radius: 1px;
+}
+
+.legend-item-dashed {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #93c5fd;
+}
+
+.dashed-line-icon {
+  width: 12px;
+  height: 2.5px;
+  border-top: 2.5px dashed #93c5fd;
+}
+
+.pressure-chart-wrapper {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.pressure-chart-tooltip {
+  display: none;
+  position: absolute;
+  z-index: 50;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 10px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.14);
+  pointer-events: none;
+  white-space: nowrap;
+  min-width: 140px;
+  box-sizing: border-box;
+  transition: opacity 0.12s ease;
+}
+
+/* Growth Scenario Card */
+.scenario-toggle-strip {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.scenario-pill-btn {
+  flex: 1;
+  padding: 3px 6px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.68rem;
+  font-weight: 750;
+  background: #f8fafc;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.scenario-pill-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.scenario-pill-btn.active {
+  background: #0b57d0;
+  color: #ffffff;
+  border-color: #0b57d0;
+  box-shadow: 0 2px 6px rgba(11, 87, 208, 0.25);
+}
+
+.scenario-bars-stage {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  align-items: flex-end;
+  flex: 1;
+  min-height: 0;
+}
+
+.scenario-bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bar-value-label {
+  font-size: 0.66rem;
+  font-weight: 750;
+  color: #64748b;
+}
+
+.bar-value-label.highlight {
+  color: #0b57d0;
+  font-weight: 850;
+}
+
+.scenario-bar-track {
+  width: 100%;
+  max-width: 32px;
+  height: 65px;
+  display: flex;
+  align-items: flex-end;
+  background: #f8fafc;
+  border-radius: 4px 4px 0 0;
+}
+
+.scenario-bar-fill {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.3s ease, background-color 0.2s ease;
+}
+
+.scenario-bar-fill.baseline {
+  background: #dbeafe;
+}
+
+.scenario-bar-fill.subtle {
+  background: #bfdbfe;
+}
+
+.scenario-bar-fill.active {
+  background: #0b57d0;
+}
+
+.bar-name-label {
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+/* Footer Notice */
+.overview-data-as-of-footer {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.66rem;
+  color: #64748b;
+  padding: 0 4px;
+}
+
+/* ==========================================================================
+   Dark Mode Styles for Overview Page
+   ========================================================================== */
+[data-theme="dark"] .vertical-kpi-card,
+[data-theme="dark"] .malaysia-map-card,
+[data-theme="dark"] .economic-gauge-card,
+[data-theme="dark"] .bottom-insight-card {
+  background: #131b2e;
+  border-color: #1e293b;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .kpi-icon-bubble {
+  background: #1e293b;
+}
+
+[data-theme="dark"] .kpi-title-label,
+[data-theme="dark"] .map-sub-title,
+[data-theme="dark"] .gauge-card-subtitle,
+[data-theme="dark"] .bottom-card-subtitle,
+[data-theme="dark"] .legend-scale-text,
+[data-theme="dark"] .gauge-metric-label,
+[data-theme="dark"] .bar-name-label,
+[data-theme="dark"] .overview-data-as-of-footer {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .kpi-main-val,
+[data-theme="dark"] .map-main-title,
+[data-theme="dark"] .gauge-card-title,
+[data-theme="dark"] .bottom-card-title,
+[data-theme="dark"] .gauge-metric-val,
+[data-theme="dark"] .state-receipt-val,
+[data-theme="dark"] .profile-cluster-pct {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .state-name-text,
+[data-theme="dark"] .profile-cluster-title,
+[data-theme="dark"] .legend-label-readiness,
+[data-theme="dark"] .pressure-chart-legend {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .receipts-track,
+[data-theme="dark"] .profile-track,
+[data-theme="dark"] .scenario-bar-track {
+  background: #1e293b;
+}
+
+[data-theme="dark"] .scenario-pill-btn {
+  background: #1a243b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .scenario-pill-btn.active {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #3b82f6;
+}
+
+[data-theme="dark"] .map-mode-toggle {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .map-mode-btn {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .map-mode-btn:hover {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .map-mode-btn.active {
+  background: #0f172a;
+  color: #60a5fa;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .map-floating-tooltip,
+[data-theme="dark"] .pressure-chart-tooltip {
+  background: #131b2e;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .map-state-label-text {
+  fill: #f8fafc !important;
+  stroke: #090d16 !important;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1200px) {
+  .overview-page-layout {
+    height: auto;
+    min-height: 0;
+  }
+  .overview-upper-3col-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .overview-lower-3col-grid,
+  .overview-lower-4col-grid {
+    grid-template-columns: repeat(2, 1fr);
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .overview-lower-3col-grid,
+  .overview-lower-4col-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}
+

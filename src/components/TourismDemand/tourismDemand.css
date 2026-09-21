@@ -1,0 +1,648 @@
+/* ==========================================================================
+   Tourisma Tourism Demand Page Stylesheet
+   Where demand is coming from, when it arrives, and where it is heading.
+   ========================================================================== */
+
+.tourism-demand-page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 20px 20px 40px 20px;
+  max-width: 1380px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  color: #0f172a;
+}
+
+/* Page Section Container */
+.demand-section-block {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.demand-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 10px;
+}
+
+.demand-section-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.demand-section-title {
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.demand-section-subtitle {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   Section 1: Composition (Stacked Area & Top 15 Source Markets)
+   -------------------------------------------------------------------------- */
+.composition-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 16px;
+}
+
+.demand-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.demand-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.demand-card-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.demand-card-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.demand-card-desc {
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+/* Composition Chart Area */
+.composition-chart-stage {
+  width: 100%;
+  height: 270px;
+  position: relative;
+}
+
+.stacked-area-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.chart-legend-horizontal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.legend-item-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+}
+.legend-dot.domestic { background-color: #38bdf8; }
+.legend-dot.international { background-color: #0b57d0; }
+
+/* Top 15 Source Markets Card */
+.source-markets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.source-market-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.76rem;
+  padding: 3px 6px;
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+}
+
+.source-market-row:hover {
+  background-color: #f8fafc;
+}
+
+.source-rank {
+  font-weight: 700;
+  color: #94a3b8;
+  width: 18px;
+  font-size: 0.7rem;
+}
+
+.source-flag {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.source-name {
+  font-weight: 600;
+  color: #1e293b;
+  width: 125px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.source-bar-wrapper {
+  flex: 1;
+  height: 7px;
+  background-color: #f1f5f9;
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.source-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.35s ease;
+}
+
+.source-bar-fill.volume-mode {
+  background: linear-gradient(90deg, #60a5fa, #0b57d0);
+}
+
+.source-bar-fill.yield-mode {
+  background: linear-gradient(90deg, #38bdf8, #0284c7);
+}
+
+.source-value {
+  font-weight: 800;
+  color: #0b57d0;
+  min-width: 68px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.76rem;
+}
+
+.contrast-callout-strip {
+  margin-top: 10px;
+  padding: 7px 10px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  color: #0369a1;
+  line-height: 1.35;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   Section 2: Seasonality (16x12 Matrix & Concentration List)
+   -------------------------------------------------------------------------- */
+.seasonality-grid {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 16px;
+}
+
+.heatmap-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.heatmap-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 2px;
+  font-size: 0.72rem;
+}
+
+.heatmap-th {
+  font-weight: 700;
+  color: #64748b;
+  text-align: center;
+  padding: 4px 2px;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+.heatmap-th.state-th {
+  text-align: left;
+  padding-left: 6px;
+  width: 110px;
+}
+
+.heatmap-state-label {
+  font-weight: 700;
+  color: #1e293b;
+  padding: 4px 6px;
+  white-space: nowrap;
+  font-size: 0.72rem;
+}
+
+.heatmap-cell {
+  text-align: center;
+  padding: 6px 2px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, outline 0.15s ease;
+  user-select: none;
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.15);
+  outline: 2px solid #0f172a;
+  z-index: 10;
+  position: relative;
+}
+
+.heatmap-scale-bar-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+  font-size: 0.68rem;
+  color: #64748b;
+}
+
+.heatmap-scale-bar {
+  display: flex;
+  height: 8px;
+  width: 180px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+}
+
+/* Concentration Ranked List */
+.concentration-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.concentration-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  background-color: #fafbfc;
+  border: 1px solid #f1f5f9;
+}
+
+.concentration-name {
+  font-weight: 700;
+  color: #1e293b;
+  width: 110px;
+  font-size: 0.74rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.concentration-bar-track {
+  flex: 1;
+  height: 6px;
+  background-color: #e2e8f0;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.concentration-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #60a5fa, #0b57d0);
+}
+
+.concentration-ratio-val {
+  font-weight: 800;
+  color: #0b57d0;
+  font-size: 0.78rem;
+  min-width: 42px;
+  text-align: right;
+}
+
+.concentration-policy-note {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background-color: #f8fafc;
+  border-left: 3px solid #0b57d0;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: #334155;
+}
+
+/* --------------------------------------------------------------------------
+   Section 3: Forecast (Line Chart & Model Card)
+   -------------------------------------------------------------------------- */
+.forecast-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.forecast-controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.forecast-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.forecast-select {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #0f172a;
+  background-color: #ffffff;
+  cursor: pointer;
+  outline: none;
+}
+
+.forecast-chart-container {
+  width: 100%;
+  height: 270px;
+  position: relative;
+}
+
+.forecast-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.modelled-tag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  background-color: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+/* Model Card */
+.model-card-box {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.model-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 6px;
+}
+
+.model-card-title {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.model-card-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.model-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.model-meta-label {
+  font-size: 0.66rem;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.model-meta-val {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.model-limitations-row {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.limitations-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+}
+
+.limitations-text {
+  font-size: 0.72rem;
+  color: #64748b;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Section 4: Trip Characteristics (3 Equal Cards)
+   -------------------------------------------------------------------------- */
+.trip-characteristics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.trip-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.trip-list-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.74rem;
+  padding: 3px 4px;
+}
+
+.trip-state-name {
+  font-weight: 600;
+  color: #1e293b;
+  width: 95px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trip-bar-track {
+  flex: 1;
+  height: 6px;
+  background-color: #f1f5f9;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.trip-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #38bdf8, #0b57d0);
+}
+
+.trip-val-text {
+  font-weight: 800;
+  color: #0b57d0;
+  min-width: 60px;
+  text-align: right;
+  font-size: 0.74rem;
+}
+
+/* Purpose Split Breakdown */
+.purpose-split-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.purpose-stacked-strip {
+  display: flex;
+  height: 14px;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.purpose-strip-seg {
+  height: 100%;
+  transition: opacity 0.15s ease;
+}
+
+.purpose-strip-seg:hover {
+  opacity: 0.85;
+}
+
+.purpose-items-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.purpose-item-detail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background-color: #fafbfc;
+  border-radius: 6px;
+  border: 1px solid #f1f5f9;
+}
+
+.purpose-info-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.purpose-color-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.purpose-label-title {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.purpose-pct-val {
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1200px) {
+  .composition-grid,
+  .seasonality-grid {
+    grid-template-columns: 1fr;
+  }
+  .trip-characteristics-grid {
+    grid-template-columns: 1fr;
+  }
+  .model-card-meta-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

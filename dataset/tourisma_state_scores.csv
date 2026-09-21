@@ -1,0 +1,17 @@
+state,reference_year,domestic_visitors_score,international_hotel_guests_score,receipts_score,demand_score,demand_category,accommodation_capacity_score,core_asset_density_score,supporting_asset_density_score,road_access_score,pt_access_score,readiness_score,readiness_category,quadrant,average_length_of_stay
+W.P. Kuala Lumpur,2025,96.32,100.0,100.0,98.77,Above Median Demand,100.0,100.0,100.0,98.98,99.53,99.7,Above Relative Readiness,Above Median Demand / Above Relative Readiness,2.33
+Selangor,2025,100.0,26.96,93.08,73.35,Above Median Demand,53.44,5.95,5.07,35.55,39.3,27.86,Above Relative Readiness,Above Median Demand / Above Relative Readiness,2.31
+Pahang,2025,63.06,22.02,57.29,47.46,Above Median Demand,52.55,0.9,0.12,15.64,20.32,17.91,Below Relative Readiness,Above Median Demand / Below Relative Readiness,2.21
+Sabah,2025,60.82,21.62,56.72,46.39,Above Median Demand,41.16,0.22,0.0,31.6,26.09,19.81,Above Relative Readiness,Above Median Demand / Above Relative Readiness,3.15
+Sarawak,2025,61.83,9.08,53.0,41.3,Above Median Demand,42.29,0.0,0.02,29.82,17.17,17.86,Below Relative Readiness,Above Median Demand / Below Relative Readiness,3.1
+Johor,2025,49.18,24.24,50.49,41.3,Above Median Demand,55.3,1.48,1.0,28.7,35.9,24.48,Above Relative Readiness,Above Median Demand / Above Relative Readiness,2.68
+Pulau Pinang,2025,47.84,25.9,49.08,40.94,Above Median Demand,40.34,35.87,15.36,65.26,76.53,46.67,Above Relative Readiness,Above Median Demand / Above Relative Readiness,2.65
+Melaka,2025,56.55,12.31,50.54,39.8,Above Median Demand,29.88,74.01,3.06,100.0,94.85,60.36,Above Relative Readiness,Above Median Demand / Above Relative Readiness,2.11
+Perak,2025,64.4,7.0,46.22,39.21,Below Median Demand,28.5,1.56,0.41,36.81,24.34,18.32,Above Relative Readiness,Below Median Demand / Above Relative Readiness,2.44
+Negeri Sembilan,2025,52.42,3.65,37.21,31.09,Below Median Demand,14.99,2.19,0.6,37.88,33.43,17.82,Below Relative Readiness,Below Median Demand / Below Relative Readiness,2.29
+Kedah,2025,41.94,15.71,31.11,29.59,Below Median Demand,27.38,3.19,0.82,26.23,10.0,13.52,Below Relative Readiness,Below Median Demand / Below Relative Readiness,2.82
+Terengganu,2025,41.53,2.01,32.77,25.44,Below Median Demand,15.53,1.73,0.21,8.19,15.84,8.3,Below Relative Readiness,Below Median Demand / Below Relative Readiness,2.76
+Kelantan,2025,32.03,0.38,29.4,20.6,Below Median Demand,7.8,1.04,0.23,15.39,10.21,6.93,Below Relative Readiness,Below Median Demand / Below Relative Readiness,2.98
+W.P. Putrajaya,2025,7.11,1.6,5.18,4.63,Below Median Demand,1.75,24.4,18.37,93.03,100.0,47.51,Above Relative Readiness,Below Median Demand / Above Relative Readiness,2.5
+Perlis,2025,8.81,0.0,5.03,4.61,Below Median Demand,0.0,1.46,0.58,31.23,25.0,11.65,Below Relative Readiness,Below Median Demand / Below Relative Readiness,2.25
+W.P. Labuan,2025,0.0,0.35,0.0,0.12,Below Median Demand,1.29,39.34,2.96,0.0,0.0,8.72,Below Relative Readiness,Below Median Demand / Below Relative Readiness,2.51

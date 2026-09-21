@@ -2,12 +2,30 @@
   --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --bg-app: #f8fafc;
   --bg-sidebar: #ffffff;
+  --bg-card: #ffffff;
+  --bg-input: #ffffff;
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #64748b;
   --primary-blue: #0b57d0;
   --primary-blue-hover: #1d4ed8;
   --border-subtle: #eef2f6;
+  --border-card: #e2e8f0;
+}
+
+[data-theme="dark"],
+body.dark-theme {
+  --bg-app: #090d16;
+  --bg-sidebar: #0d1322;
+  --bg-card: #131b2e;
+  --bg-input: #1a243b;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --primary-blue: #3b82f6;
+  --primary-blue-hover: #60a5fa;
+  --border-subtle: #1e293b;
+  --border-card: #1e293b;
 }
 
 *,
@@ -29,6 +47,7 @@ body {
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 #app {
@@ -36,6 +55,7 @@ body {
   height: 100%;
   display: flex;
   overflow: hidden;
+  background-color: var(--bg-app);
 }
 
 /* App Layout */
@@ -43,9 +63,10 @@ body {
   display: flex;
   width: 100%;
   height: 100%;
+  background-color: var(--bg-app);
 }
 
-/* Content Area Wrapper: Header on top, Page body below */
+/* Content Area Wrapper */
 .content-wrapper {
   flex: 1;
   display: flex;
@@ -55,9 +76,225 @@ body {
   background-color: var(--bg-app);
 }
 
-/* Main Content Area - Intentionally Left Blank */
+/* Main Content Area */
 .main-content {
   flex: 1;
   background-color: var(--bg-app);
   overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* ==========================================================================
+   Comprehensive Executive Dark Theme System
+   ========================================================================== */
+[data-theme="dark"] .sidebar-container {
+  background-color: var(--bg-sidebar);
+  border-right-color: var(--border-subtle);
+}
+
+[data-theme="dark"] .sidebar-brand-name {
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .nav-item {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .nav-item:hover {
+  background-color: #1e293b;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .nav-item.active {
+  background-color: #1d4ed8;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .header-container {
+  background-color: var(--bg-sidebar);
+  border-bottom-color: var(--border-subtle);
+}
+
+[data-theme="dark"] .header-main-title {
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .header-subtitle {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .header-menu-btn,
+[data-theme="dark"] .header-action-btn {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .header-action-btn:hover {
+  background-color: #334155;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .footer-container {
+  background-color: var(--bg-sidebar);
+  border-top-color: var(--border-subtle);
+  color: #64748b;
+}
+
+/* Cards & Surfaces */
+[data-theme="dark"] .set-card,
+[data-theme="dark"] .rep-card,
+[data-theme="dark"] .ds-card,
+[data-theme="dark"] .infra-card,
+[data-theme="dark"] .sus-card,
+[data-theme="dark"] .overview-kpi-card,
+[data-theme="dark"] .destination-card,
+[data-theme="dark"] .cluster-scatter-card,
+[data-theme="dark"] .model-spec-card {
+  background-color: var(--bg-card);
+  border-color: var(--border-card);
+  color: var(--text-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .set-card-title,
+[data-theme="dark"] .rep-card-title,
+[data-theme="dark"] .ds-card-title,
+[data-theme="dark"] .infra-card-title,
+[data-theme="dark"] .sus-card-title,
+[data-theme="dark"] .set-section-title,
+[data-theme="dark"] .rep-section-title,
+[data-theme="dark"] .ds-section-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .set-card-desc,
+[data-theme="dark"] .rep-card-desc,
+[data-theme="dark"] .ds-card-desc,
+[data-theme="dark"] .infra-card-desc,
+[data-theme="dark"] .sus-card-desc,
+[data-theme="dark"] .set-section-subtitle,
+[data-theme="dark"] .rep-section-subtitle,
+[data-theme="dark"] .ds-section-subtitle {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .set-card-header,
+[data-theme="dark"] .rep-card-header,
+[data-theme="dark"] .ds-card-header,
+[data-theme="dark"] .infra-card-header,
+[data-theme="dark"] .sus-card-header,
+[data-theme="dark"] .set-section-header,
+[data-theme="dark"] .rep-section-header,
+[data-theme="dark"] .ds-section-header {
+  border-bottom-color: #1e293b;
+}
+
+/* Tables in Dark Mode */
+[data-theme="dark"] table th {
+  background-color: #1a243b !important;
+  color: #94a3b8 !important;
+  border-bottom-color: #334155 !important;
+}
+
+[data-theme="dark"] table td {
+  color: #cbd5e1 !important;
+  border-bottom-color: #1e293b !important;
+}
+
+[data-theme="dark"] .registry-row-clickable:hover,
+[data-theme="dark"] .thresholds-table tr:hover,
+[data-theme="dark"] .prev-reports-table tr:hover {
+  background-color: #1a243b !important;
+}
+
+[data-theme="dark"] .registry-expanded-row {
+  background-color: #0f172a !important;
+}
+
+/* Form Controls & Inputs in Dark Mode */
+[data-theme="dark"] .threshold-input-control,
+[data-theme="dark"] .form-select-control,
+[data-theme="dark"] .form-input-control {
+  background-color: #1a243b;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .threshold-input-control:focus,
+[data-theme="dark"] .form-select-control:focus,
+[data-theme="dark"] .form-input-control:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.25);
+}
+
+/* Buttons and Toggle Chips */
+[data-theme="dark"] .display-toggle-btn,
+[data-theme="dark"] .report-action-btn,
+[data-theme="dark"] .infra-toggle-btn {
+  background-color: #1a243b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .display-toggle-btn:hover,
+[data-theme="dark"] .report-action-btn:hover,
+[data-theme="dark"] .infra-toggle-btn:hover {
+  background-color: #24304d;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .display-toggle-btn.active,
+[data-theme="dark"] .infra-toggle-btn.active {
+  background-color: #1d4ed8;
+  border-color: #3b82f6;
+  color: #ffffff;
+}
+
+/* Settings Specific Cards */
+[data-theme="dark"] .threshold-impact-text {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .display-field-label {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .weight-label-text {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .endpoint-item {
+  background-color: #1a243b;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .endpoint-name {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .about-spec-item {
+  background-color: #1a243b;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .about-spec-label {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .about-spec-value {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .about-attribution-box {
+  background-color: #0f172a;
+  border-left-color: #3b82f6;
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .weights-warning-banner {
+  background-color: #451a03;
+  border-color: #78350f;
+  color: #fde68a;
 }

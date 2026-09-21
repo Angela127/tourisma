@@ -1,0 +1,448 @@
+/* ==========================================================================
+   Tourisma Sustainability Page Stylesheet
+   Where is tourism growth creating pressure?
+   ========================================================================== */
+
+.sustainability-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px 18px 48px 18px;
+  width: 100%;
+  box-sizing: border-box;
+  color: #0f172a;
+}
+
+.sus-section-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.sus-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 8px;
+}
+
+.sus-section-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sus-section-title {
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.sus-section-subtitle {
+  font-size: 0.76rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   Hero Section: Map & Pressure Signals (2 Columns)
+   -------------------------------------------------------------------------- */
+.sus-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
+  gap: 14px;
+  width: 100%;
+}
+
+.sus-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.sus-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sus-card-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sus-card-title {
+  font-size: 0.94rem;
+  font-weight: 750;
+  color: #0f172a;
+  margin: 0;
+}
+
+.sus-card-desc {
+  font-size: 0.74rem;
+  color: #64748b;
+}
+
+/* Pressure Dimension Segmented Control */
+.pressure-dim-controls {
+  display: flex;
+  background: #f1f5f9;
+  padding: 3px;
+  border-radius: 8px;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+.pressure-dim-btn {
+  padding: 4px 10px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.pressure-dim-btn:hover {
+  color: #0f172a;
+}
+
+.pressure-dim-btn.active {
+  background: #ffffff;
+  color: #0b57d0;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Map Canvas */
+.sus-map-canvas-wrap {
+  width: 100%;
+  height: 380px;
+  position: relative;
+}
+
+.sus-map-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.sus-map-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.sus-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.sus-legend-box {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+.sus-legend-box.headroom { background-color: #10b981; }
+.sus-legend-box.strain { background-color: #f59e0b; }
+.sus-legend-box.critical { background-color: #dc2626; }
+
+/* Right Rail: Pressure Signals List */
+.signals-list-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 460px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+  min-width: 0;
+}
+
+.signal-accordion-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #ffffff;
+  overflow: hidden;
+  transition: all 0.15s ease;
+  min-width: 0;
+  flex-shrink: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.signal-accordion-card.critical {
+  border-left: 3px solid #dc2626;
+}
+
+.signal-accordion-card.strain {
+  border-left: 3px solid #f59e0b;
+}
+
+.signal-accordion-header {
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  background: #fafbfc;
+  box-sizing: border-box;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.signal-accordion-header:hover {
+  background: #f1f5f9;
+}
+
+.signal-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.signal-state-title {
+  font-size: 0.8rem;
+  font-weight: 750;
+  color: #0f172a;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.signal-dim-badge {
+  font-size: 0.67rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
+  line-height: 1.2;
+}
+
+.signal-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.signal-val-tag {
+  font-size: 0.74rem;
+  font-weight: 800;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.signal-val-tag.critical { color: #dc2626; }
+.signal-val-tag.strain { color: #d97706; }
+
+.signal-trend-pill {
+  font-size: 0.67rem;
+  font-weight: 800;
+  padding: 3px 6px;
+  border-radius: 4px;
+  background: #f1f5f9;
+  white-space: nowrap;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+}
+
+.signal-accordion-body {
+  padding: 12px 14px;
+  font-size: 0.72rem;
+  color: #334155;
+  line-height: 1.45;
+  border-top: 1px solid #f1f5f9;
+  background: #ffffff;
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Middle Band: Radar Comparison Chart
+   -------------------------------------------------------------------------- */
+.sus-middle-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+}
+
+.radar-controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.radar-state-selectors {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.radar-select {
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #0f172a;
+  background: #ffffff;
+  outline: none;
+}
+
+.sus-radar-stage {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   Lower Band: Scatter Plot & Trajectory Multi-Line (2 Columns)
+   -------------------------------------------------------------------------- */
+.sus-lower-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.sus-scatter-stage,
+.sus-trajectory-stage {
+  width: 100%;
+  height: 320px;
+  position: relative;
+}
+
+/* --------------------------------------------------------------------------
+   Collapsible Methodology Note (Open by default)
+   -------------------------------------------------------------------------- */
+.sus-methodology-panel {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.sus-methodology-header {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  background: #f1f5f9;
+  user-select: none;
+}
+
+.sus-methodology-title {
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sus-methodology-content {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.sus-methodology-desc {
+  font-size: 0.76rem;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.sus-weights-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.sus-weight-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sus-weight-pct {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0b57d0;
+}
+
+.sus-weight-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.sus-weight-sub {
+  font-size: 0.65rem;
+  color: #64748b;
+  line-height: 1.3;
+}
+
+.sus-disclaimer-note {
+  font-size: 0.7rem;
+  font-style: italic;
+  color: #94a3b8;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 8px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .sus-hero-grid,
+  .sus-lower-grid {
+    grid-template-columns: 1fr;
+  }
+  .sus-weights-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
