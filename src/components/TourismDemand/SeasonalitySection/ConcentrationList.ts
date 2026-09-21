@@ -24,22 +24,36 @@ export class ConcentrationList {
     const sortedData = [...STATE_SEASONALITY_DATA].sort(
       (a, b) => b.peakToTroughRatio - a.peakToTroughRatio
     );
-    const maxRatio = sortedData[0].peakToTroughRatio; // ~3.15x
 
-    list.innerHTML = sortedData
-      .map((item) => {
-        const pct = ((item.peakToTroughRatio / maxRatio) * 100).toFixed(1);
-        return `
-          <div class="concentration-row" title="${item.stateName}: Peak ${item.peakMonth} vs Trough ${item.troughMonth}">
-            <span class="concentration-name">${item.stateName}</span>
-            <div class="concentration-bar-track">
-              <div class="concentration-bar-fill" style="width: ${pct}%;"></div>
+    if (sortedData.length === 0) {
+      list.innerHTML = `
+        <div class="demand-empty-state">
+          <svg class="demand-empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+          <span class="demand-empty-state-title">No concentration data available</span>
+          <span class="demand-empty-state-desc">State peak-to-trough surge multipliers will appear once data is connected.</span>
+        </div>
+      `;
+    } else {
+      const maxRatio = sortedData[0].peakToTroughRatio;
+
+      list.innerHTML = sortedData
+        .map((item) => {
+          const pct = ((item.peakToTroughRatio / maxRatio) * 100).toFixed(1);
+          return `
+            <div class="concentration-row" title="${item.stateName}: Peak ${item.peakMonth} vs Trough ${item.troughMonth}">
+              <span class="concentration-name">${item.stateName}</span>
+              <div class="concentration-bar-track">
+                <div class="concentration-bar-fill" style="width: ${pct}%;"></div>
+              </div>
+              <span class="concentration-ratio-val">${item.peakToTroughRatio.toFixed(2)}×</span>
             </div>
-            <span class="concentration-ratio-val">${item.peakToTroughRatio.toFixed(2)}×</span>
-          </div>
-        `;
-      })
-      .join('');
+          `;
+        })
+        .join('');
+    }
 
     // Explanatory Policy Callout
     const note = document.createElement('div');

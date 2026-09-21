@@ -646,3 +646,40 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ==========================================================================
+   Empty State Styles
+   ========================================================================== */
+.demand-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 180px;
+  width: 100%;
+  padding: 36px 20px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.demand-empty-state-icon {
+  width: 32px;
+  height: 32px;
+  color: #94a3b8;
+  margin-bottom: 2px;
+}
+
+.demand-empty-state-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.demand-empty-state-desc {
+  font-size: 0.76rem;
+  color: #94a3b8;
+  max-width: 320px;
+  line-height: 1.45;
+}
+

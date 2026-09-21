@@ -63,7 +63,10 @@ export class SourceMarketsChart {
 
     this.element.appendChild(header);
     this.element.appendChild(this.listContainer);
-    this.element.appendChild(callout);
+
+    if (TOP_15_SOURCE_MARKETS.length > 0) {
+      this.element.appendChild(callout);
+    }
 
     this.renderList();
   }
@@ -75,6 +78,21 @@ export class SourceMarketsChart {
         ? b.receiptsPerArrival - a.receiptsPerArrival
         : b.arrivals - a.arrivals;
     });
+
+    if (sortedData.length === 0) {
+      this.listContainer.innerHTML = `
+        <div class="demand-empty-state">
+          <svg class="demand-empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+          <span class="demand-empty-state-title">No source market data available</span>
+          <span class="demand-empty-state-desc">Top international origin markets and yield metrics will appear once data is connected.</span>
+        </div>
+      `;
+      return;
+    }
 
     const maxVal = isYield
       ? Math.max(...sortedData.map((d) => d.receiptsPerArrival))

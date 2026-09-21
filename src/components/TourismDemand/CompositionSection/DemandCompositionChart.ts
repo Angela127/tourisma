@@ -75,6 +75,21 @@ export class DemandCompositionChart {
     const isShare = this.currentMode === 'share';
     const data = COMPOSITION_TIME_SERIES;
 
+    if (!data || data.length === 0) {
+      this.chartStage.innerHTML = `
+        <div class="demand-empty-state">
+          <svg class="demand-empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span class="demand-empty-state-title">No demand composition data available</span>
+          <span class="demand-empty-state-desc">Historical visitor records will appear once data is connected.</span>
+        </div>
+      `;
+      return;
+    }
+
     const width = 640;
     const height = 240;
     const padLeft = 46;
