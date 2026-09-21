@@ -1,8 +1,6 @@
 import './tourismDemand.css';
-import { CompositionSection } from './CompositionSection/CompositionSection';
-import { SeasonalitySection } from './SeasonalitySection/SeasonalitySection';
-import { ForecastSection } from './ForecastSection/ForecastSection';
-import { TripCharacteristicsSection } from './TripCharacteristics/TripCharacteristicsSection';
+import { DemandCompositionChart } from './CompositionSection/DemandCompositionChart';
+import { StateMetricsChart } from './CompositionSection/StateMetricsChart';
 
 export class TourismDemandPage {
   public readonly element: HTMLElement;
@@ -11,20 +9,15 @@ export class TourismDemandPage {
     this.element = document.createElement('div');
     this.element.className = 'tourism-demand-page';
 
-    // 1. Section 1: Demand Composition & Source Markets
-    const compositionSection = new CompositionSection();
-    this.element.appendChild(compositionSection.element);
+    const section = document.createElement('section');
+    section.className = 'demand-section-block';
 
-    // 2. Section 2: Seasonality & Concentration
-    const seasonalitySection = new SeasonalitySection();
-    this.element.appendChild(seasonalitySection.element);
+    const demandChart = new DemandCompositionChart();
+    section.appendChild(demandChart.element);
 
-    // 3. Section 3: Forecast & Model Card
-    const forecastSection = new ForecastSection();
-    this.element.appendChild(forecastSection.element);
+    const stateMetricsChart = new StateMetricsChart();
+    section.appendChild(stateMetricsChart.element);
 
-    // 4. Section 4: Trip Characteristics
-    const tripSection = new TripCharacteristicsSection();
-    this.element.appendChild(tripSection.element);
+    this.element.appendChild(section);
   }
 }
