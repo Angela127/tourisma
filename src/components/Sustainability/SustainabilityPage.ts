@@ -1,100 +1,136 @@
 import './sustainability.css';
-import { PressureMapHero } from './PressureMapHero';
-import { PressureSignalsList } from './PressureSignalsList';
-import { PressureRadarCard } from './PressureRadarCard';
-import { PressureValueScatter } from './PressureValueScatter';
-import { PressureTrajectoryChart } from './PressureTrajectoryChart';
-import { MethodologyPanel } from './MethodologyPanel';
+import { NATIONAL_ENVIRONMENT_DATA } from '../../data/environmentData';
+import { EnvironmentMapCard } from './EnvironmentMapCard';
+import { EnvironmentRingChartCard } from './EnvironmentRingChartCard';
+import { EnvironmentExposureBarChart } from './EnvironmentExposureBarChart';
 import { StateDetailDrawer } from '../Common/StateDetailDrawer';
 
 export class SustainabilityPage {
   public readonly element: HTMLElement;
   private stateDrawer: StateDetailDrawer;
+  private mapCard!: EnvironmentMapCard;
+  private ringCard!: EnvironmentRingChartCard;
+  private barChart!: EnvironmentExposureBarChart;
+  private selectedStateId: string | null = null;
 
   constructor() {
     this.element = document.createElement('div');
-    this.element.className = 'sustainability-page';
+    this.element.className = 'sustainability-page environment-page';
 
     this.stateDrawer = new StateDetailDrawer();
     this.render();
   }
 
   private handleSelectState(stateId: string): void {
-    this.stateDrawer.open(stateId);
+    this.mapCard.hideTooltip();
+    this.barChart.hideTooltip();
+
+    if (this.selectedStateId === stateId) {
+      // Toggle off selection
+      this.selectedStateId = null;
+      this.mapCard.setSelectedState(null);
+      this.ringCard.setScope('all');
+      this.barChart.setSelectedState(null);
+    } else {
+      this.selectedStateId = stateId;
+      this.mapCard.setSelectedState(stateId);
+      this.ringCard.setScope(stateId);
+      this.barChart.setSelectedState(stateId);
+
+      // Open State Drawer for comprehensive drilldown
+      this.stateDrawer.open(stateId);
+    }
+  }
+
+  private handleRingScopeChange(scope: string): void {
+    if (scope === 'all') {
+      this.selectedStateId = null;
+      this.mapCard.setSelectedState(null);
+      this.barChart.setSelectedState(null);
+    } else {
+      this.selectedStateId = scope;
+      this.mapCard.setSelectedState(scope);
+      this.barChart.setSelectedState(scope);
+    }
   }
 
   private render(): void {
     this.element.innerHTML = '';
 
-    // 1. Hero Section: Map + Right Rail Signals
-    const heroSection = document.createElement('section');
-    heroSection.className = 'sus-section-block';
+    // 1. Top KPI Summary Strip
+    const kpiStrip = document.createElement('section');
+    kpiStrip.className = 'env-kpi-strip';
 
-    const heroHeader = document.createElement('div');
-    heroHeader.className = 'sus-section-header';
-    heroHeader.innerHTML = `
-      <div class="sus-section-title-wrap">
-        <h2 class="sus-section-title">Spatial Carry-Capacity & Early Warning Diagnostic</h2>
+    const nat = NATIONAL_ENVIRONMENT_DATA;
+
+    kpiStrip.innerHTML = `
+      <div class="env-kpi-card">
+        <span class="env-kpi-label">TOTAL SCREENED ASSETS</span>
+        <div class="env-kpi-value-wrap">
+          <span class="env-kpi-num">${nat.totalAssets.toLocaleString()}</span>
+        </div>
+        <span class="env-kpi-sub">Across all 16 states & federal territories</span>
       </div>
-      <span class="sus-section-subtitle">Multi-dimensional pressure thresholds and active destination stress signals</span>
+
+      <div class="env-kpi-card highlight-exposed">
+        <span class="env-kpi-label">SENSITIVE PROXIMITY</span>
+        <div class="env-kpi-value-wrap">
+          <span class="env-kpi-num">${nat.totalExposed.toLocaleString()}</span>
+          <span class="env-kpi-badge warning">${nat.exposurePct}%</span>
+        </div>
+        <span class="env-kpi-sub">Inside or within 5km ecological buffer</span>
+      </div>
+
+      <div class="env-kpi-card highlight-inside">
+        <span class="env-kpi-label">PHYSICAL INCURSIONS</span>
+        <div class="env-kpi-value-wrap">
+          <span class="env-kpi-num">${nat.inside.toLocaleString()}</span>
+          <span class="env-kpi-badge critical">${nat.insidePct}%</span>
+        </div>
+        <span class="env-kpi-sub">Located directly inside protected boundaries</span>
+      </div>
+
+      <div class="env-kpi-card highlight-land">
+        <span class="env-kpi-label">LAND ECO-EXPOSURE</span>
+        <div class="env-kpi-value-wrap">
+          <span class="env-kpi-num">${nat.land.exposed.toLocaleString()}</span>
+          <span class="env-kpi-badge land">${nat.land.percent}%</span>
+        </div>
+        <span class="env-kpi-sub">Forest reserves & national terrestrial parks</span>
+      </div>
+
+      <div class="env-kpi-card highlight-marine">
+        <span class="env-kpi-label">MARINE & REEF EXPOSURE</span>
+        <div class="env-kpi-value-wrap">
+          <span class="env-kpi-num">${nat.marine.exposed.toLocaleString()}</span>
+          <span class="env-kpi-badge marine">${nat.marine.percent}%</span>
+        </div>
+        <span class="env-kpi-sub">Marine parks, coral ecosystems & turtle sanctuaries</span>
+      </div>
     `;
 
-    const heroGrid = document.createElement('div');
-    heroGrid.className = 'sus-hero-grid';
+    this.element.appendChild(kpiStrip);
 
-    const mapHero = new PressureMapHero((stateId) => this.handleSelectState(stateId));
-    const signalsList = new PressureSignalsList((stateId) => this.handleSelectState(stateId));
+    // 2. Upper Grid: Environmental Map (Left) + Ring Chart (Right)
+    const upperGrid = document.createElement('div');
+    upperGrid.className = 'env-upper-grid';
 
-    heroGrid.appendChild(mapHero.element);
-    heroGrid.appendChild(signalsList.element);
+    this.mapCard = new EnvironmentMapCard((stateId) => this.handleSelectState(stateId));
+    this.ringCard = new EnvironmentRingChartCard((scope) => this.handleRingScopeChange(scope));
 
-    heroSection.appendChild(heroHeader);
-    heroSection.appendChild(heroGrid);
-    this.element.appendChild(heroSection);
+    upperGrid.appendChild(this.mapCard.element);
+    upperGrid.appendChild(this.ringCard.element);
+    this.element.appendChild(upperGrid);
 
-    // 2. Middle Band: Radar Comparison
-    const middleSection = document.createElement('section');
-    middleSection.className = 'sus-section-block';
-
-    const middleGrid = document.createElement('div');
-    middleGrid.className = 'sus-middle-grid';
-
-    const radarCard = new PressureRadarCard();
-    middleGrid.appendChild(radarCard.element);
-    middleSection.appendChild(middleGrid);
-    this.element.appendChild(middleSection);
-
-    // 3. Lower Band: Value vs Pressure Scatter & Trajectory Chart
+    // 3. Lower Section: Environmental Exposure by State (Land & Marine) Horizontal Bar Chart
     const lowerSection = document.createElement('section');
-    lowerSection.className = 'sus-section-block';
+    lowerSection.className = 'env-lower-section';
 
-    const lowerHeader = document.createElement('div');
-    lowerHeader.className = 'sus-section-header';
-    lowerHeader.innerHTML = `
-      <div class="sus-section-title-wrap">
-        <h2 class="sus-section-title">Economic Yield Balance & Multi-Year Trajectory</h2>
-      </div>
-      <span class="sus-section-subtitle">Pressure vs visitor yield quadrants and longitudinal index evolution (2020–2026)</span>
-    `;
-
-    const lowerGrid = document.createElement('div');
-    lowerGrid.className = 'sus-lower-grid';
-
-    const valueScatter = new PressureValueScatter((stateId) => this.handleSelectState(stateId));
-    const trajectoryChart = new PressureTrajectoryChart((stateId) => this.handleSelectState(stateId));
-
-    lowerGrid.appendChild(valueScatter.element);
-    lowerGrid.appendChild(trajectoryChart.element);
-
-    lowerSection.appendChild(lowerHeader);
-    lowerSection.appendChild(lowerGrid);
+    this.barChart = new EnvironmentExposureBarChart((stateId) => this.handleSelectState(stateId));
+    lowerSection.appendChild(this.barChart.element);
     this.element.appendChild(lowerSection);
 
-    // 4. Collapsible Methodology Panel
-    const methodology = new MethodologyPanel();
-    this.element.appendChild(methodology.element);
-
-    // Append State Detail Drawer
+    // Universal State Detail Drawer
     this.element.appendChild(this.stateDrawer.backdrop);
     this.element.appendChild(this.stateDrawer.element);
   }
