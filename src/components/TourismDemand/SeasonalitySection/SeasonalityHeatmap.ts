@@ -41,7 +41,9 @@ export class SeasonalityHeatmap {
 
     this.element.appendChild(header);
     this.element.appendChild(container);
-    this.element.appendChild(scaleBar);
+    if (STATE_SEASONALITY_DATA.length > 0) {
+      this.element.appendChild(scaleBar);
+    }
   }
 
   // Diverging color scale mapping based on 100 baseline
@@ -57,6 +59,21 @@ export class SeasonalityHeatmap {
 
   private renderHeatmapTable(): string {
     const data = STATE_SEASONALITY_DATA;
+
+    if (!data || data.length === 0) {
+      return `
+        <div class="demand-empty-state">
+          <svg class="demand-empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span class="demand-empty-state-title">No seasonality matrix data available</span>
+          <span class="demand-empty-state-desc">State monthly visitor concentration indexes will appear here once data is connected.</span>
+        </div>
+      `;
+    }
 
     const headersHtml = MONTH_LABELS.map((m) => `<th class="heatmap-th">${m}</th>`).join('');
 

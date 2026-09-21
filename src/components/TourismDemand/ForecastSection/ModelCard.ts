@@ -9,6 +9,20 @@ export class ModelCard {
 
     const m = FORECAST_MODEL_CARD;
 
+    if (!m) {
+      this.element.innerHTML = `
+        <div class="model-card-header">
+          <span class="model-card-title">Forecast Model Specification Card</span>
+          <span style="font-size: 0.7rem; color: #64748b; font-weight: 500;">Status: Uncalibrated</span>
+        </div>
+        <div class="demand-empty-state" style="min-height: 100px; padding: 20px 16px;">
+          <span class="demand-empty-state-title">No calibrated forecast model</span>
+          <span class="demand-empty-state-desc">Model architecture, training window, error metrics, and limitations will appear once a forecast model is trained.</span>
+        </div>
+      `;
+      return;
+    }
+
     this.element.innerHTML = `
       <div class="model-card-header">
         <span class="model-card-title">Forecast Model Specification Card</span>

@@ -102,6 +102,21 @@ export class ForecastChart {
 
   private renderChart(): void {
     const stateData = FORECAST_DATA[this.currentStateId] || FORECAST_DATA.all;
+
+    if (!stateData || !stateData.points || stateData.points.length === 0) {
+      this.chartContainer.innerHTML = `
+        <div class="demand-empty-state">
+          <svg class="demand-empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M3 3v18h18"></path>
+            <path d="m19 9-5 5-4-4-3 3"></path>
+          </svg>
+          <span class="demand-empty-state-title">No forecast projections available</span>
+          <span class="demand-empty-state-desc">Modelled demand trajectories and confidence intervals will appear here once data is connected.</span>
+        </div>
+      `;
+      return;
+    }
+
     const maxYear = 2026 + this.currentHorizon;
 
     const filteredPoints = stateData.points.filter((p) => p.year <= maxYear);
