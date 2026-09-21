@@ -1,9 +1,18 @@
+import { MONTHLY_PRESSURE_DATA, type MonthlyPressurePoint } from '../../../data/overviewData';
+
 export class TourismPressureCard {
   public readonly element: HTMLElement;
+  private data: MonthlyPressurePoint[];
 
-  constructor() {
+  constructor(data: MonthlyPressurePoint[] = MONTHLY_PRESSURE_DATA) {
     this.element = document.createElement('div');
     this.element.className = 'bottom-insight-card';
+    this.data = data;
+    this.render();
+  }
+
+  public updateData(data: MonthlyPressurePoint[]): void {
+    this.data = data;
     this.render();
   }
 
@@ -11,7 +20,7 @@ export class TourismPressureCard {
     this.element.innerHTML = `
       <div class="bottom-card-header flex-between">
         <div>
-          <h3 class="bottom-card-title">TOURISM PRESSURE</h3>
+          <h3 class="bottom-card-title">TOURISME PRESSURE</h3>
           <span class="bottom-card-subtitle">Visitor arrivals (million)</span>
         </div>
         <div class="pressure-chart-legend">
@@ -26,9 +35,9 @@ export class TourismPressureCard {
   }
 
   private renderChartSvg(): string {
-    const currentSeries = [3.4, 3.8, 4.8, 5.2, 6.2, 6.0, 6.8, 7.2, 7.8, 6.8, 5.2];
-    const baselineSeries = [2.8, 3.0, 3.8, 3.2, 4.4, 4.6, 5.0, 5.2, 6.2, 5.5, 4.2];
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const currentSeries = this.data.map((d) => d.currentYearM);
+    const baselineSeries = this.data.map((d) => d.baselineYearM);
+    const months = this.data.map((d) => d.month);
 
     const width = 280;
     const height = 110;
@@ -39,7 +48,7 @@ export class TourismPressureCard {
 
     const chartW = width - padLeft - padRight;
     const chartH = height - padTop - padBottom;
-    const maxVal = 10.0;
+    const maxVal = Math.max(...currentSeries, ...baselineSeries, 35.0);
 
     const getX = (idx: number) => padLeft + (idx / (months.length - 1)) * chartW;
     const getY = (val: number) => padTop + chartH - (val / maxVal) * chartH;
@@ -56,14 +65,14 @@ export class TourismPressureCard {
       baselineD += ` L ${getX(i)} ${getY(baselineSeries[i])}`;
     }
 
-    // Y Axis Labels: 0.0, 2.5, 5.0, 7.5, 10.0
-    const yTicks = [0, 2.5, 5.0, 7.5, 10.0];
+    // Y Axis Labels
+    const yTicks = [0, 10.0, 20.0, 30.0];
     const yGridLines = yTicks
       .map((t) => {
         const y = getY(t);
         return `
           <line x1="${padLeft}" y1="${y}" x2="${width - padRight}" y2="${y}" stroke="#f1f5f9" stroke-width="1" />
-          <text x="${padLeft - 4}" y="${y + 3}" font-size="7.5" fill="#94a3b8" text-anchor="end">${t === 0 ? '0.0' : t.toFixed(1)}</text>
+          <text x="${padLeft - 4}" y="${y + 3}" font-size="7.5" fill="#94a3b8" text-anchor="end">${t === 0 ? '0' : t.toFixed(0)}</text>
         `;
       })
       .join('');

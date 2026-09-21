@@ -31,7 +31,7 @@ export class MapControls {
       { id: 'visitors', label: 'Visitors' },
       { id: 'receipts', label: 'Receipts' },
       { id: 'receiptsPerVisitor', label: 'Receipts / Visitor' },
-      { id: 'readinessScore', label: 'Readiness Score' },
+      { id: 'readinessScore', label: 'Readiness Index' },
     ];
 
     metrics.forEach(({ id, label }) => {

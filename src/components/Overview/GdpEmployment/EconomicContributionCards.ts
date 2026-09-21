@@ -1,9 +1,18 @@
+import { NATIONAL_ECONOMY_CONTRIBUTION, type NationalEconomyContribution } from '../../../data/overviewData';
+
 export class EconomicContributionCards {
   public readonly element: HTMLElement;
+  private data: NationalEconomyContribution;
 
-  constructor() {
+  constructor(data: NationalEconomyContribution = NATIONAL_ECONOMY_CONTRIBUTION) {
     this.element = document.createElement('div');
     this.element.className = 'right-gauge-column-stack';
+    this.data = data;
+    this.render();
+  }
+
+  public updateData(data: NationalEconomyContribution): void {
+    this.data = data;
     this.render();
   }
 
@@ -15,21 +24,21 @@ export class EconomicContributionCards {
     gdpCard.className = 'economic-gauge-card';
     gdpCard.innerHTML = `
       <div class="gauge-card-header">
-        <h3 class="gauge-card-title">TOURISM ECONOMIC CONTRIBUTION</h3>
+        <h3 class="gauge-card-title">TOURISME ECONOMIC CONTRIBUTION</h3>
         <span class="gauge-card-subtitle">% of Malaysia's GDP (Tourism Satellite Account)</span>
       </div>
       <div class="gauge-card-body-row">
         <div class="gauge-visual-box">
-          ${this.renderSemiCircleGauge(15.1, 0, 30, '15.1%', 'of GDP')}
+          ${this.renderSemiCircleGauge(this.data.gdpSharePct, 0, 30, `${this.data.gdpSharePct}%`, 'of GDP')}
         </div>
         <div class="gauge-metrics-side">
           <div class="gauge-metric-tile">
             <span class="gauge-metric-label">Total Tourism GDP</span>
-            <span class="gauge-metric-val">RM291.9B</span>
+            <span class="gauge-metric-val">RM${this.data.tourismGdpRmB}B</span>
           </div>
           <div class="gauge-metric-tile">
             <span class="gauge-metric-label">Total Economy</span>
-            <span class="gauge-metric-val">RM1,929.6B</span>
+            <span class="gauge-metric-val">RM${this.data.totalEconomyGdpRmB.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}B</span>
           </div>
         </div>
       </div>
@@ -40,21 +49,21 @@ export class EconomicContributionCards {
     empCard.className = 'economic-gauge-card';
     empCard.innerHTML = `
       <div class="gauge-card-header">
-        <h3 class="gauge-card-title">TOURISM EMPLOYMENT</h3>
+        <h3 class="gauge-card-title">TOURISME EMPLOYMENT</h3>
         <span class="gauge-card-subtitle">% of Total Employment</span>
       </div>
       <div class="gauge-card-body-row">
         <div class="gauge-visual-box">
-          ${this.renderSemiCircleGauge(21.6, 0, 40, '21.6%', 'of total employment')}
+          ${this.renderSemiCircleGauge(this.data.employmentSharePct, 0, 40, `${this.data.employmentSharePct}%`, 'of total employment')}
         </div>
         <div class="gauge-metrics-side">
           <div class="gauge-metric-tile">
             <span class="gauge-metric-label">Tourism Employment</span>
-            <span class="gauge-metric-val">3.54M</span>
+            <span class="gauge-metric-val">${this.data.tourismEmploymentM}M</span>
           </div>
           <div class="gauge-metric-tile">
             <span class="gauge-metric-label">Total Employment</span>
-            <span class="gauge-metric-val">16.4M</span>
+            <span class="gauge-metric-val">${this.data.totalEmploymentM}M</span>
           </div>
         </div>
       </div>

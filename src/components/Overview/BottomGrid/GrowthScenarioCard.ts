@@ -1,16 +1,51 @@
-export type ScenarioTarget = '+10%' | '+20%' | '+30%';
+import { GROWTH_SCENARIOS, type GrowthScenarioProjection } from '../../../data/overviewData';
 
 export class GrowthScenarioCard {
   public readonly element: HTMLElement;
-  private selectedScenario: ScenarioTarget = '+10%';
+  private selectedScenario: string = '+10%';
+  private scenarios: GrowthScenarioProjection[];
 
-  constructor() {
+  constructor(scenarios: GrowthScenarioProjection[] = GROWTH_SCENARIOS) {
     this.element = document.createElement('div');
     this.element.className = 'bottom-insight-card';
+    this.scenarios = scenarios;
+    this.render();
+  }
+
+  public updateData(scenarios: GrowthScenarioProjection[]): void {
+    this.scenarios = scenarios;
     this.render();
   }
 
   private render(): void {
+    const maxVal = Math.max(...this.scenarios.map((s) => s.projectedReceiptsRmB), 170.0);
+    const nonBaseline = this.scenarios.filter((s) => !s.isBaseline);
+
+    const buttonsHtml = nonBaseline.map((s) => `
+      <button class="scenario-pill-btn ${this.selectedScenario === s.targetLabel ? 'active' : ''}" data-target="${s.targetLabel}">${s.targetLabel}</button>
+    `).join('');
+
+    const barsHtml = this.scenarios.map((s) => {
+      const heightPct = Math.round((s.projectedReceiptsRmB / maxVal) * 100);
+      const isSelected = this.selectedScenario === s.targetLabel;
+      const isBase = s.isBaseline;
+
+      let barClass = 'scenario-bar-fill baseline';
+      if (!isBase) {
+        barClass = `scenario-bar-fill ${isSelected ? 'active' : 'subtle'}`;
+      }
+
+      return `
+        <div class="scenario-bar-col">
+          <span class="bar-value-label ${isSelected ? 'highlight' : ''}">${s.projectedReceiptsRmB.toFixed(1)}</span>
+          <div class="scenario-bar-track">
+            <div class="${barClass}" style="height: ${heightPct}%;"></div>
+          </div>
+          <span class="bar-name-label">${s.targetLabel}</span>
+        </div>
+      `;
+    }).join('');
+
     this.element.innerHTML = `
       <div class="bottom-card-header">
         <h3 class="bottom-card-title">GROWTH SCENARIO</h3>
@@ -18,50 +53,18 @@ export class GrowthScenarioCard {
       </div>
 
       <div class="scenario-toggle-strip">
-        <button class="scenario-pill-btn ${this.selectedScenario === '+10%' ? 'active' : ''}" data-target="+10%">+10%</button>
-        <button class="scenario-pill-btn ${this.selectedScenario === '+20%' ? 'active' : ''}" data-target="+20%">+20%</button>
-        <button class="scenario-pill-btn ${this.selectedScenario === '+30%' ? 'active' : ''}" data-target="+30%">+30%</button>
+        ${buttonsHtml}
       </div>
 
       <div class="scenario-bars-stage">
-        <div class="scenario-bar-col">
-          <span class="bar-value-label">121.3</span>
-          <div class="scenario-bar-track">
-            <div class="scenario-bar-fill baseline" style="height: 65%;"></div>
-          </div>
-          <span class="bar-name-label">Baseline</span>
-        </div>
-
-        <div class="scenario-bar-col">
-          <span class="bar-value-label ${this.selectedScenario === '+10%' ? 'highlight' : ''}">133.4</span>
-          <div class="scenario-bar-track">
-            <div class="scenario-bar-fill ${this.selectedScenario === '+10%' ? 'active' : 'subtle'}" style="height: 72%;"></div>
-          </div>
-          <span class="bar-name-label">+10%</span>
-        </div>
-
-        <div class="scenario-bar-col">
-          <span class="bar-value-label ${this.selectedScenario === '+20%' ? 'highlight' : ''}">145.5</span>
-          <div class="scenario-bar-track">
-            <div class="scenario-bar-fill ${this.selectedScenario === '+20%' ? 'active' : 'subtle'}" style="height: 80%;"></div>
-          </div>
-          <span class="bar-name-label">+20%</span>
-        </div>
-
-        <div class="scenario-bar-col">
-          <span class="bar-value-label ${this.selectedScenario === '+30%' ? 'highlight' : ''}">157.6</span>
-          <div class="scenario-bar-track">
-            <div class="scenario-bar-fill ${this.selectedScenario === '+30%' ? 'active' : 'subtle'}" style="height: 92%;"></div>
-          </div>
-          <span class="bar-name-label">+30%</span>
-        </div>
+        ${barsHtml}
       </div>
     `;
 
     // Attach click events
     this.element.querySelectorAll('.scenario-pill-btn').forEach((btn) => {
       btn.addEventListener('click', (e) => {
-        const target = (e.currentTarget as HTMLElement).getAttribute('data-target') as ScenarioTarget;
+        const target = (e.currentTarget as HTMLElement).getAttribute('data-target');
         if (target) {
           this.selectedScenario = target;
           this.render();

@@ -146,8 +146,8 @@ export class StateDrawer {
         sub: 'Yield per tourist trip',
       },
       {
-        label: 'Readiness Score',
-        value: `${state.readinessScore}/100`,
+        label: 'Readiness Index',
+        value: (state.readinessScore / 100).toFixed(2),
         sub: 'Composite infrastructure index',
       },
     ];

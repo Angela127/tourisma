@@ -1,5 +1,5 @@
 import { MALAYSIA_GEO_DATA } from '../../../data/malaysiaGeo';
-import { STATES_DATA } from '../../../data/overviewData';
+import { STATES_OVERVIEW_DATA, type StateOverviewItem } from '../../../data/overviewData';
 import { StateDetailDrawer } from '../../Common/StateDetailDrawer';
 
 // Centroid lookup for tooltip positioning (in SVG viewBox 0 0 1000 440 space)
@@ -62,11 +62,11 @@ export class MalaysiaMap {
       <div class="legend-scale-row">
         <span class="legend-scale-text">Low</span>
         <div class="legend-step-blocks">
-          <span class="step-block" style="background:#bfdbfe;" title="Low (&lt;55)"></span>
-          <span class="step-block" style="background:#93c5fd;" title="Moderate-Low (55-64)"></span>
-          <span class="step-block" style="background:#60a5fa;" title="Moderate (65-74)"></span>
-          <span class="step-block" style="background:#2563eb;" title="High (75-84)"></span>
-          <span class="step-block" style="background:#1d4ed8;" title="Very High (85+)"></span>
+          <span class="step-block" style="background:#bfdbfe;" title="Low (&lt;0.12)"></span>
+          <span class="step-block" style="background:#93c5fd;" title="Moderate-Low (0.12-0.19)"></span>
+          <span class="step-block" style="background:#60a5fa;" title="Moderate (0.20-0.34)"></span>
+          <span class="step-block" style="background:#2563eb;" title="High (0.35-0.59)"></span>
+          <span class="step-block" style="background:#1d4ed8;" title="Very High (0.60+)"></span>
         </div>
         <span class="legend-scale-text">High</span>
       </div>
@@ -83,17 +83,17 @@ export class MalaysiaMap {
   }
 
   private getColorForScore(score: number): string {
-    if (score >= 85) return '#1d4ed8';
-    if (score >= 75) return '#2563eb';
-    if (score >= 65) return '#60a5fa';
-    if (score >= 55) return '#93c5fd';
+    if (score >= 60) return '#1d4ed8';
+    if (score >= 35) return '#2563eb';
+    if (score >= 20) return '#60a5fa';
+    if (score >= 12) return '#93c5fd';
     return '#bfdbfe';
   }
 
   private renderMapSvg(): string {
     const pathsSvg = MALAYSIA_GEO_DATA.map((geo) => {
-      const data = STATES_DATA[geo.id];
-      const score = data ? data.readinessScore : 70;
+      const data: StateOverviewItem | undefined = STATES_OVERVIEW_DATA[geo.id];
+      const score = data ? data.readinessScore : 20;
       const fill = this.getColorForScore(score);
 
       return `
@@ -211,25 +211,29 @@ export class MalaysiaMap {
   }
 
   private showTooltip(stateId: string): void {
-    const data = STATES_DATA[stateId];
+    const data: StateOverviewItem | undefined = STATES_OVERVIEW_DATA[stateId];
     if (!data) return;
 
     this.tooltipElement.innerHTML = `
       <div style="font-weight:800; font-size:0.78rem; color:#0f172a; margin-bottom:3px; display:flex; align-items:center; gap:6px;">
         <span>${data.name}</span>
-        <span style="font-size:0.62rem; font-weight:700; padding:1px 5px; border-radius:4px; background:#eff6ff; color:#1d4ed8;">${data.cluster}</span>
+        <span style="font-size:0.62rem; font-weight:700; padding:1px 5px; border-radius:4px; background:#eff6ff; color:#1d4ed8;">${data.quadrant}</span>
       </div>
       <div style="font-size:0.7rem; color:#475569; display:flex; justify-content:space-between; gap:12px; margin-bottom:2px;">
-        <span>Readiness Score:</span>
-        <strong style="color:#0f172a;">${data.readinessScore} / 100</strong>
+        <span>Readiness Index:</span>
+        <strong style="color:#0f172a;">${(data.readinessScore / 100).toFixed(2)}</strong>
       </div>
       <div style="font-size:0.7rem; color:#475569; display:flex; justify-content:space-between; gap:12px; margin-bottom:2px;">
-        <span>Annual Visitors:</span>
-        <strong style="color:#0f172a;">${data.visitorsTotal}M</strong>
+        <span>Domestic Visitors:</span>
+        <strong style="color:#0f172a;">${data.domesticVisitorsM}M</strong>
+      </div>
+      <div style="font-size:0.7rem; color:#475569; display:flex; justify-content:space-between; gap:12px; margin-bottom:2px;">
+        <span>Tourism Receipts:</span>
+        <strong style="color:#0f172a;">RM${data.receiptsRmB}B (RM${data.receiptsPerVisitor}/visitor)</strong>
       </div>
       <div style="font-size:0.7rem; color:#475569; display:flex; justify-content:space-between; gap:12px; margin-bottom:4px;">
-        <span>Tourism Receipts:</span>
-        <strong style="color:#0f172a;">RM${data.receipts}B</strong>
+        <span>Avg. Length of Stay:</span>
+        <strong style="color:#0f172a;">${data.alos} nights</strong>
       </div>
       <div style="font-size:0.64rem; color:#0b57d0; font-weight:750; border-top:1px solid #e2e8f0; padding-top:3px; margin-top:2px;">
         👆 Click to open State Diagnostic →

@@ -64,7 +64,7 @@ export class DestinationCardGrid {
     sortSelect.innerHTML = `
       <option value="visitors">Sort: Highest Visitors</option>
       <option value="receipts">Sort: Highest Receipts</option>
-      <option value="readiness">Sort: Highest Readiness</option>
+      <option value="readiness">Sort: Highest Readiness Index</option>
       <option value="pressure">Sort: Highest Pressure</option>
       <option value="name">Sort: Alphabetical</option>
     `;
@@ -134,8 +134,8 @@ export class DestinationCardGrid {
             <span class="dest-figure-val">RM ${dest.receiptsTotal}B</span>
           </div>
           <div class="dest-figure-col">
-            <span class="dest-figure-label">Readiness</span>
-            <span class="dest-figure-val">${dest.readinessScore}/100</span>
+            <span class="dest-figure-label">Readiness Index</span>
+            <span class="dest-figure-val">${(dest.readinessScore / 100).toFixed(2)}</span>
           </div>
         </div>
 

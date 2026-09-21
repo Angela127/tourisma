@@ -22,7 +22,9 @@ export class KpiCard {
 
     const infoIconWrapper = document.createElement('span');
     infoIconWrapper.className = 'kpi-info-icon';
-    infoIconWrapper.setAttribute('title', item.tooltipNote);
+    if (item.tooltipNote) {
+      infoIconWrapper.setAttribute('title', item.tooltipNote);
+    }
     const infoIcon = createElement(Info, {
       width: 13,
       height: 13,
@@ -58,7 +60,7 @@ export class KpiCard {
 
     const unit = document.createElement('span');
     unit.className = 'kpi-unit';
-    unit.textContent = item.unit;
+    unit.textContent = item.unit || '';
 
     valueRow.appendChild(value);
     valueRow.appendChild(unit);

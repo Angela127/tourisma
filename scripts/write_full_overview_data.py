@@ -1,4 +1,7 @@
-// National Overview Datasets for Tourisma Intelligence Dashboard
+import pandas as pd
+import json
+
+ts_content = """// National Overview Datasets for Tourisma Intelligence Dashboard
 // Grounded directly in DOSM Domestic Tourism Survey, State Master Dataset,
 // Tourism Satellite Account (TSA), and Spatial Accessibility Datasets.
 
@@ -9,10 +12,10 @@ export interface SparklinePoint {
 
 export interface KpiCardConfig {
   id: string;
-  iconSvg: string;
+  iconSvg?: string;
   title: string;
   value: string;
-  unit: string;
+  unit?: string;
   unitSubtitle?: string;
   change: string;
   isPositive: boolean;
@@ -53,7 +56,6 @@ export interface StateOverviewItem {
   accommodationEstablishments: number;
   aorPct: number; // Average Occupancy Rate %
   readinessScore: number; // 0-100
-  readinessIndex?: number; // 0.00 - 1.00
   demandScore: number; // 0-100
   quadrant: QuadrantType;
   demandCategory: string;
@@ -65,17 +67,17 @@ export interface StateOverviewItem {
   visitorToRoomRatio: number;
   yearlyTrendVisitors: number[];
   // Legacy / convenience fields
-  visitorsTotal: number;
-  visitorsDomestic: number;
-  visitorsInternational: number;
-  receipts: number;
-  pressureScore: number;
-  bindingConstraint: string;
-  pressureTrend: 'up' | 'down' | 'stable';
-  topAttractions: string[];
-  keyInsight: string;
-  monthlyTrend: number[];
-  cluster: ClusterType;
+  visitorsTotal?: number;
+  visitorsDomestic?: number;
+  visitorsInternational?: number;
+  receipts?: number;
+  pressureScore?: number;
+  bindingConstraint?: string;
+  pressureTrend?: 'up' | 'down' | 'stable';
+  topAttractions?: string[];
+  keyInsight?: string;
+  monthlyTrend?: number[];
+  cluster?: ClusterType;
 }
 
 export type StateData = StateOverviewItem;
@@ -99,7 +101,7 @@ export interface QuadrantProfileSummary {
   colorHex: string;
   states: string[];
   // Legacy compatibility
-  cluster: ClusterType;
+  cluster?: ClusterType;
   color?: string;
   description?: string;
 }
@@ -111,8 +113,8 @@ export interface MonthlyPressurePoint {
   currentYearM: number; // 2025/2026 in Millions
   baselineYearM: number; // 2024 Baseline in Millions
   // Legacy compatibility
-  currentYear: number;
-  previousYear: number;
+  currentYear?: number;
+  previousYear?: number;
   annotation?: string;
 }
 
@@ -1061,3 +1063,9 @@ export const DATA_LIMITATION_NOTE =
 // Aliases
 export const STATES_DATA = STATES_OVERVIEW_DATA;
 export const KPI_DATA = NATIONAL_OVERVIEW_KPIS;
+"""
+
+with open('src/data/overviewData.ts', 'w', encoding='utf-8') as f:
+    f.write(ts_content)
+
+print("Saved overviewData.ts successfully.")

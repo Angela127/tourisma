@@ -25,6 +25,7 @@ export interface DestinationProfile {
   occupancyRate: number; // %
   tourismEmployment: string;
   readinessScore: number; // 0-100
+  readinessIndex?: number; // 0.00 - 1.00
   quadrantType: DestinationQuadrant;
   radarDimensions: { axis: string; stateValue: number; nationalAvg: number }[];
   scenarioPreview: {
