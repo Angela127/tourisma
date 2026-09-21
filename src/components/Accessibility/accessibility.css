@@ -448,55 +448,132 @@
   border-radius: 2px;
 }
 
-/* Floating Map Tooltip */
+/* Floating Map Tooltip (Matches Tourism Asset & Environment Card) */
 .access-floating-tooltip {
-  position: absolute;
-  pointer-events: none;
-  background: #0f172a;
-  color: #ffffff;
-  padding: 8px 12px;
+  position: fixed;
+  z-index: 9999;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
   border-radius: 8px;
-  font-size: 12px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-  z-index: 50;
+  padding: 12px 14px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.12);
+  pointer-events: none;
+  min-width: 230px;
+  box-sizing: border-box;
   display: none;
   flex-direction: column;
-  gap: 4px;
-  max-width: 240px;
-  transition: opacity 0.15s ease;
-  transform: translate(-50%, -100%);
-  margin-top: -10px;
 }
 
 [data-theme="dark"] .access-floating-tooltip {
   background: #1e293b;
-  border: 1px solid #334155;
+  border-color: #334155;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
 }
 
-.access-tooltip-title {
-  font-weight: 750;
-  font-size: 12.5px;
-  color: #ffffff;
+.access-floating-tooltip .map-tooltip-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  padding-bottom: 4px;
+  margin-bottom: 8px;
 }
 
-.access-tooltip-row {
+.access-floating-tooltip .map-tooltip-title {
+  font-weight: 800;
+  font-size: 13px;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .access-floating-tooltip .map-tooltip-title {
+  color: #f8fafc;
+}
+
+.access-floating-tooltip .map-tooltip-quadrant {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+  text-align: right;
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.access-floating-tooltip .map-tooltip-quadrant.high {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.access-floating-tooltip .map-tooltip-quadrant.moderate {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.access-floating-tooltip .map-tooltip-quadrant.low {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+[data-theme="dark"] .access-floating-tooltip .map-tooltip-quadrant {
+  background: #0f172a;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .access-floating-tooltip .map-tooltip-quadrant.high {
+  background: rgba(21, 128, 61, 0.25);
+  color: #4ade80;
+}
+
+[data-theme="dark"] .access-floating-tooltip .map-tooltip-quadrant.moderate {
+  background: rgba(133, 77, 14, 0.25);
+  color: #fde047;
+}
+
+[data-theme="dark"] .access-floating-tooltip .map-tooltip-quadrant.low {
+  background: rgba(194, 65, 12, 0.25);
+  color: #fb923c;
+}
+
+.access-floating-tooltip .map-tooltip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.access-floating-tooltip .map-tooltip-metric-row {
+  font-size: 11.5px;
+  color: #475569;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 11.5px;
-  color: #cbd5e1;
-  gap: 12px;
+  gap: 16px;
 }
 
-.access-tooltip-row strong {
-  color: #38bdf8;
+.access-floating-tooltip .map-tooltip-metric-row strong {
+  color: #0f172a;
   font-weight: 700;
+}
+
+[data-theme="dark"] .access-floating-tooltip .map-tooltip-metric-row {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .access-floating-tooltip .map-tooltip-metric-row strong {
+  color: #f8fafc;
+}
+
+.access-floating-tooltip .map-tooltip-footer {
+  font-size: 10.5px;
+  color: #2563eb;
+  font-weight: 600;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid #f1f5f9;
+}
+
+[data-theme="dark"] .access-floating-tooltip .map-tooltip-footer {
+  border-color: #334155;
+  color: #60a5fa;
 }
 
 /* Ring Charts Card */

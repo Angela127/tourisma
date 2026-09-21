@@ -18,7 +18,7 @@ export class EnvironmentExposureBarChart {
   constructor(onSelectState?: (stateId: string) => void) {
     this.onSelectStateCallback = onSelectState;
     this.element = document.createElement('div');
-    this.element.className = 'env-card env-barchart-card';
+    this.element.className = 'asset-card env-barchart-card';
 
     this.createTooltip();
     this.render();
@@ -51,17 +51,17 @@ export class EnvironmentExposureBarChart {
 
     // Card Header
     const header = document.createElement('div');
-    header.className = 'env-card-header';
+    header.className = 'asset-card-header env-bar-header';
 
     const titleGroup = document.createElement('div');
-    titleGroup.className = 'env-title-group';
+    titleGroup.className = 'asset-card-title-group';
     titleGroup.innerHTML = `
-      <div class="env-badge-header">
-        <span class="env-badge-dot bar"></span>
+      <div class="asset-card-badge">
+        <span class="asset-badge-dot" style="background-color: #0284c7;"></span>
         <span>STATE COMPARATIVE DIAGNOSTIC</span>
       </div>
-      <h3 class="env-card-title">Environmental Exposure by State (Land & Marine)</h3>
-      <span class="env-card-desc">Comparative side-by-side asset exposure to terrestrial conservation reserves vs marine & reef parks</span>
+      <h3 class="asset-card-title">ENVIRONMENTAL EXPOSURE BY STATE (LAND & MARINE)</h3>
+      <p class="asset-card-subtitle">Comparative side-by-side asset exposure to terrestrial conservation reserves vs marine & reef parks</p>
     `;
 
     // Right-side Controls
@@ -70,17 +70,17 @@ export class EnvironmentExposureBarChart {
 
     // Metric Mode Toggle (Count vs %)
     const metricToggle = document.createElement('div');
-    metricToggle.className = 'env-segmented-toggle';
+    metricToggle.className = 'asset-segmented-control env-segmented-control';
     metricToggle.innerHTML = `
-      <button class="env-seg-btn ${this.metricMode === 'count' ? 'active' : ''}" data-mode="count">Asset Count</button>
-      <button class="env-seg-btn ${this.metricMode === 'percent' ? 'active' : ''}" data-mode="percent">Percentage (%)</button>
+      <button class="asset-segment-btn ${this.metricMode === 'count' ? 'active' : ''}" data-mode="count">Asset Count</button>
+      <button class="asset-segment-btn ${this.metricMode === 'percent' ? 'active' : ''}" data-mode="percent">Percentage (%)</button>
     `;
-    metricToggle.querySelectorAll('.env-seg-btn').forEach((btn) => {
+    metricToggle.querySelectorAll('.asset-segment-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
         const mode = btn.getAttribute('data-mode') as BarMetricMode;
         if (mode && this.metricMode !== mode) {
           this.metricMode = mode;
-          metricToggle.querySelectorAll('.env-seg-btn').forEach((b) => b.classList.remove('active'));
+          metricToggle.querySelectorAll('.asset-segment-btn').forEach((b) => b.classList.remove('active'));
           btn.classList.add('active');
           this.updateBars();
         }
@@ -112,15 +112,24 @@ export class EnvironmentExposureBarChart {
     legendStrip.className = 'env-bar-legend-strip';
     legendStrip.innerHTML = `
       <div class="env-bar-legend-item">
-        <span class="env-legend-color land"></span>
+        <span class="env-series-dot land"></span>
         <strong>Land Environmental Exposure</strong>
         <span class="env-legend-sub">(Forest Reserves, National Parks, Wildlife Sanctuaries)</span>
       </div>
       <div class="env-bar-legend-item">
-        <span class="env-legend-color marine"></span>
+        <span class="env-series-dot marine"></span>
         <strong>Marine Environmental Exposure</strong>
         <span class="env-legend-sub">(Marine Parks, Coastal Protected Areas, Turtle Sanctuaries)</span>
       </div>
+    `;
+
+    // Column Headers above the bars
+    const columnHeaderRow = document.createElement('div');
+    columnHeaderRow.className = 'env-bar-header-row';
+    columnHeaderRow.innerHTML = `
+      <span>State & Total Assets</span>
+      <span>Ecosystem Proximity Distribution (Land vs Marine)</span>
+      <span style="text-align: right;">Total Exposed</span>
     `;
 
     // Bars Container
@@ -129,6 +138,7 @@ export class EnvironmentExposureBarChart {
 
     this.element.appendChild(header);
     this.element.appendChild(legendStrip);
+    this.element.appendChild(columnHeaderRow);
     this.element.appendChild(this.barsContainer);
 
     this.updateBars();
@@ -157,10 +167,17 @@ export class EnvironmentExposureBarChart {
     return list.sort((a, b) => a.name.localeCompare(b.name));
   }
 
+  private getSeverityClass(pct: number): string {
+    if (pct > 25) return 'critical';
+    if (pct > 15) return 'high';
+    if (pct > 5) return 'moderate';
+    return 'safe';
+  }
+
   private updateBars(): void {
     const data = this.getSortedData();
 
-    // Determine max value for 100% scale width
+    // Determine max value for scale normalization
     let maxVal = 1;
     if (this.metricMode === 'count') {
       data.forEach((s) => {
@@ -172,14 +189,15 @@ export class EnvironmentExposureBarChart {
         if (s.land.percent > maxVal) maxVal = s.land.percent;
         if (s.marine.percent > maxVal) maxVal = s.marine.percent;
       });
-      // Give a bit of headroom
-      maxVal = Math.max(maxVal * 1.1, 35);
+      maxVal = Math.max(maxVal * 1.05, 35);
     }
 
     this.barsContainer.innerHTML = '';
 
     data.forEach((state) => {
       const isSelected = this.selectedStateId === state.id;
+      const severityClass = this.getSeverityClass(state.exposurePct);
+
       const row = document.createElement('div');
       row.className = `env-bar-row ${isSelected ? 'selected' : ''}`;
       row.setAttribute('data-state-id', state.id);
@@ -187,16 +205,16 @@ export class EnvironmentExposureBarChart {
       const landVal = this.metricMode === 'count' ? state.land.exposed : state.land.percent;
       const marineVal = this.metricMode === 'count' ? state.marine.exposed : state.marine.percent;
 
-      const landWidthPct = Math.min((landVal / maxVal) * 100, 100);
-      const marineWidthPct = Math.min((marineVal / maxVal) * 100, 100);
+      const landWidthPct = maxVal > 0 ? Math.min((landVal / maxVal) * 100, 100) : 0;
+      const marineWidthPct = maxVal > 0 ? Math.min((marineVal / maxVal) * 100, 100) : 0;
 
-      const landLabel = this.metricMode === 'count'
-        ? `${state.land.exposed.toLocaleString()} (${state.land.percent}%)`
-        : `${state.land.percent}% (${state.land.exposed.toLocaleString()})`;
+      const landMetricHtml = this.metricMode === 'count'
+        ? `<strong>${state.land.exposed.toLocaleString()}</strong> <span class="env-series-val-sub">(${state.land.percent}%)</span>`
+        : `<strong>${state.land.percent.toFixed(1)}%</strong> <span class="env-series-val-sub">(${state.land.exposed.toLocaleString()})</span>`;
 
-      const marineLabel = this.metricMode === 'count'
-        ? `${state.marine.exposed.toLocaleString()} (${state.marine.percent}%)`
-        : `${state.marine.percent}% (${state.marine.exposed.toLocaleString()})`;
+      const marineMetricHtml = this.metricMode === 'count'
+        ? `<strong>${state.marine.exposed.toLocaleString()}</strong> <span class="env-series-val-sub">(${state.marine.percent}%)</span>`
+        : `<strong>${state.marine.percent.toFixed(1)}%</strong> <span class="env-series-val-sub">(${state.marine.exposed.toLocaleString()})</span>`;
 
       row.innerHTML = `
         <div class="env-bar-state-label">
@@ -208,57 +226,44 @@ export class EnvironmentExposureBarChart {
         </div>
 
         <div class="env-bar-track-group">
-          <!-- Land Bar Track -->
-          <div class="env-bar-channel">
-            <div class="env-bar-fill land" style="width: ${landWidthPct}%;"></div>
-            <span class="env-bar-val-text land">${landVal > 0 ? landLabel : '0 (0%)'}</span>
+          <!-- Land Line -->
+          <div class="env-series-line">
+            <div class="env-series-tag land">
+              <span class="env-series-dot land"></span>
+              <span>Land</span>
+            </div>
+            <div class="env-series-track">
+              <div class="env-series-fill land" style="width: ${landWidthPct}%;"></div>
+            </div>
+            <div class="env-series-val land ${state.land.exposed === 0 ? 'zero' : ''}">
+              ${landMetricHtml}
+            </div>
           </div>
 
-          <!-- Marine Bar Track -->
-          <div class="env-bar-channel">
-            <div class="env-bar-fill marine" style="width: ${marineWidthPct}%;"></div>
-            <span class="env-bar-val-text marine">${marineVal > 0 ? marineLabel : '0 (0%)'}</span>
+          <!-- Marine Line -->
+          <div class="env-series-line">
+            <div class="env-series-tag marine">
+              <span class="env-series-dot marine"></span>
+              <span>Marine</span>
+            </div>
+            <div class="env-series-track">
+              <div class="env-series-fill marine" style="width: ${marineWidthPct}%;"></div>
+            </div>
+            <div class="env-series-val marine ${state.marine.exposed === 0 ? 'zero' : ''}">
+              ${marineMetricHtml}
+            </div>
           </div>
         </div>
 
-        <div class="env-bar-total-badge" title="Total Exposed Assets (${state.exposurePct}% of state)">
-          <strong>${state.totalExposed.toLocaleString()}</strong>
-          <span class="env-badge-pct">${state.exposurePct}%</span>
+        <div class="env-bar-total-col" title="Total Exposed Assets (${state.exposurePct}% of state)">
+          <span class="env-total-num">${state.totalExposed.toLocaleString()}</span>
+          <span class="env-total-severity-badge ${severityClass}">${state.exposurePct}%</span>
         </div>
       `;
 
-      // Hover Tooltip
+      // Hover Tooltip with Neater, Structured UI
       row.addEventListener('mouseenter', (e) => {
-        this.tooltip.innerHTML = `
-          <div class="env-tooltip-header">
-            <strong>${state.name}</strong> (${state.code})
-            <span class="env-tooltip-rate">${state.exposurePct}% Combined Exposure</span>
-          </div>
-          <div class="env-tooltip-body">
-            <div class="env-tooltip-row">
-              <span>Total State Assets:</span>
-              <strong>${state.totalAssets.toLocaleString()}</strong>
-            </div>
-            <div class="env-tooltip-row" style="border-top:1px solid #e2e8f0; padding-top:4px; margin-top:4px;">
-              <span style="color:#059669; font-weight:700;">🌲 Land Environmental Exposure:</span>
-              <strong>${state.land.exposed.toLocaleString()} (${state.land.percent}%)</strong>
-            </div>
-            <div style="font-size:0.68rem; color:#64748b; margin-left:14px; margin-bottom:4px;">
-              • Inside Forest/Parks: <strong>${state.land.inside}</strong> | Near Buffer: <strong>${state.land.near}</strong>
-            </div>
-            <div class="env-tooltip-row" style="border-top:1px solid #e2e8f0; padding-top:4px; margin-top:4px;">
-              <span style="color:#0284c7; font-weight:700;">🌊 Marine Environmental Exposure:</span>
-              <strong>${state.marine.exposed.toLocaleString()} (${state.marine.percent}%)</strong>
-            </div>
-            <div style="font-size:0.68rem; color:#64748b; margin-left:14px; margin-bottom:4px;">
-              • Inside Marine Parks: <strong>${state.marine.inside}</strong> | Near Coastal Buffer: <strong>${state.marine.near}</strong>
-            </div>
-            <div class="env-tooltip-footer">
-              <strong>Key Proximate Reserves:</strong> ${state.keyProtectedAreas.join(', ') || 'None'}
-            </div>
-            <div style="font-size:0.64rem; color:#64748b; margin-top:5px;">🖱 Click to select & filter tab view</div>
-          </div>
-        `;
+        this.renderTooltip(state, isSelected);
         this.tooltip.style.display = 'block';
         this.updateTooltipPos(e as MouseEvent);
       });
@@ -281,8 +286,67 @@ export class EnvironmentExposureBarChart {
     });
   }
 
+  private renderTooltip(state: StateEnvironmentData, isSelected: boolean): void {
+    const severityClass = this.getSeverityClass(state.exposurePct);
+
+    this.tooltip.innerHTML = `
+      <div class="map-tooltip-header">
+        <span class="map-tooltip-title">${state.name}</span>
+        <span class="map-tooltip-quadrant ${severityClass}">${state.exposurePct}% Combined</span>
+      </div>
+      <div class="map-tooltip-body">
+        <div class="map-tooltip-metric-row">
+          <span>Total Screened Assets:</span>
+          <strong>${state.totalAssets.toLocaleString()} assets</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Combined Exposure:</span>
+          <strong>${state.exposurePct}% (${state.totalExposed.toLocaleString()})</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Land Eco-Exposure:</span>
+          <strong>${state.land.percent}% (${state.land.exposed.toLocaleString()})</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Marine Eco-Exposure:</span>
+          <strong>${state.marine.percent}% (${state.marine.exposed.toLocaleString()})</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Inside Reserves:</span>
+          <strong>${state.inside.toLocaleString()} assets</strong>
+        </div>
+      </div>
+      <div class="map-tooltip-footer">
+        ${isSelected ? '● Active state • Click to deselect' : 'Click state to filter map & proximity ring →'}
+      </div>
+    `;
+  }
+
   private updateTooltipPos(e: MouseEvent): void {
-    this.tooltip.style.left = `${e.clientX + 14}px`;
-    this.tooltip.style.top = `${e.clientY + 14}px`;
+    const pad = 16;
+    const tooltipRect = this.tooltip.getBoundingClientRect();
+    const tw = tooltipRect.width || 220;
+    const th = tooltipRect.height || 180;
+
+    let x = e.clientX + pad;
+    let y = e.clientY + pad;
+
+    // Viewport right edge overflow check
+    if (x + tw > window.innerWidth - pad) {
+      x = e.clientX - tw - pad;
+    }
+
+    // Viewport bottom edge overflow check
+    // Viewport bottom edge overflow check
+    if (y + th > window.innerHeight - pad) {
+      y = e.clientY - th - pad;
+    }
+
+    if (y < pad) {
+      y = pad;
+    }
+
+    this.tooltip.style.left = `${x}px`;
+    this.tooltip.style.top = `${y}px`;
   }
 }

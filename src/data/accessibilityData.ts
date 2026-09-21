@@ -98,7 +98,7 @@ export interface AccessibilityKpis {
 
 export const ACCESSIBILITY_KPIS: AccessibilityKpis = {
   roadAccessRate: 43.6,
-  roadAccessSubtext: 'of tourism assets within 1 km of a main road',
+  roadAccessSubtext: 'of attractions ≤ 1 km of a main road',
   ptAccessRate: 46.0,
   ptAccessSubtext: 'within 1 km of public transport',
   totalTourismAssets: 5491,

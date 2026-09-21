@@ -3,6 +3,30 @@ import { ACCOMMODATION_DATA } from '../../data/accommodationData';
 
 export type MapToggleLayer = 'aor' | 'ratio';
 
+interface KeyStateLabel {
+  id: string;
+  name: string;
+  x: number;
+  y: number;
+}
+
+const KEY_STATE_LABELS: KeyStateLabel[] = [
+  { id: 'PLS', name: 'Perlis', x: 45, y: 78 },
+  { id: 'KDH', name: 'Kedah', x: 65, y: 110 },
+  { id: 'PNG', name: 'Penang', x: 26, y: 138 },
+  { id: 'PRK', name: 'Perak', x: 88, y: 180 },
+  { id: 'KTN', name: 'Kelantan', x: 136, y: 145 },
+  { id: 'TRG', name: 'Terengganu', x: 190, y: 175 },
+  { id: 'PHG', name: 'Pahang', x: 165, y: 255 },
+  { id: 'SGR', name: 'Selangor', x: 68, y: 275 },
+  { id: 'KUL', name: 'KL', x: 95, y: 290 },
+  { id: 'NSN', name: 'N. Sembilan', x: 98, y: 320 },
+  { id: 'MLK', name: 'Melaka', x: 130, y: 350 },
+  { id: 'JHR', name: 'Johor', x: 195, y: 355 },
+  { id: 'SWK', name: 'Sarawak', x: 674, y: 340 },
+  { id: 'SBH', name: 'Sabah', x: 840, y: 160 },
+];
+
 export class AccommodationMap {
   public readonly element: HTMLElement;
   private currentToggle: MapToggleLayer = 'aor';
@@ -10,7 +34,6 @@ export class AccommodationMap {
   private legendElement!: HTMLElement;
   private tooltip!: HTMLElement;
   private onSelectStateCallback?: (stateId: string | null) => void;
-  private hoveredStateId: string | null = null;
   private selectedStateId: string | null = null;
 
   constructor(onSelectState?: (stateId: string | null) => void) {
@@ -36,7 +59,7 @@ export class AccommodationMap {
         ratioBtn.setAttribute('aria-checked', String(toggle === 'ratio'));
       }
 
-      this.updateMapSvg();
+      this.updateMapColors();
       this.updateLegend();
     }
   }
@@ -44,7 +67,7 @@ export class AccommodationMap {
   public setSelectedState(stateId: string | null): void {
     if (this.selectedStateId !== stateId) {
       this.selectedStateId = stateId;
-      this.updateMapSvg();
+      this.updateMapColors();
     }
   }
 
@@ -62,10 +85,6 @@ export class AccommodationMap {
   private hideTooltip(): void {
     if (this.tooltip) {
       this.tooltip.style.display = 'none';
-    }
-    if (this.hoveredStateId !== null) {
-      this.hoveredStateId = null;
-      this.updateMapSvg();
     }
   }
 
@@ -112,6 +131,7 @@ export class AccommodationMap {
 
     this.svgWrapper = document.createElement('div');
     this.svgWrapper.className = 'acc-svg-container';
+    this.svgWrapper.innerHTML = this.renderMapSvg();
     mapStage.appendChild(this.svgWrapper);
 
     // 3. Legend Step Bar
@@ -122,8 +142,8 @@ export class AccommodationMap {
     this.element.appendChild(mapHeader);
     this.element.appendChild(mapStage);
 
-    this.updateMapSvg();
     this.updateLegend();
+    this.attachEvents();
   }
 
   private updateLegend(): void {
@@ -160,9 +180,9 @@ export class AccommodationMap {
     }
   }
 
-  private getColor(stateId: string): string {
-    const data = ACCOMMODATION_DATA.find((d) => d.id === stateId);
-    if (!data) return '#cbd5e1';
+  private getColor(stateCode: string): string {
+    const data = ACCOMMODATION_DATA.find((d) => d.code === stateCode || d.id === stateCode);
+    if (!data) return '#e2e8f0';
 
     if (this.currentToggle === 'aor') {
       const val = data.aor;
@@ -181,126 +201,198 @@ export class AccommodationMap {
     }
   }
 
-  private updateMapSvg(): void {
+  private renderMapSvg(): string {
     const paths = MALAYSIA_GEO_DATA.map((geo) => {
-      const fillColor = this.getColor(geo.code);
-      const isHovered = this.hoveredStateId === geo.code;
+      const fill = this.getColor(geo.code);
       const isSelected = this.selectedStateId === geo.code;
-
-      const stroke = isSelected ? '#0f172a' : isHovered ? '#1e293b' : '#64748b';
-      const strokeWidth = isSelected ? '2.4' : isHovered ? '1.6' : '0.9';
 
       return `
         <path
           d="${geo.svgPath}"
           data-state-id="${geo.code}"
-          fill="${fillColor}"
-          stroke="${stroke}"
-          stroke-width="${strokeWidth}"
+          fill="${fill}"
+          stroke="${isSelected ? '#0f172a' : '#ffffff'}"
+          stroke-width="${isSelected ? '2.4' : '1.1'}"
           stroke-linejoin="round"
           class="acc-map-path ${isSelected ? 'selected' : ''}"
-          style="cursor: pointer; transition: fill 0.25s ease, stroke 0.2s ease, stroke-width 0.15s ease;"
+          style="cursor: pointer; transition: fill 0.25s ease, filter 0.2s ease, stroke 0.2s ease, stroke-width 0.2s ease; ${
+            isSelected ? 'filter: drop-shadow(0 4px 10px rgba(15, 23, 42, 0.45));' : ''
+          }"
         />
       `;
     }).join('');
 
-    const labels = MALAYSIA_GEO_DATA.map((geo) => {
-      const offset = geo.labelOffset || { x: 0, y: 0 };
-      const lx = geo.centroid.x + offset.x;
-      const ly = geo.centroid.y + offset.y;
-      const isHovered = this.hoveredStateId === geo.code;
-      const isSelected = this.selectedStateId === geo.code;
+    const labels = KEY_STATE_LABELS.map((lbl) => `
+      <text
+        x="${lbl.x}"
+        y="${lbl.y}"
+        class="acc-map-state-label"
+        font-size="9.5"
+        font-weight="750"
+        fill="#0f172a"
+        text-anchor="middle"
+        style="pointer-events: none; paint-order: stroke; stroke: #ffffff; stroke-width: 3px; stroke-linejoin: round;"
+      >${lbl.name}</text>
+    `).join('');
 
-      const fontWeight = isSelected ? '900' : isHovered ? '800' : '750';
-      const fill = isSelected ? '#0f172a' : isHovered ? '#1e293b' : '#334155';
-
-      return `
-        <text
-          x="${lx}"
-          y="${ly}"
-          text-anchor="middle"
-          font-size="8.5"
-          font-weight="${fontWeight}"
-          fill="${fill}"
-          style="pointer-events: none; paint-order: stroke; stroke: #ffffff; stroke-width: 2.5px; stroke-linejoin: round;"
-        >${geo.code}</text>
-      `;
-    }).join('');
-
-    this.svgWrapper.innerHTML = `
+    return `
       <svg viewBox="0 0 1000 440" preserveAspectRatio="xMidYMid meet" class="acc-map-svg">
         <g id="acc-states-group">${paths}</g>
         <g id="acc-labels-group">${labels}</g>
       </svg>
     `;
+  }
 
-    // Click outside to clear selection
-    this.svgWrapper.onclick = (e) => {
-      const target = e.target as HTMLElement;
-      if (target.tagName !== 'path' && target.tagName !== 'text') {
-        if (this.selectedStateId !== null) {
-          this.selectedStateId = null;
-          this.updateMapSvg();
-          if (this.onSelectStateCallback) this.onSelectStateCallback(null);
-        }
+  private updateMapColors(): void {
+    const paths = this.svgWrapper.querySelectorAll<SVGPathElement>('.acc-map-path');
+    paths.forEach((path) => {
+      const stateCode = path.getAttribute('data-state-id');
+      if (!stateCode) return;
+      path.setAttribute('fill', this.getColor(stateCode));
+      const isSelected = this.selectedStateId === stateCode;
+      path.classList.toggle('selected', isSelected);
+      if (isSelected) {
+        path.style.stroke = '#0f172a';
+        path.style.strokeWidth = '2.4';
+        path.style.filter = 'drop-shadow(0 4px 10px rgba(15, 23, 42, 0.45))';
+      } else {
+        path.style.stroke = '#ffffff';
+        path.style.strokeWidth = '1.1';
+        path.style.filter = 'none';
       }
-    };
-
-    // Mouse leave svgWrapper to clear hover outline
-    this.svgWrapper.addEventListener('mouseleave', () => {
-      if (this.hoveredStateId !== null) {
-        this.hoveredStateId = null;
-        this.updateMapSvg();
-      }
-    });
-
-    // Add event listeners for hover and click
-    this.svgWrapper.querySelectorAll('path[data-state-id]').forEach((pathEl) => {
-      const stateId = pathEl.getAttribute('data-state-id');
-      if (!stateId) return;
-
-      // HOVER ONLY: show tooltip and outline. Do NOT change the bar chart!
-      pathEl.addEventListener('mouseenter', (e) => {
-        if (this.hoveredStateId !== stateId) {
-          this.hoveredStateId = stateId;
-          this.updateMapSvg();
-        }
-
-        const data = ACCOMMODATION_DATA.find((d) => d.code === stateId);
-        if (data) {
-          const ratio = Math.round((data.visitors * 1000000) / data.rooms);
-          this.tooltip.innerHTML = `
-            <div style="font-weight:700; color:#0f172a; margin-bottom:4px;">${data.name}</div>
-            <div style="font-size:0.75rem; color:#475569;">AOR: <strong>${data.aor}%</strong></div>
-            <div style="font-size:0.75rem; color:#475569;">Ratio: <strong>${ratio.toLocaleString()}</strong> visitors/room</div>
-          `;
-          this.tooltip.style.display = 'block';
-          this.updateTooltipPos(e as MouseEvent);
-        }
-      });
-
-      pathEl.addEventListener('mousemove', (e) => this.updateTooltipPos(e as MouseEvent));
-
-      // CLICK ONLY: change the selected state and trigger callback to update the bar chart!
-      pathEl.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (this.selectedStateId !== stateId) {
-          this.selectedStateId = stateId;
-          this.updateMapSvg();
-          if (this.onSelectStateCallback) this.onSelectStateCallback(stateId);
-        } else {
-          // Toggle off if already selected
-          this.selectedStateId = null;
-          this.updateMapSvg();
-          if (this.onSelectStateCallback) this.onSelectStateCallback(null);
-        }
-      });
     });
   }
 
+  private attachEvents(): void {
+    const paths = this.svgWrapper.querySelectorAll<SVGPathElement>('.acc-map-path');
+
+    paths.forEach((path) => {
+      const stateCode = path.getAttribute('data-state-id');
+      if (!stateCode) return;
+
+      path.addEventListener('mouseenter', (e) => {
+        if (stateCode !== this.selectedStateId) {
+          path.style.filter = 'brightness(1.1) drop-shadow(0 3px 8px rgba(11, 87, 208, 0.35))';
+          path.style.stroke = '#0f172a';
+          path.style.strokeWidth = '1.8';
+        }
+        this.showTooltip(stateCode, e as MouseEvent);
+      });
+
+      path.addEventListener('mousemove', (e) => {
+        this.updateTooltipPos(e as MouseEvent);
+      });
+
+      path.addEventListener('mouseleave', () => {
+        if (stateCode === this.selectedStateId) {
+          path.style.stroke = '#0f172a';
+          path.style.strokeWidth = '2.4';
+          path.style.filter = 'drop-shadow(0 4px 10px rgba(15, 23, 42, 0.45))';
+        } else {
+          path.style.filter = 'none';
+          path.style.stroke = '#ffffff';
+          path.style.strokeWidth = '1.1';
+        }
+        this.hideTooltip();
+      });
+
+      path.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const nextSelected = this.selectedStateId === stateCode ? null : stateCode;
+        this.setSelectedState(nextSelected);
+        if (this.onSelectStateCallback) {
+          this.onSelectStateCallback(nextSelected);
+        }
+        if (nextSelected) {
+          this.showTooltip(stateCode, e as MouseEvent);
+        } else {
+          this.hideTooltip();
+        }
+      });
+    });
+
+    // Clicking outside paths clears selection
+    this.svgWrapper.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName !== 'path') {
+        if (this.selectedStateId !== null) {
+          this.setSelectedState(null);
+          if (this.onSelectStateCallback) {
+            this.onSelectStateCallback(null);
+          }
+          this.hideTooltip();
+        }
+      }
+    });
+  }
+
+  private showTooltip(stateCode: string, e: MouseEvent): void {
+    const data = ACCOMMODATION_DATA.find((d) => d.code === stateCode || d.id === stateCode);
+    if (!data) return;
+
+    const ratio = Math.round((data.visitors * 1000000) / data.rooms);
+    const isSelected = this.selectedStateId === stateCode;
+
+    let badgeClass = 'safe';
+    let badgeText = '';
+    if (this.currentToggle === 'aor') {
+      badgeClass = data.aor >= 65 ? 'critical' : data.aor >= 50 ? 'moderate' : 'safe';
+      badgeText = `${data.aor.toFixed(1)}% AOR`;
+    } else {
+      badgeClass = ratio >= 1000 ? 'critical' : ratio >= 700 ? 'moderate' : 'safe';
+      badgeText = `${ratio.toLocaleString()} / rm`;
+    }
+
+    this.tooltip.innerHTML = `
+      <div class="map-tooltip-header">
+        <span class="map-tooltip-title">${data.name}</span>
+        <span class="map-tooltip-quadrant ${badgeClass}">${badgeText}</span>
+      </div>
+      <div class="map-tooltip-body">
+        <div class="map-tooltip-metric-row">
+          <span>Room Inventory:</span>
+          <strong>${data.rooms.toLocaleString()} rooms</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Annual Visitors:</span>
+          <strong>${data.visitors.toFixed(2)}M visitors</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Average Occupancy:</span>
+          <strong>${data.aor.toFixed(1)}% AOR</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Visitor / Room Ratio:</span>
+          <strong>${ratio.toLocaleString()} / room</strong>
+        </div>
+      </div>
+      <div class="map-tooltip-footer">
+        ${isSelected ? '● Active state • Click to deselect' : 'Click state to view capacity details →'}
+      </div>
+    `;
+
+    this.tooltip.style.display = 'block';
+    this.updateTooltipPos(e);
+  }
+
   private updateTooltipPos(e: MouseEvent): void {
-    this.tooltip.style.left = `${e.clientX + 14}px`;
-    this.tooltip.style.top = `${e.clientY + 14}px`;
+    const tooltipW = 230;
+    const tooltipH = 170;
+    const pad = 16;
+    let x = e.clientX + 16;
+    let y = e.clientY + 16;
+
+    if (x + tooltipW > window.innerWidth - pad) {
+      x = e.clientX - tooltipW - 12;
+    }
+    if (y + tooltipH > window.innerHeight - pad) {
+      y = e.clientY - tooltipH - 12;
+    }
+    if (x < pad) x = pad;
+    if (y < pad) y = pad;
+
+    this.tooltip.style.left = `${x}px`;
+    this.tooltip.style.top = `${y}px`;
   }
 
   public destroy(): void {

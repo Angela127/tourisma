@@ -32,9 +32,11 @@ export class TourismAssetDensityMap {
     });
 
     // Floating Tooltip
+    document.querySelectorAll('.asset-density-map-card-tooltip').forEach((el) => el.remove());
     this.tooltipElement = document.createElement('div');
-    this.tooltipElement.className = 'map-floating-tooltip';
+    this.tooltipElement.className = 'map-floating-tooltip asset-density-map-card-tooltip';
     this.tooltipElement.style.display = 'none';
+    document.body.appendChild(this.tooltipElement);
 
     // Card Header: Title + Subtitle on Left, Mode Toggle + Compass on Right
     const mapHeader = document.createElement('div');
@@ -85,7 +87,6 @@ export class TourismAssetDensityMap {
 
     mapStage.appendChild(svgWrapper);
     mapStage.appendChild(this.legendElement);
-    mapStage.appendChild(this.tooltipElement);
 
     this.element.appendChild(mapHeader);
     this.element.appendChild(mapStage);
@@ -302,17 +303,23 @@ export class TourismAssetDensityMap {
 
   private attachSvgEventListeners(): void {
     const paths = this.element.querySelectorAll<SVGPathElement>('.state-map-path');
+    const svgWrapper = this.element.querySelector<HTMLElement>('.svg-map-wrapper');
 
     paths.forEach((path) => {
       const stateId = path.getAttribute('data-state-id');
       if (!stateId) return;
 
-      path.addEventListener('mouseenter', () => {
+      path.addEventListener('mouseenter', (e: MouseEvent) => {
         if (stateId !== this.selectedStateId) {
-          path.style.filter = 'brightness(1.15) drop-shadow(0 3px 8px rgba(11, 87, 208, 0.4))';
+          path.style.filter = 'brightness(1.12) drop-shadow(0 3px 8px rgba(11, 87, 208, 0.35))';
+          path.style.stroke = '#0f172a';
           path.style.strokeWidth = '1.8';
         }
-        this.showTooltip(stateId);
+        this.showTooltip(stateId, e);
+      });
+
+      path.addEventListener('mousemove', (e: MouseEvent) => {
+        this.updateTooltipPos(e);
       });
 
       path.addEventListener('mouseleave', () => {
@@ -328,18 +335,37 @@ export class TourismAssetDensityMap {
         this.hideTooltip();
       });
 
-      path.addEventListener('click', () => {
+      path.addEventListener('click', (e: MouseEvent) => {
+        e.stopPropagation();
         const nextSelected = this.selectedStateId === stateId ? null : stateId;
         this.setSelectedState(nextSelected);
         if (this.onSelectStateCallback) {
           this.onSelectStateCallback(nextSelected);
         }
-        this.showTooltip(stateId);
+        if (nextSelected) {
+          this.showTooltip(stateId, e);
+        } else {
+          this.hideTooltip();
+        }
       });
+    });
+
+    // Clicking on canvas outside paths clears selection
+    svgWrapper?.addEventListener('click', (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName !== 'path') {
+        if (this.selectedStateId !== null) {
+          this.setSelectedState(null);
+          if (this.onSelectStateCallback) {
+            this.onSelectStateCallback(null);
+          }
+          this.hideTooltip();
+        }
+      }
     });
   }
 
-  private showTooltip(stateId: string): void {
+  private showTooltip(stateId: string, e?: MouseEvent): void {
     const data = STATE_ASSET_DENSITY_DATA[stateId];
     if (!data) return;
 
@@ -377,19 +403,42 @@ export class TourismAssetDensityMap {
       </div>
     `;
 
-    const centroid = STATE_CENTROIDS[stateId];
-    if (centroid) {
-      const { px, py } = this.svgPointToPixel(centroid.x, centroid.y);
-      const tooltipW = 220;
-      const stageEl = this.element.querySelector<HTMLElement>('.map-stage-container');
-      const stageW = stageEl ? stageEl.clientWidth : 500;
-      const xOffset = px > stageW * 0.6 ? -(tooltipW + 10) : 14;
-
-      this.tooltipElement.style.left = `${px + xOffset}px`;
-      this.tooltipElement.style.top = `${py - 40}px`;
-    }
-
     this.tooltipElement.style.display = 'block';
+
+    if (e) {
+      this.updateTooltipPos(e);
+    } else {
+      const centroid = STATE_CENTROIDS[stateId];
+      if (centroid) {
+        const { px, py } = this.svgPointToPixel(centroid.x, centroid.y);
+        const stageEl = this.element.querySelector<HTMLElement>('.map-stage-container');
+        const stageRect = stageEl?.getBoundingClientRect();
+        if (stageRect) {
+          this.tooltipElement.style.left = `${stageRect.left + px + 14}px`;
+          this.tooltipElement.style.top = `${stageRect.top + py - 40}px`;
+        }
+      }
+    }
+  }
+
+  private updateTooltipPos(e: MouseEvent): void {
+    const tooltipW = 230;
+    const tooltipH = 175;
+    const pad = 16;
+    let x = e.clientX + 16;
+    let y = e.clientY + 16;
+
+    if (x + tooltipW > window.innerWidth - pad) {
+      x = e.clientX - tooltipW - 12;
+    }
+    if (y + tooltipH > window.innerHeight - pad) {
+      y = e.clientY - tooltipH - 12;
+    }
+    if (x < pad) x = pad;
+    if (y < pad) y = pad;
+
+    this.tooltipElement.style.left = `${x}px`;
+    this.tooltipElement.style.top = `${y}px`;
   }
 
   private hideTooltip(): void {
@@ -397,6 +446,8 @@ export class TourismAssetDensityMap {
   }
 
   public destroy(): void {
-    this.tooltipElement.remove();
+    if (this.tooltipElement) {
+      this.tooltipElement.remove();
+    }
   }
 }

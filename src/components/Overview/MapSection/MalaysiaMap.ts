@@ -11,6 +11,7 @@ export class MalaysiaMap {
   private tooltipElement: HTMLElement;
   private legendElement: HTMLElement;
   private currentMode: 'demand' | 'readiness' = 'readiness';
+  private selectedStateId: string | null = null;
 
   constructor() {
     this.element = document.createElement('div');
@@ -23,9 +24,11 @@ export class MalaysiaMap {
     });
 
     // Floating Tooltip
+    document.querySelectorAll('.overview-floating-tooltip').forEach((el) => el.remove());
     this.tooltipElement = document.createElement('div');
-    this.tooltipElement.className = 'map-floating-tooltip';
+    this.tooltipElement.className = 'map-floating-tooltip overview-floating-tooltip';
     this.tooltipElement.style.display = 'none';
+    document.body.appendChild(this.tooltipElement);
 
     // Card Header: Title + Subtitle on Left, Demand/Readiness Toggle + North Compass on Right
     const mapHeader = document.createElement('div');
@@ -72,7 +75,6 @@ export class MalaysiaMap {
 
     mapStage.appendChild(svgWrapper);
     mapStage.appendChild(this.legendElement);
-    mapStage.appendChild(this.tooltipElement);
 
     this.element.appendChild(mapHeader);
     this.element.appendChild(mapStage);
@@ -192,7 +194,7 @@ export class MalaysiaMap {
           stroke="#ffffff"
           stroke-width="1.1"
           stroke-linejoin="round"
-          style="cursor: default; transition: fill 0.25s ease, filter 0.2s ease, stroke-width 0.2s ease;"
+          style="cursor: pointer; transition: fill 0.25s ease, filter 0.2s ease, stroke 0.2s ease, stroke-width 0.2s ease;"
         />
       `;
     }).join('');
@@ -271,34 +273,92 @@ export class MalaysiaMap {
     };
   }
 
+  public setSelectedState(stateId: string | null): void {
+    this.selectedStateId = stateId;
+
+    const paths = this.element.querySelectorAll<SVGPathElement>('.state-map-path');
+    paths.forEach((path) => {
+      const pid = path.getAttribute('data-state-id');
+      if (pid === this.selectedStateId) {
+        path.classList.add('selected');
+        path.style.stroke = '#0f172a';
+        path.style.strokeWidth = '2.4';
+        path.style.filter = 'drop-shadow(0 4px 10px rgba(15, 23, 42, 0.45))';
+      } else {
+        path.classList.remove('selected');
+        path.style.stroke = '#ffffff';
+        path.style.strokeWidth = '1.1';
+        path.style.filter = 'none';
+      }
+    });
+  }
+
   private attachSvgEventListeners(): void {
     const paths = this.element.querySelectorAll<SVGPathElement>('.state-map-path');
+    const svgWrapper = this.element.querySelector<HTMLElement>('.svg-map-wrapper');
 
     paths.forEach((path) => {
       const stateId = path.getAttribute('data-state-id');
       if (!stateId) return;
 
-      path.addEventListener('mouseenter', () => {
-        path.style.filter = 'brightness(1.15) drop-shadow(0 3px 8px rgba(11, 87, 208, 0.4))';
-        path.style.strokeWidth = '1.8';
-        this.showTooltip(stateId);
+      path.addEventListener('mouseenter', (e: MouseEvent) => {
+        if (stateId !== this.selectedStateId) {
+          path.style.filter = 'brightness(1.12) drop-shadow(0 3px 8px rgba(11, 87, 208, 0.35))';
+          path.style.stroke = '#0f172a';
+          path.style.strokeWidth = '1.8';
+        }
+        this.showTooltip(stateId, e);
+      });
+
+      path.addEventListener('mousemove', (e: MouseEvent) => {
+        this.updateTooltipPos(e);
       });
 
       path.addEventListener('mouseleave', () => {
-        path.style.filter = 'none';
-        path.style.strokeWidth = '1.1';
+        if (stateId === this.selectedStateId) {
+          path.style.stroke = '#0f172a';
+          path.style.strokeWidth = '2.4';
+          path.style.filter = 'drop-shadow(0 4px 10px rgba(15, 23, 42, 0.45))';
+        } else {
+          path.style.filter = 'none';
+          path.style.stroke = '#ffffff';
+          path.style.strokeWidth = '1.1';
+        }
         this.hideTooltip();
       });
+
+      path.addEventListener('click', (e: MouseEvent) => {
+        e.stopPropagation();
+        const next = this.selectedStateId === stateId ? null : stateId;
+        this.setSelectedState(next);
+        if (next) {
+          this.showTooltip(stateId, e);
+        } else {
+          this.hideTooltip();
+        }
+      });
+    });
+
+    // Clicking outside paths on canvas clears selection
+    svgWrapper?.addEventListener('click', (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName !== 'path') {
+        if (this.selectedStateId !== null) {
+          this.setSelectedState(null);
+          this.hideTooltip();
+        }
+      }
     });
   }
 
-  private showTooltip(stateId: string): void {
+  private showTooltip(stateId: string, e?: MouseEvent): void {
     const data: StateOverviewItem | undefined = STATES_OVERVIEW_DATA[stateId];
     if (!data) return;
 
     const isDemand = this.currentMode === 'demand';
     const activeMetricLabel = isDemand ? 'Demand Index' : 'Readiness Index';
     const activeMetricVal = Math.round(isDemand ? data.demandScore : data.readinessScore);
+    const isSelected = this.selectedStateId === stateId;
 
     this.tooltipElement.innerHTML = `
       <div class="map-tooltip-header">
@@ -323,29 +383,56 @@ export class MalaysiaMap {
           <strong>${data.alos} nights</strong>
         </div>
       </div>
+      <div class="map-tooltip-footer">
+        ${isSelected ? '● Active state • Click to deselect' : (isDemand ? 'Ranked by total visitor demand & receipts' : 'Ranked by infrastructure capacity & lodging')}
+      </div>
     `;
 
-    // Position tooltip anchored near the state's centroid
-    const centroid = STATE_CENTROIDS[stateId];
-    if (centroid) {
-      const { px, py } = this.svgPointToPixel(centroid.x, centroid.y);
-
-      // Offset slightly so the tooltip doesn't cover the state center
-      const tooltipW = 200;
-      const stageEl = this.element.querySelector<HTMLElement>('.map-stage-container');
-      const stageW = stageEl ? stageEl.clientWidth : 500;
-
-      // If centroid is on the right half, show tooltip to the left; otherwise to the right
-      const xOffset = px > stageW * 0.6 ? -(tooltipW + 10) : 14;
-
-      this.tooltipElement.style.left = `${px + xOffset}px`;
-      this.tooltipElement.style.top = `${py - 40}px`;
-    }
-
     this.tooltipElement.style.display = 'block';
+
+    if (e) {
+      this.updateTooltipPos(e);
+    } else {
+      const centroid = STATE_CENTROIDS[stateId];
+      if (centroid) {
+        const { px, py } = this.svgPointToPixel(centroid.x, centroid.y);
+        const stageEl = this.element.querySelector<HTMLElement>('.map-stage-container');
+        const stageRect = stageEl?.getBoundingClientRect();
+        if (stageRect) {
+          this.tooltipElement.style.left = `${stageRect.left + px + 14}px`;
+          this.tooltipElement.style.top = `${stageRect.top + py - 40}px`;
+        }
+      }
+    }
+  }
+
+  private updateTooltipPos(e: MouseEvent): void {
+    const tooltipW = 230;
+    const tooltipH = 175;
+    const pad = 16;
+    let x = e.clientX + 16;
+    let y = e.clientY + 16;
+
+    if (x + tooltipW > window.innerWidth - pad) {
+      x = e.clientX - tooltipW - 12;
+    }
+    if (y + tooltipH > window.innerHeight - pad) {
+      y = e.clientY - tooltipH - 12;
+    }
+    if (x < pad) x = pad;
+    if (y < pad) y = pad;
+
+    this.tooltipElement.style.left = `${x}px`;
+    this.tooltipElement.style.top = `${y}px`;
   }
 
   private hideTooltip(): void {
     this.tooltipElement.style.display = 'none';
+  }
+
+  public destroy(): void {
+    if (this.tooltipElement) {
+      this.tooltipElement.remove();
+    }
   }
 }

@@ -236,17 +236,80 @@
   display: block;
 }
 
+.malaysia-map-card .state-map-path {
+  cursor: pointer;
+  stroke: #ffffff;
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+  transition: fill 0.25s ease, filter 0.2s ease, stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+[data-theme="dark"] .malaysia-map-card .state-map-path {
+  stroke: #1e293b;
+}
+
+.malaysia-map-card .state-map-path:hover {
+  filter: brightness(1.12) drop-shadow(0 3px 8px rgba(11, 87, 208, 0.35));
+  stroke: #0f172a;
+  stroke-width: 1.8;
+}
+
+[data-theme="dark"] .malaysia-map-card .state-map-path:hover {
+  stroke: #f8fafc;
+}
+
+.malaysia-map-card .state-map-path.selected {
+  stroke: #0f172a !important;
+  stroke-width: 2.4 !important;
+  filter: drop-shadow(0 4px 10px rgba(15, 23, 42, 0.45)) !important;
+}
+
+[data-theme="dark"] .malaysia-map-card .state-map-path.selected {
+  stroke: #38bdf8 !important;
+  filter: drop-shadow(0 4px 10px rgba(56, 189, 248, 0.6)) !important;
+}
+
+/* World Map Paths */
+.world-country-path {
+  cursor: pointer;
+  stroke: #ffffff;
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+  transition: fill 0.25s ease, filter 0.2s ease, stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+.world-country-path:hover {
+  filter: brightness(1.12) drop-shadow(0 2px 8px rgba(11, 87, 208, 0.35));
+  stroke: #0f172a;
+  stroke-width: 1.8;
+}
+
+[data-theme="dark"] .world-country-path:hover {
+  stroke: #f8fafc;
+}
+
+/* Floating Tooltips (attached to document.body) */
+.overview-floating-tooltip,
+.world-floating-tooltip,
 .map-floating-tooltip {
-  position: absolute;
-  z-index: 50;
+  position: fixed;
+  z-index: 9999;
   background: #ffffff;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   padding: 12px 14px;
   box-shadow: 0 4px 18px rgba(15, 23, 42, 0.12);
   pointer-events: none;
-  min-width: 220px;
+  min-width: 230px;
   box-sizing: border-box;
+}
+
+[data-theme="dark"] .overview-floating-tooltip,
+[data-theme="dark"] .world-floating-tooltip,
+[data-theme="dark"] .map-floating-tooltip {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
 }
 
 .map-tooltip-header {
@@ -259,25 +322,38 @@
 
 .map-tooltip-title {
   font-weight: 800;
-  font-size: 0.82rem;
+  font-size: 13px;
   color: #0f172a;
 }
 
+[data-theme="dark"] .map-tooltip-title {
+  color: #f8fafc;
+}
+
 .map-tooltip-quadrant {
-  font-size: 0.63rem;
+  font-size: 10px;
   font-weight: 600;
   color: #64748b;
   text-align: right;
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .map-tooltip-quadrant {
+  background: #0f172a;
+  color: #94a3b8;
 }
 
 .map-tooltip-body {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
 }
 
 .map-tooltip-metric-row {
-  font-size: 0.72rem;
+  font-size: 11.5px;
   color: #475569;
   display: flex;
   align-items: center;
@@ -290,13 +366,26 @@
   font-weight: 700;
 }
 
+[data-theme="dark"] .map-tooltip-metric-row {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .map-tooltip-metric-row strong {
+  color: #f8fafc;
+}
+
 .map-tooltip-footer {
-  font-size: 0.66rem;
+  font-size: 10.5px;
   color: #0b57d0;
-  font-weight: 700;
-  border-top: 1px solid #f1f5f9;
+  font-weight: 600;
+  margin-top: 8px;
   padding-top: 6px;
-  margin-top: 4px;
+  border-top: 1px solid #f1f5f9;
+}
+
+[data-theme="dark"] .map-tooltip-footer {
+  border-color: #334155;
+  color: #60a5fa;
 }
 
 /* Map Legend Step Bar */

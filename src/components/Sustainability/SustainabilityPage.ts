@@ -1,13 +1,18 @@
 import './sustainability.css';
+import {
+  createElement,
+  ShieldCheck,
+  AlertTriangle,
+  Trees,
+  Waves,
+} from 'lucide';
 import { NATIONAL_ENVIRONMENT_DATA } from '../../data/environmentData';
 import { EnvironmentMapCard } from './EnvironmentMapCard';
 import { EnvironmentRingChartCard } from './EnvironmentRingChartCard';
 import { EnvironmentExposureBarChart } from './EnvironmentExposureBarChart';
-import { StateDetailDrawer } from '../Common/StateDetailDrawer';
 
 export class SustainabilityPage {
   public readonly element: HTMLElement;
-  private stateDrawer: StateDetailDrawer;
   private mapCard!: EnvironmentMapCard;
   private ringCard!: EnvironmentRingChartCard;
   private barChart!: EnvironmentExposureBarChart;
@@ -16,16 +21,14 @@ export class SustainabilityPage {
   constructor() {
     this.element = document.createElement('div');
     this.element.className = 'sustainability-page environment-page';
-
-    this.stateDrawer = new StateDetailDrawer();
     this.render();
   }
 
-  private handleSelectState(stateId: string): void {
+  private handleSelectState(stateId: string | null): void {
     this.mapCard.hideTooltip();
     this.barChart.hideTooltip();
 
-    if (this.selectedStateId === stateId) {
+    if (!stateId || this.selectedStateId === stateId) {
       // Toggle off selection
       this.selectedStateId = null;
       this.mapCard.setSelectedState(null);
@@ -36,9 +39,6 @@ export class SustainabilityPage {
       this.mapCard.setSelectedState(stateId);
       this.ringCard.setScope(stateId);
       this.barChart.setSelectedState(stateId);
-
-      // Open State Drawer for comprehensive drilldown
-      this.stateDrawer.open(stateId);
     }
   }
 
@@ -57,57 +57,110 @@ export class SustainabilityPage {
   private render(): void {
     this.element.innerHTML = '';
 
-    // 1. Top KPI Summary Strip
+    // 1. Top KPI Summary Strip (4 Standardized Cards Matching Other Pages)
     const kpiStrip = document.createElement('section');
     kpiStrip.className = 'env-kpi-strip';
 
     const nat = NATIONAL_ENVIRONMENT_DATA;
 
-    kpiStrip.innerHTML = `
-      <div class="env-kpi-card">
-        <span class="env-kpi-label">TOTAL SCREENED ASSETS</span>
-        <div class="env-kpi-value-wrap">
-          <span class="env-kpi-num">${nat.totalAssets.toLocaleString()}</span>
-        </div>
-        <span class="env-kpi-sub">Across all 16 states & federal territories</span>
-      </div>
+    const kpis = [
+      {
+        title: 'TOTAL SCREENED ASSETS',
+        value: nat.totalAssets.toLocaleString(),
+        badgeText: '100% spatial inventory',
+        badgeClass: 'blue',
+        subtext: 'Across all 16 states & federal territories',
+        icon: ShieldCheck,
+        accentColor: '#2563eb', // Royal Blue
+        iconBg: '#eff6ff',
+        iconColor: '#2563eb',
+      },
+      {
+        title: 'SENSITIVE PROXIMITY',
+        value: nat.totalExposed.toLocaleString(),
+        badgeText: `${nat.exposurePct}% exposed`,
+        badgeClass: 'warning',
+        subtext: 'Inside or near protected reserves',
+        icon: AlertTriangle,
+        accentColor: '#ea580c', // Orange
+        iconBg: '#fff7ed',
+        iconColor: '#ea580c',
+      },
+      {
+        title: 'LAND ECO-EXPOSURE',
+        value: nat.land.exposed.toLocaleString(),
+        badgeText: `${nat.land.percent}% terrestrial exposure`,
+        badgeClass: 'land',
+        subtext: 'Forest reserves & national parks',
+        icon: Trees,
+        accentColor: '#059669', // Emerald
+        iconBg: '#ecfdf5',
+        iconColor: '#059669',
+      },
+      {
+        title: 'MARINE & REEF EXPOSURE',
+        value: nat.marine.exposed.toLocaleString(),
+        badgeText: `${nat.marine.percent}% marine exposure`,
+        badgeClass: 'marine',
+        subtext: 'Marine parks & coral ecosystems',
+        icon: Waves,
+        accentColor: '#0284c7', // Sky Blue
+        iconBg: '#f0f9ff',
+        iconColor: '#0284c7',
+      },
+    ];
 
-      <div class="env-kpi-card highlight-exposed">
-        <span class="env-kpi-label">SENSITIVE PROXIMITY</span>
-        <div class="env-kpi-value-wrap">
-          <span class="env-kpi-num">${nat.totalExposed.toLocaleString()}</span>
-          <span class="env-kpi-badge warning">${nat.exposurePct}%</span>
-        </div>
-        <span class="env-kpi-sub">Inside or within 5km ecological buffer</span>
-      </div>
+    kpis.forEach((kpi) => {
+      const card = document.createElement('div');
+      card.className = 'env-kpi-card';
+      card.style.setProperty('--card-accent', kpi.accentColor);
+      card.style.setProperty('--icon-bg', kpi.iconBg);
+      card.style.setProperty('--icon-color', kpi.iconColor);
 
-      <div class="env-kpi-card highlight-inside">
-        <span class="env-kpi-label">PHYSICAL INCURSIONS</span>
-        <div class="env-kpi-value-wrap">
-          <span class="env-kpi-num">${nat.inside.toLocaleString()}</span>
-          <span class="env-kpi-badge critical">${nat.insidePct}%</span>
-        </div>
-        <span class="env-kpi-sub">Located directly inside protected boundaries</span>
-      </div>
+      // Info left
+      const infoDiv = document.createElement('div');
+      infoDiv.className = 'env-kpi-info';
 
-      <div class="env-kpi-card highlight-land">
-        <span class="env-kpi-label">LAND ECO-EXPOSURE</span>
-        <div class="env-kpi-value-wrap">
-          <span class="env-kpi-num">${nat.land.exposed.toLocaleString()}</span>
-          <span class="env-kpi-badge land">${nat.land.percent}%</span>
-        </div>
-        <span class="env-kpi-sub">Forest reserves & national terrestrial parks</span>
-      </div>
+      const titleEl = document.createElement('h4');
+      titleEl.className = 'env-kpi-label';
+      titleEl.textContent = kpi.title;
 
-      <div class="env-kpi-card highlight-marine">
-        <span class="env-kpi-label">MARINE & REEF EXPOSURE</span>
-        <div class="env-kpi-value-wrap">
-          <span class="env-kpi-num">${nat.marine.exposed.toLocaleString()}</span>
-          <span class="env-kpi-badge marine">${nat.marine.percent}%</span>
-        </div>
-        <span class="env-kpi-sub">Marine parks, coral ecosystems & turtle sanctuaries</span>
-      </div>
-    `;
+      const valWrap = document.createElement('div');
+      valWrap.className = 'env-kpi-value-wrap';
+
+      const valEl = document.createElement('span');
+      valEl.className = 'env-kpi-num';
+      valEl.textContent = kpi.value;
+      valWrap.appendChild(valEl);
+
+      const badgeEl = document.createElement('span');
+      badgeEl.className = `env-kpi-badge ${kpi.badgeClass}`;
+      badgeEl.textContent = kpi.badgeText;
+      valWrap.appendChild(badgeEl);
+
+      const subEl = document.createElement('span');
+      subEl.className = 'env-kpi-sub';
+      subEl.textContent = kpi.subtext;
+
+      infoDiv.appendChild(titleEl);
+      infoDiv.appendChild(valWrap);
+      infoDiv.appendChild(subEl);
+
+      // Icon right
+      const iconWrap = document.createElement('div');
+      iconWrap.className = 'env-kpi-icon-wrap';
+
+      const iconSvg = createElement(kpi.icon, {
+        width: 20,
+        height: 20,
+        'stroke-width': 2,
+      });
+      iconWrap.appendChild(iconSvg);
+
+      card.appendChild(infoDiv);
+      card.appendChild(iconWrap);
+      kpiStrip.appendChild(card);
+    });
 
     this.element.appendChild(kpiStrip);
 
@@ -129,9 +182,5 @@ export class SustainabilityPage {
     this.barChart = new EnvironmentExposureBarChart((stateId) => this.handleSelectState(stateId));
     lowerSection.appendChild(this.barChart.element);
     this.element.appendChild(lowerSection);
-
-    // Universal State Detail Drawer
-    this.element.appendChild(this.stateDrawer.backdrop);
-    this.element.appendChild(this.stateDrawer.element);
   }
 }

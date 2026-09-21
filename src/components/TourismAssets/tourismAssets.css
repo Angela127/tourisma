@@ -496,20 +496,49 @@
   border-radius: 2px;
 }
 
-.asset-density-map-card .map-floating-tooltip {
-  position: absolute;
-  z-index: 50;
+.asset-density-map-card .state-map-path {
+  cursor: pointer;
+  stroke: #ffffff;
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+  transition: fill 0.25s ease, filter 0.2s ease, stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+[data-theme="dark"] .asset-density-map-card .state-map-path {
+  stroke: #1e293b;
+}
+
+.asset-density-map-card .state-map-path:hover {
+  filter: brightness(1.12) drop-shadow(0 3px 8px rgba(11, 87, 208, 0.35));
+  stroke: #0f172a;
+  stroke-width: 1.8;
+}
+
+[data-theme="dark"] .asset-density-map-card .state-map-path:hover {
+  stroke: #f8fafc;
+}
+
+/* Floating Map Tooltip (attached to document.body) */
+.asset-density-map-card-tooltip {
+  position: fixed;
+  z-index: 9999;
   background: #ffffff;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   padding: 12px 14px;
   box-shadow: 0 4px 18px rgba(15, 23, 42, 0.12);
   pointer-events: none;
-  min-width: 220px;
+  min-width: 230px;
   box-sizing: border-box;
 }
 
-.asset-density-map-card .map-tooltip-header {
+[data-theme="dark"] .asset-density-map-card-tooltip {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+}
+
+.asset-density-map-card-tooltip .map-tooltip-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -517,13 +546,17 @@
   margin-bottom: 8px;
 }
 
-.asset-density-map-card .map-tooltip-title {
+.asset-density-map-card-tooltip .map-tooltip-title {
   font-weight: 800;
   font-size: 13px;
   color: #0f172a;
 }
 
-.asset-density-map-card .map-tooltip-quadrant {
+[data-theme="dark"] .asset-density-map-card-tooltip .map-tooltip-title {
+  color: #f8fafc;
+}
+
+.asset-density-map-card-tooltip .map-tooltip-quadrant {
   font-size: 10px;
   font-weight: 600;
   color: #64748b;
@@ -533,13 +566,18 @@
   border-radius: 4px;
 }
 
-.asset-density-map-card .map-tooltip-body {
+[data-theme="dark"] .asset-density-map-card-tooltip .map-tooltip-quadrant {
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+}
+
+.asset-density-map-card-tooltip .map-tooltip-body {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.asset-density-map-card .map-tooltip-metric-row {
+.asset-density-map-card-tooltip .map-tooltip-metric-row {
   font-size: 11.5px;
   color: #475569;
   display: flex;
@@ -548,18 +586,31 @@
   gap: 16px;
 }
 
-.asset-density-map-card .map-tooltip-metric-row strong {
+.asset-density-map-card-tooltip .map-tooltip-metric-row strong {
   color: #0f172a;
   font-weight: 700;
 }
 
-.asset-density-map-card .map-tooltip-footer {
+[data-theme="dark"] .asset-density-map-card-tooltip .map-tooltip-metric-row {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .asset-density-map-card-tooltip .map-tooltip-metric-row strong {
+  color: #f8fafc;
+}
+
+.asset-density-map-card-tooltip .map-tooltip-footer {
   font-size: 10.5px;
   color: #0b57d0;
   font-weight: 600;
   margin-top: 8px;
   padding-top: 6px;
   border-top: 1px solid #f1f5f9;
+}
+
+[data-theme="dark"] .asset-density-map-card-tooltip .map-tooltip-footer {
+  border-color: #334155;
+  color: #60a5fa;
 }
 
 /* --------------------------------------------------------------------------
@@ -1039,6 +1090,11 @@
   stroke: #0f172a !important;
   stroke-width: 2.4px !important;
   filter: drop-shadow(0 4px 12px rgba(15, 23, 42, 0.5)) !important;
+}
+
+[data-theme="dark"] .asset-density-map-card .state-map-path.selected {
+  stroke: #38bdf8 !important;
+  filter: drop-shadow(0 4px 12px rgba(56, 189, 248, 0.6)) !important;
 }
 
 /* Reset Scope Button in Ring Chart Header */

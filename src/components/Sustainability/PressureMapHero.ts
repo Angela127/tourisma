@@ -22,7 +22,7 @@ export class PressureMapHero {
 
   private createTooltip(): void {
     this.tooltip = document.createElement('div');
-    this.tooltip.className = 'infra-tooltip';
+    this.tooltip.className = 'map-floating-tooltip env-chart-tooltip';
     this.tooltip.style.display = 'none';
     document.body.appendChild(this.tooltip);
   }
@@ -160,14 +160,33 @@ export class PressureMapHero {
         (pathEl as SVGPathElement).style.filter = 'brightness(1.15) drop-shadow(0 2px 6px rgba(0,0,0,0.3))';
         const metric = data.dimensions[this.currentDimension];
         const statusText = metric.status === 'critical' ? 'CRITICAL BOTTLENECK' : metric.status === 'strain' ? 'STRAIN WARNING' : 'HEALTHY HEADROOM';
-        const statusColor = metric.status === 'critical' ? '#f87171' : metric.status === 'strain' ? '#fde047' : '#6ee7b7';
 
         this.tooltip.innerHTML = `
-          <strong>${data.name} (${data.code})</strong> • <span style="color:${statusColor}">${statusText}</span><br/>
-          • ${this.getDimensionLabel(this.currentDimension)}: <strong>${metric.value}</strong><br/>
-          • Pressure Score: <strong>${metric.score.toFixed(1)} / 100</strong> (Threshold: ${metric.threshold})<br/>
-          • Trend: <strong>${metric.trend.toUpperCase()}</strong><br/>
-          <span style="font-size:0.65rem; color:#94a3b8;">🖱 Click state to open State Profile</span>
+          <div class="map-tooltip-header">
+            <span class="map-tooltip-title">${data.name}</span>
+            <span class="map-tooltip-quadrant ${metric.status}">${statusText}</span>
+          </div>
+          <div class="map-tooltip-body">
+            <div class="map-tooltip-metric-row">
+              <span>${this.getDimensionLabel(this.currentDimension)}:</span>
+              <strong>${metric.value}</strong>
+            </div>
+            <div class="map-tooltip-metric-row">
+              <span>Pressure Score:</span>
+              <strong>${metric.score.toFixed(1)} / 100</strong>
+            </div>
+            <div class="map-tooltip-metric-row">
+              <span>Threshold:</span>
+              <strong>${metric.threshold}</strong>
+            </div>
+            <div class="map-tooltip-metric-row">
+              <span>Trend:</span>
+              <strong>${metric.trend.toUpperCase()}</strong>
+            </div>
+          </div>
+          <div class="map-tooltip-footer">
+            Click state to view detailed profile →
+          </div>
         `;
         this.tooltip.style.display = 'block';
         this.updateTooltipPos(e as MouseEvent);

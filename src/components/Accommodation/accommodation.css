@@ -515,19 +515,41 @@
 
 .acc-map-path {
   cursor: pointer;
+  stroke: #ffffff;
+  stroke-width: 1.1;
+  stroke-linejoin: round;
   transition: fill 0.25s ease, filter 0.2s ease, stroke 0.2s ease, stroke-width 0.2s ease;
 }
 
 .acc-map-path:hover {
   filter: brightness(1.12) drop-shadow(0 3px 8px rgba(11, 87, 208, 0.35));
-  stroke: #1e293b;
-  stroke-width: 1.6;
+  stroke: #0f172a !important;
+  stroke-width: 1.8 !important;
 }
 
 .acc-map-path.selected {
   stroke: #0f172a !important;
   stroke-width: 2.4 !important;
-  filter: drop-shadow(0 4px 10px rgba(15, 23, 42, 0.4)) !important;
+  filter: drop-shadow(0 4px 10px rgba(15, 23, 42, 0.45)) !important;
+}
+
+[data-theme="dark"] .acc-map-path.selected {
+  stroke: #38bdf8 !important;
+  filter: drop-shadow(0 4px 10px rgba(56, 189, 248, 0.6)) !important;
+}
+
+.acc-map-state-label {
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: #ffffff;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  font-family: inherit;
+}
+
+[data-theme="dark"] .acc-map-state-label {
+  stroke: #0f172a;
+  fill: #f1f5f9 !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -587,26 +609,131 @@
 }
 
 /* --------------------------------------------------------------------------
-   Tooltip
+   Floating Map Tooltip (Matches Tourism Assets & Environmental Card)
    -------------------------------------------------------------------------- */
 .acc-floating-tooltip {
   position: fixed;
   pointer-events: none;
-  z-index: 5000;
+  z-index: 9999;
   background: #ffffff;
-  color: #0f172a;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 12px;
-  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.12);
   border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px 14px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.12);
+  min-width: 220px;
+  box-sizing: border-box;
 }
 
 [data-theme="dark"] .acc-floating-tooltip {
   background: #1e293b;
-  color: #f8fafc;
   border-color: #334155;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+}
+
+.acc-floating-tooltip .map-tooltip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.acc-floating-tooltip .map-tooltip-title {
+  font-weight: 800;
+  font-size: 13px;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .acc-floating-tooltip .map-tooltip-title {
+  color: #f8fafc;
+}
+
+.acc-floating-tooltip .map-tooltip-quadrant {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+  text-align: right;
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.acc-floating-tooltip .map-tooltip-quadrant.critical {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.acc-floating-tooltip .map-tooltip-quadrant.moderate {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.acc-floating-tooltip .map-tooltip-quadrant.safe {
+  background: #dbeafe;
+  color: #0369a1;
+}
+
+[data-theme="dark"] .acc-floating-tooltip .map-tooltip-quadrant {
+  background: #0f172a;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .acc-floating-tooltip .map-tooltip-quadrant.critical {
+  background: rgba(185, 28, 28, 0.25);
+  color: #f87171;
+}
+
+[data-theme="dark"] .acc-floating-tooltip .map-tooltip-quadrant.moderate {
+  background: rgba(133, 77, 14, 0.25);
+  color: #fde047;
+}
+
+[data-theme="dark"] .acc-floating-tooltip .map-tooltip-quadrant.safe {
+  background: rgba(3, 105, 161, 0.25);
+  color: #38bdf8;
+}
+
+.acc-floating-tooltip .map-tooltip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.acc-floating-tooltip .map-tooltip-metric-row {
+  font-size: 11.5px;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.acc-floating-tooltip .map-tooltip-metric-row strong {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .acc-floating-tooltip .map-tooltip-metric-row {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .acc-floating-tooltip .map-tooltip-metric-row strong {
+  color: #f8fafc;
+}
+
+.acc-floating-tooltip .map-tooltip-footer {
+  font-size: 10.5px;
+  color: #2563eb;
+  font-weight: 600;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid #f1f5f9;
+}
+
+[data-theme="dark"] .acc-floating-tooltip .map-tooltip-footer {
+  border-color: #334155;
+  color: #60a5fa;
 }
 
 /* --------------------------------------------------------------------------

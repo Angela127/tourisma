@@ -65,9 +65,11 @@ export class WorldMapCard {
     mapStage.className = 'world-map-stage';
 
     // Tooltip
+    document.querySelectorAll('.world-floating-tooltip').forEach((el) => el.remove());
     this.tooltipElement = document.createElement('div');
-    this.tooltipElement.className = 'world-map-tooltip';
+    this.tooltipElement.className = 'map-floating-tooltip world-floating-tooltip';
     this.tooltipElement.style.display = 'none';
+    document.body.appendChild(this.tooltipElement);
 
     const svgWrapper = document.createElement('div');
     svgWrapper.className = 'world-svg-wrapper';
@@ -92,7 +94,6 @@ export class WorldMapCard {
 
     mapStage.appendChild(svgWrapper);
     mapStage.appendChild(legend);
-    mapStage.appendChild(this.tooltipElement);
 
     this.element.appendChild(cardHeader);
     this.element.appendChild(mapStage);
@@ -165,22 +166,49 @@ export class WorldMapCard {
 
   private showTooltip(name: string, arrivals: string, event: MouseEvent): void {
     this.tooltipElement.innerHTML = `
-      <div class="tt-world-title">${name}</div>
-      <div class="tt-world-val">Arrivals: <strong>${arrivals}</strong></div>
+      <div class="map-tooltip-header">
+        <span class="map-tooltip-title">${name}</span>
+        <span class="map-tooltip-quadrant">Global Market</span>
+      </div>
+      <div class="map-tooltip-body">
+        <div class="map-tooltip-metric-row">
+          <span>Tourist Arrivals:</span>
+          <strong>${arrivals}</strong>
+        </div>
+      </div>
     `;
     this.tooltipElement.style.display = 'block';
     this.moveTooltip(event);
   }
 
   private moveTooltip(event: MouseEvent): void {
-    const stageRect = this.element.getBoundingClientRect();
-    const x = event.clientX - stageRect.left + 12;
-    const y = event.clientY - stageRect.top + 12;
+    const tooltipW = 210;
+    const tooltipH = 90;
+    const pad = 16;
+
+    let x = event.clientX + 16;
+    let y = event.clientY + 16;
+
+    if (x + tooltipW > window.innerWidth - pad) {
+      x = event.clientX - tooltipW - 12;
+    }
+    if (y + tooltipH > window.innerHeight - pad) {
+      y = event.clientY - tooltipH - 12;
+    }
+    if (x < pad) x = pad;
+    if (y < pad) y = pad;
+
     this.tooltipElement.style.left = `${x}px`;
     this.tooltipElement.style.top = `${y}px`;
   }
 
   private hideTooltip(): void {
     this.tooltipElement.style.display = 'none';
+  }
+
+  public destroy(): void {
+    if (this.tooltipElement) {
+      this.tooltipElement.remove();
+    }
   }
 }

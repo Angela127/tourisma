@@ -4,16 +4,12 @@ import {
   getStateEnvironment,
 } from '../../data/environmentData';
 
-export type SimulationScenario = 'baseline' | 'peak';
-
 export class EnvironmentRingChartCard {
   public readonly element: HTMLElement;
   private currentScope: string = 'all'; // 'all' or stateId
-  private currentScenario: SimulationScenario = 'baseline';
   private ringContainer!: HTMLElement;
   private metricsContainer!: HTMLElement;
   private selectDropdown!: HTMLSelectElement;
-  private scenarioToggle!: HTMLElement;
   private onSelectScopeCallback?: (scope: string) => void;
 
   // SVG Element references for smooth transitions (prevents full innerHTML DOM wipes)
@@ -32,7 +28,7 @@ export class EnvironmentRingChartCard {
   constructor(onSelectScope?: (scope: string) => void) {
     this.onSelectScopeCallback = onSelectScope;
     this.element = document.createElement('div');
-    this.element.className = 'env-card env-ring-card';
+    this.element.className = 'asset-card env-ring-card';
 
     this.render();
   }
@@ -53,41 +49,22 @@ export class EnvironmentRingChartCard {
 
     // Header
     const header = document.createElement('div');
-    header.className = 'env-card-header';
+    header.className = 'asset-card-header env-ring-header';
 
     const titleGroup = document.createElement('div');
-    titleGroup.className = 'env-title-group';
+    titleGroup.className = 'asset-card-title-group';
     titleGroup.innerHTML = `
-      <div class="env-badge-header">
-        <span class="env-badge-dot ring"></span>
+      <div class="asset-card-badge">
+        <span class="asset-badge-dot" style="background-color: #f59e0b;"></span>
         <span>RESERVE PROXIMITY RING</span>
       </div>
-      <h3 class="env-card-title">Environmental Proximity Breakdown</h3>
-      <span class="env-card-desc">Inside vs Near buffer vs Outside safe zone distribution</span>
+      <h3 class="asset-card-title">ENVIRONMENTAL PROXIMITY BREAKDOWN</h3>
+      <p class="asset-card-subtitle">Inside vs Near buffer vs Outside safe zone distribution</p>
     `;
 
-    // Right-side Controls: Scenario Simulation Toggle + State Dropdown
+    // Right-side Controls: State Dropdown
     const controlsWrap = document.createElement('div');
     controlsWrap.className = 'env-ring-controls-group';
-
-    // Simulation Scenario Toggle
-    this.scenarioToggle = document.createElement('div');
-    this.scenarioToggle.className = 'env-sim-scenario-toggle';
-    this.scenarioToggle.innerHTML = `
-      <button class="env-scenario-btn ${this.currentScenario === 'baseline' ? 'active' : ''}" data-scenario="baseline" title="Real-world observed dataset">Observed</button>
-      <button class="env-scenario-btn ${this.currentScenario === 'peak' ? 'active' : ''}" data-scenario="peak" title="Simulate peak-season carry-capacity strain (+25% buffer pressure)">⚡ +25% Peak Sim</button>
-    `;
-    this.scenarioToggle.querySelectorAll('.env-scenario-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const sc = btn.getAttribute('data-scenario') as SimulationScenario;
-        if (sc && this.currentScenario !== sc) {
-          this.currentScenario = sc;
-          this.scenarioToggle.querySelectorAll('.env-scenario-btn').forEach((b) => b.classList.remove('active'));
-          btn.classList.add('active');
-          this.updateChart(true);
-        }
-      });
-    });
 
     // Dropdown selector
     const selectorWrap = document.createElement('div');
@@ -120,7 +97,6 @@ export class EnvironmentRingChartCard {
     });
 
     selectorWrap.appendChild(this.selectDropdown);
-    controlsWrap.appendChild(this.scenarioToggle);
     controlsWrap.appendChild(selectorWrap);
 
     header.appendChild(titleGroup);
@@ -257,15 +233,6 @@ export class EnvironmentRingChartCard {
     let near = isNational ? NATIONAL_ENVIRONMENT_DATA.near : (stateData?.near || 0);
     let outside = isNational ? NATIONAL_ENVIRONMENT_DATA.outside : (stateData?.outside || 0);
 
-    // Scenario simulation shift: If Peak (+25%), simulate buffer zone assets experiencing increased pressure
-    if (this.currentScenario === 'peak') {
-      const shiftToInside = Math.round(near * 0.18);
-      const shiftToNear = Math.round(outside * 0.08);
-      inside += shiftToInside;
-      near = near - shiftToInside + shiftToNear;
-      outside -= shiftToNear;
-    }
-
     const total = baseTotal;
     const insidePct = total > 0 ? (inside / total) * 100 : 0;
     const nearPct = total > 0 ? (near / total) * 100 : 0;
@@ -286,7 +253,7 @@ export class EnvironmentRingChartCard {
     const nearOffset = -insideLen;
     const outsideOffset = -(insideLen + nearLen);
 
-    // Trigger visual simulation pulse effect
+    // Trigger visual pulse effect on state switch
     if (animate && this.simIndicatorCircle) {
       this.simIndicatorCircle.setAttribute('r', `${radius + 8}`);
       this.simIndicatorCircle.style.opacity = '0.6';
@@ -331,7 +298,7 @@ export class EnvironmentRingChartCard {
 
       this.animatePct(startPct, endPct, 650, (val) => {
         if (this.pctText) {
-          this.pctText.textContent = `${val.toFixed(1)}% Exposed ${this.currentScenario === 'peak' ? '(Sim)' : ''}`;
+          this.pctText.textContent = `${val.toFixed(1)}% Exposed`;
           this.pctText.setAttribute('fill', val > 15 ? '#ef4444' : '#059669');
         }
       });
@@ -355,7 +322,7 @@ export class EnvironmentRingChartCard {
             <span class="env-breakdown-dot inside"></span>
             <div class="env-breakdown-text">
               <span class="env-breakdown-title">Inside Protected Reserves</span>
-              <span class="env-breakdown-sub">${this.currentScenario === 'peak' ? 'Simulated elevated direct incursion' : 'Direct physical siting inside gazetted parks / reserves'}</span>
+              <span class="env-breakdown-sub">Direct physical siting inside gazetted parks / reserves</span>
             </div>
           </div>
           <div class="env-breakdown-stat">
@@ -370,7 +337,7 @@ export class EnvironmentRingChartCard {
             <span class="env-breakdown-dot near"></span>
             <div class="env-breakdown-text">
               <span class="env-breakdown-title">Near Sensitive Buffer</span>
-              <span class="env-breakdown-sub">${this.currentScenario === 'peak' ? 'High holiday weekend perimeter spillover' : 'Within active 5km ecological buffer zone'}</span>
+              <span class="env-breakdown-sub">Within active ecological buffer zone</span>
             </div>
           </div>
           <div class="env-breakdown-stat">

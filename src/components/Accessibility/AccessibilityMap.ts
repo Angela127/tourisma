@@ -22,6 +22,14 @@ export class AccessibilityMap {
     this.onModeChangeCallback = onModeChange;
     this.element = document.createElement('div');
     this.element.className = 'access-card access-map-card';
+
+    // Tooltip attached to document.body to avoid overflow clipping
+    document.querySelectorAll('.access-floating-tooltip').forEach((el) => el.remove());
+    this.tooltipElement = document.createElement('div');
+    this.tooltipElement.className = 'access-floating-tooltip';
+    this.tooltipElement.style.display = 'none';
+    document.body.appendChild(this.tooltipElement);
+
     this.render();
   }
 
@@ -78,11 +86,6 @@ export class AccessibilityMap {
     svgWrap.className = 'access-map-svg-wrap';
     svgWrap.innerHTML = this.renderMapSvg();
     stage.appendChild(svgWrap);
-
-    // Tooltip
-    this.tooltipElement = document.createElement('div');
-    this.tooltipElement.className = 'access-floating-tooltip';
-    stage.appendChild(this.tooltipElement);
 
     // Legend
     this.legendElement = document.createElement('div');
@@ -251,29 +254,29 @@ export class AccessibilityMap {
   }
 
   private attachSvgEvents(): void {
-    const stageEl = this.element.querySelector<HTMLElement>('.access-map-stage');
     const paths = this.element.querySelectorAll<SVGPathElement>('.access-state-path');
+    const svgWrap = this.element.querySelector<HTMLElement>('.access-map-svg-wrap');
 
     paths.forEach((path) => {
       path.addEventListener('mouseenter', (e: MouseEvent) => {
         const stateId = path.getAttribute('data-state-id');
-        if (!stateId || !stageEl) return;
+        if (!stateId) return;
         const data = STATE_ACCESSIBILITY_DATA[stateId];
         if (!data) return;
 
-        this.showTooltip(data, e, stageEl);
+        this.showTooltip(data, e);
       });
 
       path.addEventListener('mousemove', (e: MouseEvent) => {
-        if (!stageEl) return;
-        this.positionTooltip(e, stageEl);
+        this.positionTooltip(e);
       });
 
       path.addEventListener('mouseleave', () => {
         this.hideTooltip();
       });
 
-      path.addEventListener('click', () => {
+      path.addEventListener('click', (e: MouseEvent) => {
+        e.stopPropagation();
         const stateId = path.getAttribute('data-state-id');
         if (!stateId) return;
 
@@ -282,48 +285,88 @@ export class AccessibilityMap {
         if (this.onSelectStateCallback) {
           this.onSelectStateCallback(next);
         }
+        const data = STATE_ACCESSIBILITY_DATA[stateId];
+        if (next && data) {
+          this.showTooltip(data, e);
+        } else {
+          this.hideTooltip();
+        }
       });
+    });
+
+    // Clicking outside paths clears selection
+    svgWrap?.addEventListener('click', (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName !== 'path') {
+        if (this.selectedStateId !== null) {
+          this.setSelectedState(null);
+          if (this.onSelectStateCallback) {
+            this.onSelectStateCallback(null);
+          }
+          this.hideTooltip();
+        }
+      }
     });
   }
 
-  private showTooltip(data: StateAccessibilityItem, e: MouseEvent, stageEl: HTMLElement): void {
+  private showTooltip(data: StateAccessibilityItem, e: MouseEvent): void {
     const detail = this.currentMode === 'road' ? data.road : data.pt;
-    const modeLabel = this.currentMode === 'road' ? 'Road' : 'Public Transport';
+    const modeLabel = this.currentMode === 'road' ? 'Road' : 'PT';
+    const isSelected = this.selectedStateId === data.id;
+
+    const badgeClass = detail.goodPct >= 70 ? 'high' : detail.goodPct >= 40 ? 'moderate' : 'low';
 
     this.tooltipElement.innerHTML = `
-      <div class="access-tooltip-title">
-        <span>${data.name}</span>
-        <span style="font-size: 10.5px; opacity: 0.8;">${data.coreAssets} assets</span>
+      <div class="map-tooltip-header">
+        <span class="map-tooltip-title">${data.name}</span>
+        <span class="map-tooltip-quadrant ${badgeClass}">${detail.goodPct.toFixed(1)}% ${modeLabel} Access</span>
       </div>
-      <div class="access-tooltip-row">
-        <span>${modeLabel} Access (≤ 1 km):</span>
-        <strong>${detail.goodPct.toFixed(1)}% (${(detail.highCount + detail.moderateCount).toLocaleString()})</strong>
+      <div class="map-tooltip-body">
+        <div class="map-tooltip-metric-row">
+          <span>Total Tourism Assets:</span>
+          <strong>${data.coreAssets.toLocaleString()} assets</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Good Access (≤ 1 km):</span>
+          <strong>${detail.goodPct.toFixed(1)}% (${(detail.highCount + detail.moderateCount).toLocaleString()})</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>High Access (≤ 500 m):</span>
+          <strong>${detail.highPct.toFixed(1)}% (${detail.highCount.toLocaleString()})</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Moderate (500m – 1km):</span>
+          <strong>${detail.moderatePct.toFixed(1)}% (${detail.moderateCount.toLocaleString()})</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Limited / Remote (&gt; 1km):</span>
+          <strong>${(detail.lowPct + detail.remotePct).toFixed(1)}% (${(detail.lowCount + detail.remoteCount).toLocaleString()})</strong>
+        </div>
       </div>
-      <div class="access-tooltip-row">
-        <span style="color: #34d399;">🟢 High (≤ 500 m):</span>
-        <span style="color: #ffffff; font-weight: 600;">${detail.highPct.toFixed(1)}% (${detail.highCount})</span>
-      </div>
-      <div class="access-tooltip-row">
-        <span style="color: #facc15;">🟡 Moderate (500m–1km):</span>
-        <span style="color: #ffffff; font-weight: 600;">${detail.moderatePct.toFixed(1)}% (${detail.moderateCount})</span>
-      </div>
-      <div class="access-tooltip-row">
-        <span style="color: #fb923c;">🟠 Low (1–3 km):</span>
-        <span style="color: #ffffff; font-weight: 600;">${detail.lowPct.toFixed(1)}% (${detail.lowCount})</span>
-      </div>
-      <div class="access-tooltip-row">
-        <span style="color: #f87171;">🔴 Remote (&gt; 3 km):</span>
-        <span style="color: #ffffff; font-weight: 600;">${detail.remotePct.toFixed(1)}% (${detail.remoteCount})</span>
+      <div class="map-tooltip-footer">
+        ${isSelected ? '● Active state • Click to deselect' : 'Click state to filter charts →'}
       </div>
     `;
-    this.tooltipElement.style.display = 'flex';
-    this.positionTooltip(e, stageEl);
+    this.tooltipElement.style.display = 'block';
+    this.positionTooltip(e);
   }
 
-  private positionTooltip(e: MouseEvent, stageEl: HTMLElement): void {
-    const stageRect = stageEl.getBoundingClientRect();
-    const x = e.clientX - stageRect.left;
-    const y = e.clientY - stageRect.top;
+  private positionTooltip(e: MouseEvent): void {
+    const tooltipW = 230;
+    const tooltipH = 175;
+    const pad = 16;
+
+    let x = e.clientX + 16;
+    let y = e.clientY + 16;
+
+    if (x + tooltipW > window.innerWidth - pad) {
+      x = e.clientX - tooltipW - 12;
+    }
+    if (y + tooltipH > window.innerHeight - pad) {
+      y = e.clientY - tooltipH - 12;
+    }
+    if (x < pad) x = pad;
+    if (y < pad) y = pad;
 
     this.tooltipElement.style.left = `${x}px`;
     this.tooltipElement.style.top = `${y}px`;
@@ -331,5 +374,11 @@ export class AccessibilityMap {
 
   private hideTooltip(): void {
     this.tooltipElement.style.display = 'none';
+  }
+
+  public destroy(): void {
+    if (this.tooltipElement) {
+      this.tooltipElement.remove();
+    }
   }
 }
