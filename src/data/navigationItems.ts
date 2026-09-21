@@ -1,7 +1,10 @@
 import {
   House,
   ChartNoAxesCombined,
-  Road,
+  Landmark,
+  Bed,
+  Route,
+  HeartPulse,
   Leaf,
   MapPin,
 } from 'lucide';
@@ -19,9 +22,24 @@ export const NAVIGATION_ITEMS: NavItemConfig[] = [
     icon: ChartNoAxesCombined,
   },
   {
-    id: 'infrastructure',
-    label: 'Infrastructure',
-    icon: Road,
+    id: 'tourism-assets',
+    label: 'Tourism Assets',
+    icon: Landmark,
+  },
+  {
+    id: 'accommodation',
+    label: 'Accommodation',
+    icon: Bed,
+  },
+  {
+    id: 'accessibility',
+    label: 'Accessibility',
+    icon: Route,
+  },
+  {
+    id: 'healthcare',
+    label: 'Healthcare',
+    icon: HeartPulse,
   },
   {
     id: 'sustainability',

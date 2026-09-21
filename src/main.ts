@@ -4,7 +4,10 @@ import { Header } from './components/Header/Header';
 import { Footer } from './components/Footer/Footer';
 import { OverviewPage } from './components/Overview/OverviewPage';
 import { TourismDemandPage } from './components/TourismDemand/TourismDemandPage';
-import { InfrastructurePage } from './components/Infrastructure/InfrastructurePage';
+import { TourismAssetsPage } from './components/TourismAssets/TourismAssetsPage';
+import { AccommodationPage } from './components/Accommodation/AccommodationPage';
+import { AccessibilityPage } from './components/Accessibility/AccessibilityPage';
+import { HealthcarePage } from './components/Healthcare/HealthcarePage';
 import { SustainabilityPage } from './components/Sustainability/SustainabilityPage';
 import { DestinationsPage } from './components/Destinations/DestinationsPage';
 
@@ -28,9 +31,18 @@ function initializeApp(): void {
     } else if (navId === 'tourism-demand') {
       header.setTitle('TOURISM DEMAND & ORIGINS', 'Source Market Dynamics, Seasonality Heatmaps & Predictive Forecasts');
       renderTourismDemand();
-    } else if (navId === 'infrastructure') {
-      header.setTitle('INFRASTRUCTURE & ACCOMMODATION CAPACITY', 'Can Destinations Physically Accommodate More Visitors?');
-      renderInfrastructure();
+    } else if (navId === 'tourism-assets') {
+      header.setTitle('TOURISM ASSETS', 'Core Attractions & Supporting Tourism Inventory');
+      renderTourismAssets();
+    } else if (navId === 'accommodation') {
+      header.setTitle('ACCOMMODATION', 'Capacity, Rooms & Establishment Diagnostic');
+      renderAccommodation();
+    } else if (navId === 'accessibility') {
+      header.setTitle('ACCESSIBILITY', 'Road Connectivity & Public Transport Spatial Access');
+      renderAccessibility();
+    } else if (navId === 'healthcare') {
+      header.setTitle('HEALTHCARE', 'Medical Facilities & Bed Occupancy Diagnostic');
+      renderHealthcare();
     } else if (navId === 'sustainability') {
       header.setTitle('ENVIRONMENT & ECOLOGICAL SENSITIVITY', 'Asset Proximity Diagnostic across Terrestrial & Marine Protected Reserves');
       renderSustainability();
@@ -98,11 +110,32 @@ function initializeApp(): void {
     mainContent.appendChild(demandPage.element);
   };
 
-  // Render infrastructure capacity page
-  const renderInfrastructure = () => {
+  // Render tourism assets page (empty)
+  const renderTourismAssets = () => {
     mainContent.innerHTML = '';
-    const infraPage = new InfrastructurePage();
-    mainContent.appendChild(infraPage.element);
+    const assetsPage = new TourismAssetsPage();
+    mainContent.appendChild(assetsPage.element);
+  };
+
+  // Render accommodation page (empty)
+  const renderAccommodation = () => {
+    mainContent.innerHTML = '';
+    const accPage = new AccommodationPage();
+    mainContent.appendChild(accPage.element);
+  };
+
+  // Render accessibility page (empty)
+  const renderAccessibility = () => {
+    mainContent.innerHTML = '';
+    const accessPage = new AccessibilityPage();
+    mainContent.appendChild(accessPage.element);
+  };
+
+  // Render healthcare page (empty)
+  const renderHealthcare = () => {
+    mainContent.innerHTML = '';
+    const healthPage = new HealthcarePage();
+    mainContent.appendChild(healthPage.element);
   };
 
   // Render sustainability page
