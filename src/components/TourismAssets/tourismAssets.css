@@ -1,0 +1,1088 @@
+/* ==========================================================================
+   Tourisma Tourism Assets Stylesheet
+   ========================================================================== */
+
+.tourism-assets-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 24px 32px 24px;
+  box-sizing: border-box;
+  color: #0f172a;
+  background-color: #f8fafc;
+  min-height: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   1. Top KPI Row - 4 Cards Grid
+   -------------------------------------------------------------------------- */
+.assets-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  width: 100%;
+}
+
+.assets-kpi-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.assets-kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--card-accent, #2563eb);
+}
+
+.assets-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  border-color: #cbd5e1;
+}
+
+.assets-kpi-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.assets-kpi-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.assets-kpi-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.assets-kpi-value {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.assets-kpi-subtext {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.assets-kpi-icon-wrap {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--icon-bg, #eff6ff);
+  color: var(--icon-color, #2563eb);
+}
+
+/* --------------------------------------------------------------------------
+   Common Card Container
+   -------------------------------------------------------------------------- */
+.asset-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.asset-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.asset-card-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.asset-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #2563eb;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.asset-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #2563eb;
+}
+
+.asset-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+.asset-card-subtitle {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Toggle Segmented Pill Control */
+.asset-segmented-control {
+  display: inline-flex;
+  background: #f1f5f9;
+  padding: 3px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.asset-segment-btn {
+  padding: 5px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #475569;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.asset-segment-btn:hover:not(.active) {
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.asset-segment-btn.active {
+  background: #0b57d0;
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(11, 87, 208, 0.3);
+}
+
+/* --------------------------------------------------------------------------
+   2. Middle Row: Category Breakdown (Left) + Twin Ring Charts (Right)
+   -------------------------------------------------------------------------- */
+.assets-middle-grid {
+  display: grid;
+  grid-template-columns: 1.22fr 1fr;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Horizontal Category Bars */
+.asset-category-bars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin-top: 4px;
+}
+
+.category-bar-row {
+  display: grid;
+  grid-template-columns: 175px 1fr 110px;
+  align-items: center;
+  gap: 12px;
+  font-size: 12.5px;
+}
+
+.category-bar-label {
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.category-bar-track {
+  height: 18px;
+  background-color: #f1f5f9;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.category-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+}
+
+.category-bar-values {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.category-bar-count {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 12.5px;
+}
+
+.category-bar-pct {
+  font-weight: 500;
+  color: #64748b;
+  font-size: 11px;
+}
+
+/* Twin Donut Rings (Core vs Supporting) */
+.dual-rings-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  height: 100%;
+  align-items: stretch;
+}
+
+.ring-chart-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 10px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.ring-column-header {
+  font-size: 12.5px;
+  font-weight: 750;
+  color: #0f172a;
+  margin-bottom: 2px;
+  text-align: center;
+}
+
+.ring-column-sub {
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.donut-svg-container {
+  position: relative;
+  width: 132px;
+  height: 132px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2px 0 6px 0;
+}
+
+.donut-svg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+
+.donut-center-info {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+}
+
+.donut-center-count {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.donut-center-label {
+  font-size: 9px;
+  font-weight: 650;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-top: 1px;
+}
+
+.ring-legend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  margin-top: 6px;
+  padding: 0;
+}
+
+.ring-legend-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  gap: 6px;
+  transition: background-color 0.12s ease;
+}
+
+.ring-legend-item:hover,
+.ring-legend-item.hovered {
+  background-color: #f1f5f9;
+}
+
+.ring-legend-label-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.ring-legend-dot {
+  width: 7.5px;
+  height: 7.5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.ring-legend-name {
+  color: #334155;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11px;
+  font-weight: 550;
+}
+
+.ring-legend-values {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.ring-legend-pct {
+  font-weight: 750;
+  color: #0f172a;
+  font-size: 11px;
+}
+
+.ring-legend-count {
+  font-weight: 500;
+  color: #64748b;
+  font-size: 10.5px;
+}
+
+/* --------------------------------------------------------------------------
+   3. Malaysia Core Asset Density Vector Map
+   -------------------------------------------------------------------------- */
+.asset-density-map-card {
+  min-height: 440px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.asset-density-map-card .map-stage-container {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 320px;
+  justify-content: space-between;
+}
+
+.asset-density-map-card .svg-map-wrapper {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+}
+
+.asset-density-map-card .main-malaysia-svg {
+  width: 100%;
+  height: auto;
+  max-height: 340px;
+  display: block;
+}
+
+.asset-density-map-card .map-legend-step-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin-top: 8px;
+  font-size: 11px;
+}
+
+.asset-density-map-card .legend-label-readiness {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.asset-density-map-card .legend-scale-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.asset-density-map-card .legend-scale-text {
+  font-size: 10.5px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.asset-density-map-card .legend-step-blocks {
+  display: flex;
+  gap: 3px;
+}
+
+.asset-density-map-card .step-block {
+  width: 22px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.asset-density-map-card .map-floating-tooltip {
+  position: absolute;
+  z-index: 50;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px 14px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.12);
+  pointer-events: none;
+  min-width: 220px;
+  box-sizing: border-box;
+}
+
+.asset-density-map-card .map-tooltip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.asset-density-map-card .map-tooltip-title {
+  font-weight: 800;
+  font-size: 13px;
+  color: #0f172a;
+}
+
+.asset-density-map-card .map-tooltip-quadrant {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+  text-align: right;
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.asset-density-map-card .map-tooltip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.asset-density-map-card .map-tooltip-metric-row {
+  font-size: 11.5px;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.asset-density-map-card .map-tooltip-metric-row strong {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.asset-density-map-card .map-tooltip-footer {
+  font-size: 10.5px;
+  color: #0b57d0;
+  font-weight: 600;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid #f1f5f9;
+}
+
+/* --------------------------------------------------------------------------
+   4. State Attraction Portfolio Diversity Stacked Bar Chart (Graph 6.2)
+   -------------------------------------------------------------------------- */
+.diversity-chart-card {
+  margin-top: 4px;
+}
+
+.diversity-header {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.diversity-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.diversity-sort-control {
+  display: inline-flex;
+  align-items: center;
+  background: #f1f5f9;
+  padding: 3px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  gap: 2px;
+}
+
+.diversity-sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #475569;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.diversity-sort-btn:hover:not(.active) {
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.diversity-sort-btn.active {
+  background: #0b57d0;
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(11, 87, 208, 0.3);
+}
+
+.diversity-btn-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.diversity-sort-btn.active .diversity-btn-dot {
+  box-shadow: 0 0 0 1.5px #ffffff;
+}
+
+.diversity-reset-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.diversity-reset-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.diversity-reset-filter-btn:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.15);
+}
+
+.diversity-filter-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #2563eb;
+  animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+.diversity-filter-close {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  color: #2563eb;
+  margin-left: 2px;
+}
+
+
+
+/* Category Legend Bar */
+.diversity-legend-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 8px 14px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+
+.diversity-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  padding: 3px 6px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.diversity-legend-item:hover,
+.diversity-legend-item.active {
+  background-color: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+}
+
+.diversity-legend-item.dimmed {
+  opacity: 0.35;
+}
+
+.diversity-legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.diversity-legend-name {
+  white-space: nowrap;
+}
+
+.diversity-legend-stat {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Chart Container & Scale */
+.diversity-chart-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.diversity-scale-row {
+  display: grid;
+  grid-template-columns: 155px 1fr 85px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 6px 6px 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 4px;
+}
+
+.diversity-scale-state-col {
+  white-space: nowrap;
+}
+
+.diversity-scale-track-col {
+  position: relative;
+  height: 14px;
+}
+
+.scale-tick {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-variant-numeric: tabular-nums;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.diversity-scale-total-col {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Rows Container */
+.diversity-rows-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.diversity-row {
+  display: grid;
+  grid-template-columns: 155px 1fr 85px;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+}
+
+.diversity-row:hover {
+  background-color: #f1f5f9;
+}
+
+.diversity-row.selected {
+  background-color: #eff6ff;
+  outline: 2px solid #2563eb;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+}
+
+.diversity-row.selected .diversity-row-name {
+  color: #1d4ed8;
+  font-weight: 800;
+}
+
+.diversity-row.selected .diversity-total-count {
+  color: #1d4ed8;
+  font-weight: 800;
+}
+
+.diversity-state-col {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.diversity-row-index {
+  font-size: 11px;
+  color: #94a3b8;
+  width: 18px;
+  flex-shrink: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.diversity-row-name {
+  font-weight: 600;
+  color: #1e293b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Stacked Bar Track & Grid Lines */
+.diversity-bar-track-col {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.diversity-grid-lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.diversity-grid-lines .grid-line {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 1px;
+  background-color: #e2e8f0;
+}
+
+.diversity-stacked-bar {
+  display: flex;
+  width: 100%;
+  height: 22px;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: #e2e8f0;
+  position: relative;
+  z-index: 1;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.diversity-bar-segment {
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.6);
+  transition: opacity 0.15s ease, filter 0.15s ease;
+  overflow: hidden;
+}
+
+.diversity-bar-segment:last-child {
+  border-right: none;
+}
+
+.diversity-bar-segment.dimmed {
+  opacity: 0.22;
+}
+
+.diversity-bar-segment.highlighted {
+  filter: brightness(1.18);
+  box-shadow: inset 0 0 0 1.5px #ffffff;
+}
+
+.diversity-segment-pct {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+  pointer-events: none;
+  overflow: hidden;
+  padding: 0 1px;
+}
+
+/* Total Column */
+.diversity-total-col {
+  text-align: right;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 3px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.diversity-total-count {
+  font-weight: 700;
+  color: #0f172a;
+  font-variant-numeric: tabular-nums;
+}
+
+.diversity-total-unit {
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* Floating Tooltip */
+.diversity-tooltip {
+  position: fixed;
+  z-index: 99999;
+  pointer-events: none;
+  background: #0f172a;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 12px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  min-width: 220px;
+  max-width: 290px;
+}
+
+.diversity-tooltip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.diversity-tooltip-state {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.diversity-tooltip-total {
+  font-size: 10.5px;
+  color: #94a3b8;
+  font-variant-numeric: tabular-nums;
+}
+
+.diversity-tooltip-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.diversity-tooltip-category-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.diversity-tooltip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.diversity-tooltip-cat-name {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.diversity-tooltip-stat-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.diversity-tooltip-val {
+  font-size: 11px;
+  color: #cbd5e1;
+  font-variant-numeric: tabular-nums;
+}
+
+.diversity-tooltip-pct {
+  font-size: 13px;
+  font-weight: 800;
+  color: #38bdf8;
+  font-variant-numeric: tabular-nums;
+}
+
+.diversity-tooltip-footer {
+  font-size: 10px;
+  color: #94a3b8;
+  font-style: italic;
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Selected state on SVG choropleth map */
+.asset-density-map-card .state-map-path.selected {
+  stroke: #0f172a !important;
+  stroke-width: 2.4px !important;
+  filter: drop-shadow(0 4px 12px rgba(15, 23, 42, 0.5)) !important;
+}
+
+/* Reset Scope Button in Ring Chart Header */
+.asset-reset-scope-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 9999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  margin-top: 2px;
+}
+
+.asset-reset-scope-btn:hover {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-color: #93c5fd;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(37, 99, 235, 0.12);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1180px) {
+  .assets-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .assets-middle-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .assets-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+  .dual-rings-wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+

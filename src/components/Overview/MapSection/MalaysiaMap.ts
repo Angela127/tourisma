@@ -1,7 +1,5 @@
 import { MALAYSIA_GEO_DATA } from '../../../data/malaysiaGeo';
 import { STATES_OVERVIEW_DATA, type StateOverviewItem } from '../../../data/overviewData';
-import { StateDetailDrawer } from '../../Common/StateDetailDrawer';
-
 // Centroid lookup for tooltip positioning (in SVG viewBox 0 0 1000 440 space)
 const STATE_CENTROIDS: Record<string, { x: number; y: number }> = {};
 MALAYSIA_GEO_DATA.forEach((geo) => {
@@ -10,7 +8,6 @@ MALAYSIA_GEO_DATA.forEach((geo) => {
 
 export class MalaysiaMap {
   public readonly element: HTMLElement;
-  private drawer: StateDetailDrawer;
   private tooltipElement: HTMLElement;
   private legendElement: HTMLElement;
   private currentMode: 'demand' | 'readiness' = 'readiness';
@@ -19,10 +16,11 @@ export class MalaysiaMap {
     this.element = document.createElement('div');
     this.element.className = 'malaysia-map-card';
 
-    // Universal State Detail Drawer
-    this.drawer = new StateDetailDrawer();
-    document.body.appendChild(this.drawer.backdrop);
-    document.body.appendChild(this.drawer.element);
+    // Clean up any existing state detail drawer/backdrop from DOM
+    document.querySelectorAll('.state-detail-drawer, .state-detail-backdrop').forEach((el) => {
+      el.classList.remove('open');
+      el.remove();
+    });
 
     // Floating Tooltip
     this.tooltipElement = document.createElement('div');
@@ -194,7 +192,7 @@ export class MalaysiaMap {
           stroke="#ffffff"
           stroke-width="1.1"
           stroke-linejoin="round"
-          style="cursor: pointer; transition: fill 0.25s ease, filter 0.2s ease, stroke-width 0.2s ease;"
+          style="cursor: default; transition: fill 0.25s ease, filter 0.2s ease, stroke-width 0.2s ease;"
         />
       `;
     }).join('');
@@ -291,10 +289,6 @@ export class MalaysiaMap {
         path.style.strokeWidth = '1.1';
         this.hideTooltip();
       });
-
-      path.addEventListener('click', () => {
-        this.drawer.open(stateId);
-      });
     });
   }
 
@@ -328,9 +322,6 @@ export class MalaysiaMap {
           <span>Avg. Length of Stay:</span>
           <strong>${data.alos} nights</strong>
         </div>
-      </div>
-      <div class="map-tooltip-footer">
-        Click to open State Diagnostic →
       </div>
     `;
 
