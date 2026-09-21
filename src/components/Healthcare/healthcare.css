@@ -1,0 +1,1001 @@
+/* ==========================================================================
+   Tourisma Healthcare & Medical Diagnostic Stylesheet
+   Executive, compact, neat dashboard design
+   ========================================================================== */
+
+.healthcare-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px 20px 48px 20px;
+  width: 100%;
+  box-sizing: border-box;
+  color: #0f172a;
+}
+
+.hc-page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* --------------------------------------------------------------------------
+   1. KPI Summary Ribbon (4 Cards)
+   -------------------------------------------------------------------------- */
+.hc-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .hc-kpi-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .hc-kpi-strip {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hc-kpi-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hc-kpi-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.hc-kpi-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hc-kpi-label {
+  font-size: 0.64rem;
+  font-weight: 800;
+  color: #64748b;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hc-kpi-scope-tag {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 1px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+}
+
+.hc-kpi-value-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hc-kpi-num {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.hc-kpi-pill {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.pill-blue {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.pill-indigo {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+.pill-emerald {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge-safe {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.badge-warning {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.badge-critical {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.hc-kpi-sub {
+  font-size: 0.7rem;
+  color: #64748b;
+  line-height: 1.25;
+}
+
+/* --------------------------------------------------------------------------
+   Card Base Styles
+   -------------------------------------------------------------------------- */
+.hc-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+}
+
+.hc-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.hc-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hc-badge-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #0284c7;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hc-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #0284c7;
+}
+
+.hc-card-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.hc-card-desc {
+  font-size: 0.74rem;
+  color: #64748b;
+}
+
+/* --------------------------------------------------------------------------
+   2. Upper Grid (Map + 100% Stacked Bar)
+   -------------------------------------------------------------------------- */
+.hc-upper-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+.hc-upper-grid>.hc-card {
+  height: 510px;
+}
+
+@media (max-width: 1150px) {
+  .hc-upper-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hc-upper-grid>.hc-card {
+    height: auto;
+    min-height: 480px;
+  }
+}
+
+/* Map Card Specifics */
+.hc-map-controls-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hc-select-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.hc-state-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 5px 28px 5px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1e293b;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.15s ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+.hc-state-select:hover {
+  border-color: #94a3b8;
+  background-color: #f8fafc;
+}
+
+.hc-state-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+}
+
+.hc-layer-toggles {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #f1f5f9;
+  padding: 2px 3px;
+  border-radius: 6px;
+}
+
+.hc-layer-btn,
+.hc-layer-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+  padding: 4px 9px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.hc-layer-btn:hover,
+.hc-layer-toggle-btn:hover {
+  color: #0f172a;
+}
+
+.hc-layer-btn.active,
+.hc-layer-toggle-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  border-color: #e2e8f0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.hc-layer-btn:not(.active),
+.hc-layer-toggle-btn:not(.active) {
+  opacity: 0.55;
+}
+
+.hc-btn-dot {
+  width: 6.5px;
+  height: 6.5px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.hc-layer-btn:hover .hc-btn-dot,
+.hc-layer-toggle-btn:hover .hc-btn-dot {
+  transform: scale(1.2);
+}
+
+.dot-asset {
+  background: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.dot-facility {
+  background: #ef4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.dot-buffer {
+  background: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Layer Transitions in SVG */
+.hc-animated-layer {
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center center;
+}
+
+.hc-animated-layer.layer-hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.hc-animated-layer.layer-visible {
+  opacity: 1 !important;
+  pointer-events: auto;
+}
+
+/* Expanding Buffer Animation */
+.hc-buffer-circle {
+  animation: bufferPulse 2.8s ease-in-out infinite alternate;
+}
+
+@keyframes bufferPulse {
+  0% {
+    stroke-opacity: 0.55;
+    fill-opacity: 0.12;
+  }
+
+  100% {
+    stroke-opacity: 0.95;
+    fill-opacity: 0.22;
+  }
+}
+
+.hc-map-canvas-wrap {
+  width: 100%;
+  flex: 1;
+  min-height: 320px;
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hc-svg-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hc-map-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.hc-map-stats-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  margin-top: 10px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  flex-wrap: wrap;
+}
+
+.hc-stats-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.hc-strip-stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hc-stat-k {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.hc-stat-v {
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.hc-strip-hint {
+  font-size: 0.68rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.hc-reset-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.hc-reset-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
+/* --------------------------------------------------------------------------
+   Stacked Bar Specifics
+   -------------------------------------------------------------------------- */
+.hc-mode-toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: #f1f5f9;
+  padding: 2px;
+  border-radius: 6px;
+}
+
+.hc-toggle-pill {
+  background: transparent;
+  border: none;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748b;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.hc-toggle-pill:hover {
+  color: #0f172a;
+}
+
+.hc-toggle-pill.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.hc-stacked-legend {
+  display: flex;
+  gap: 14px;
+  padding: 6px 10px;
+  margin-bottom: 8px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 6px;
+  flex-wrap: wrap;
+}
+
+.hc-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hc-legend-swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.hc-legend-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.hc-stacked-bars-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-height: 0;
+  padding-right: 2px;
+}
+
+.hc-access-footer-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 10px;
+  margin-top: 6px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 6px;
+  font-size: 0.7rem;
+}
+
+.hc-access-footer-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  line-height: 1.3;
+}
+
+.hc-bar-row {
+  display: grid;
+  grid-template-columns: 105px 1fr 55px;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background-color 0.12s ease;
+  cursor: pointer;
+}
+
+.hc-bar-row:hover {
+  background-color: #f1f5f9;
+}
+
+.hc-bar-row.selected {
+  background-color: #eff6ff;
+  outline: 1px solid #3b82f6;
+}
+
+.hc-bar-state-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.hc-state-code {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 1px 4px;
+  border-radius: 3px;
+  width: 26px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.hc-state-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hc-stacked-bar-track {
+  display: flex;
+  height: 16px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: #e2e8f0;
+  width: 100%;
+}
+
+.hc-bar-segment {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.25s ease;
+}
+
+.hc-bar-segment span {
+  font-size: 0.58rem;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+.hc-bar-meta-count {
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: #64748b;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   3. Lower Grid (Capacity + BOR: 50% / 50%)
+   -------------------------------------------------------------------------- */
+.hc-lower-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+.hc-lower-grid>.hc-card {
+  height: 490px;
+}
+
+@media (max-width: 1024px) {
+  .hc-lower-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hc-lower-grid>.hc-card {
+    height: auto;
+    min-height: 460px;
+  }
+}
+
+/* Capacity Bar Specifics */
+.hc-metric-toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: #f1f5f9;
+  padding: 2px;
+  border-radius: 6px;
+}
+
+.hc-metric-pill {
+  background: transparent;
+  border: none;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748b;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.hc-metric-pill:hover {
+  color: #0f172a;
+}
+
+.hc-metric-pill.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.hc-capacity-bars-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-height: 0;
+  padding-right: 2px;
+}
+
+.hc-cap-row {
+  display: grid;
+  grid-template-columns: 105px 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.hc-cap-row:hover {
+  background-color: #f1f5f9;
+}
+
+.hc-cap-row.selected {
+  background-color: #eff6ff;
+  outline: 1px solid #3b82f6;
+}
+
+.hc-cap-label-col {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.hc-cap-code {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 1px 4px;
+  border-radius: 3px;
+  width: 26px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.hc-cap-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hc-cap-track-col {
+  width: 100%;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hc-cap-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.25s ease;
+}
+
+.hc-cap-bar-val {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #475569;
+  white-space: nowrap;
+}
+
+.hc-capacity-footer-note {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+  font-size: 0.68rem;
+  color: #64748b;
+}
+
+/* --------------------------------------------------------------------------
+   Bed Occupancy Rate (BOR) Specifics
+   -------------------------------------------------------------------------- */
+.hc-bor-national-pill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #0369a1;
+  background: #e0f2fe;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  border: 1px solid #bae6fd;
+}
+
+.hc-bor-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  background: #f8fafc;
+  border-left: 3px solid #0284c7;
+  border-radius: 4px;
+}
+
+.hc-callout-icon {
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.hc-callout-body {
+  font-size: 0.68rem;
+  color: #334155;
+  line-height: 1.35;
+}
+
+.hc-callout-body strong {
+  color: #0f172a;
+}
+
+.hc-bor-bars-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-height: 0;
+  padding-right: 2px;
+}
+
+.hc-bor-row {
+  display: grid;
+  grid-template-columns: 105px 1fr 65px;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.hc-bor-row:hover {
+  background-color: #f1f5f9;
+}
+
+.hc-bor-row.selected {
+  background-color: #eff6ff;
+  outline: 1px solid #3b82f6;
+}
+
+.hc-bor-label-col {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.hc-bor-code {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 1px 4px;
+  border-radius: 3px;
+  width: 26px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.hc-bor-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hc-bor-track-col {
+  width: 100%;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hc-bor-bg-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.hc-bor-benchmark-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #0f172a;
+  z-index: 2;
+}
+
+.hc-bor-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.25s ease;
+}
+
+.hc-bor-val-tag {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #0f172a;
+  width: 40px;
+  flex-shrink: 0;
+}
+
+.hc-bor-beds-count {
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: #64748b;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Floating Light-Theme Tooltip (Strictly No Dark Backgrounds)
+   -------------------------------------------------------------------------- */
+.hc-floating-tooltip {
+  position: fixed;
+  z-index: 5000;
+  pointer-events: none;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 10px 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  font-family: inherit;
+  color: #0f172a;
+  min-width: 190px;
+  max-width: 300px;
+  transform: translate3d(0, 0, 0);
+}
+
+.hc-tt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.hc-tt-header strong {
+  font-size: 0.8rem;
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.hc-tt-badge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.hc-tt-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hc-tt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  gap: 6px;
+}
+
+.hc-tt-row span {
+  color: #64748b;
+}
+
+.hc-tt-row strong {
+  color: #0f172a;
+  font-weight: 700;
+}
