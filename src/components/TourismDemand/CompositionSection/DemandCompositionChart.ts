@@ -133,8 +133,8 @@ export class DemandCompositionChart {
     let yFormat = (val: number) => val + 'M';
 
     if (this.currentMetric === 'expenditure') {
-        maxY = 800; // max around 600
-        yTicks = [0, 200, 400, 600, 800];
+        maxY = 250; // Values range from RM ~136 to RM ~204 (95% CI upper bound ~219)
+        yTicks = [0, 50, 100, 150, 200, 250];
         yFormat = (val: number) => 'RM ' + val;
     } else if (this.currentMetric === 'aor') {
         maxY = 100;
