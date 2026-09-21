@@ -1,5 +1,5 @@
 .accommodation-page {
-  padding: 24px;
+  padding: 16px 20px;
   animation: fadeIn 0.4s ease-out;
   background-color: var(--bg-app);
 }
@@ -7,7 +7,7 @@
 .accommodation-container {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 14px;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -15,14 +15,14 @@
 .accommodation-dashboard-grid {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  margin-top: 16px;
+  gap: 14px;
+  margin-top: 0;
 }
 
 .bar-charts-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 14px;
 }
 
 /* Match the app's standard dark theme variables for the hero */
@@ -55,9 +55,6 @@
   font-weight: 400;
 }
 
-  color: #3b82f6;
-}
-
 .utilisation-stage .stage-icon-wrapper {
   background: rgba(16, 185, 129, 0.1);
   color: #10b981;
@@ -77,7 +74,7 @@
   letter-spacing: 0.5px;
 }
 
-/* KPI Summary Ribbon (Matched to Sustainability Design) */
+/* KPI Summary Ribbon (Matched to Tourism Assets Design) */
 .kpi-cards-row {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -85,6 +82,50 @@
   width: 100%;
 }
 
+.kpi-cards-row .kpi-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 13px 15px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 10px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-cards-row .kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--card-accent, #2563eb);
+}
+
+.kpi-cards-row .kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  border-color: #cbd5e1;
+}
+
+[data-theme="dark"] .kpi-cards-row .kpi-card {
+  background: var(--bg-card);
+  border-color: var(--border-card);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .kpi-cards-row .kpi-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  border-color: #475569;
+}
+
+/* Base card styling for other components (including bottom bar charts) */
 .kpi-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -115,13 +156,80 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
+/* Bottom Bar Charts Row Card Styling (Restored Full-Width Column Layout) */
+.accommodation-bar-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.accommodation-bar-card::before {
+  display: none !important;
+}
+
+.acc-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+  cursor: pointer;
+}
+
+.acc-bar-row:hover {
+  background-color: rgba(148, 163, 184, 0.12);
+}
+
+[data-theme="dark"] .acc-bar-row:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.acc-bar-row.selected {
+  background-color: #eff6ff !important;
+  outline: 1.5px solid #93c5fd;
+}
+
+[data-theme="dark"] .acc-bar-row.selected {
+  background-color: rgba(37, 99, 235, 0.22) !important;
+  outline: 1.5px solid #3b82f6;
+}
+
+.acc-bar-row.selected .acc-bar-name {
+  font-weight: 800 !important;
+  color: #1d4ed8 !important;
+}
+
+[data-theme="dark"] .acc-bar-row.selected .acc-bar-name {
+  color: #60a5fa !important;
+}
+
+.kpi-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
 .kpi-label {
-  font-size: 0.64rem;
-  font-weight: 800;
+  font-size: 11px;
+  font-weight: 700;
   color: #64748b;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
-  display: block;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 [data-theme="dark"] .kpi-label {
@@ -136,11 +244,12 @@
 }
 
 .kpi-value {
-  font-size: 1.5rem;
-  font-weight: 900;
+  font-size: 24px;
+  font-weight: 800;
   color: #0f172a;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.5px;
   line-height: 1.1;
+  font-variant-numeric: tabular-nums;
 }
 
 [data-theme="dark"] .kpi-value {
@@ -148,12 +257,13 @@
 }
 
 .kpi-trend {
-  font-size: 0.68rem;
-  font-weight: 800;
+  font-size: 11px;
+  font-weight: 700;
   padding: 2px 7px;
   border-radius: 9999px;
   display: inline-flex;
   align-items: center;
+  line-height: 1.2;
 }
 
 .kpi-trend.positive {
@@ -166,13 +276,31 @@
   color: #34d399;
 }
 
-.kpi-subtext, .kpi-insight {
-  font-size: 0.7rem;
+.kpi-subtext {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
+[data-theme="dark"] .kpi-subtext {
   color: #94a3b8;
-  line-height: 1.25;
-  margin: 0;
-  padding: 0;
-  border: none;
+}
+
+.kpi-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--icon-bg, #eff6ff);
+  color: var(--icon-color, #2563eb);
+}
+
+[data-theme="dark"] .kpi-icon-wrap {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* Stage Specific Styling */
@@ -207,180 +335,259 @@
 }
 
 /* --------------------------------------------------------------------------
-   Accommodation Map Section
+   Accommodation Map Section (2-Column Grid matching Tourism Assets)
    -------------------------------------------------------------------------- */
 .accommodation-map-section {
-  display: flex;
-  flex-direction: column;
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-[data-theme="dark"] .accommodation-map-section {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-.acc-map-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--border-card);
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.acc-map-title-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.acc-map-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.acc-map-desc {
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.acc-map-toggles {
-  display: flex;
-  background: var(--bg-app);
-  padding: 4px;
-  border-radius: 8px;
-  gap: 2px;
-  border: 1px solid var(--border-card);
-}
-
-.acc-map-btn {
-  background: transparent;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.acc-map-btn.active {
-  background: var(--bg-card);
-  color: var(--text-primary);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.acc-map-content {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  gap: 24px;
-  padding: 24px;
-  background: var(--bg-card);
+  grid-template-columns: 1.35fr 1fr;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 1024px) {
-  .acc-map-content {
+  .accommodation-map-section {
     grid-template-columns: 1fr;
   }
 }
 
-/* Map Card */
-.acc-map-wrapper {
-  position: relative;
-  min-height: 380px;
+/* --------------------------------------------------------------------------
+   Map and Detail Card Containers (asset-card design)
+   -------------------------------------------------------------------------- */
+.acc-map-card,
+.acc-map-detail-panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  min-height: 430px;
+  justify-content: space-between;
 }
 
-.acc-map-card {
+[data-theme="dark"] .acc-map-card,
+[data-theme="dark"] .acc-map-detail-panel {
+  background: var(--bg-card);
+  border-color: var(--border-card);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Card Header inside the cards */
+.accommodation-page .asset-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.accommodation-page .asset-card-title-group {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  gap: 2px;
 }
 
-.acc-map-canvas-wrap {
-  flex: 1;
-  background: #f8fafc;
+.accommodation-page .asset-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #2563eb;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.accommodation-page .asset-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #2563eb;
+}
+
+.accommodation-page .asset-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+[data-theme="dark"] .accommodation-page .asset-card-title {
+  color: #f8fafc;
+}
+
+.accommodation-page .asset-card-subtitle {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+}
+
+[data-theme="dark"] .accommodation-page .asset-card-subtitle {
+  color: #94a3b8;
+}
+
+/* Segmented Control & Compass inside Card Header */
+.accommodation-page .asset-segmented-control {
+  display: inline-flex;
+  background: #f1f5f9;
+  padding: 3px;
   border-radius: 8px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #e2e8f0;
+}
+
+[data-theme="dark"] .accommodation-page .asset-segmented-control {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #334155;
+}
+
+.accommodation-page .asset-segment-btn {
+  padding: 5px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #475569;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+[data-theme="dark"] .accommodation-page .asset-segment-btn {
+  color: #94a3b8;
+}
+
+.accommodation-page .asset-segment-btn:hover:not(.active) {
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+[data-theme="dark"] .accommodation-page .asset-segment-btn:hover:not(.active) {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.accommodation-page .asset-segment-btn.active {
+  background: #0b57d0;
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(11, 87, 208, 0.3);
+}
+
+.accommodation-page .map-compass-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  overflow: hidden;
 }
 
-[data-theme="dark"] .acc-map-canvas-wrap {
-  background: #0f172a;
-  border-color: #334155;
+/* --------------------------------------------------------------------------
+   Map Stage & Vector Paths
+   -------------------------------------------------------------------------- */
+.acc-map-stage-container {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 320px;
 }
 
 .acc-svg-container {
   width: 100%;
-  height: 100%;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 250px;
 }
 
 .acc-map-svg {
   width: 100%;
   height: auto;
-  max-height: 360px;
-  filter: drop-shadow(0 4px 12px rgba(15, 23, 42, 0.04));
+  max-height: 340px;
+  display: block;
 }
 
-[data-theme="dark"] .acc-map-svg {
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+.acc-map-path {
+  cursor: pointer;
+  transition: fill 0.25s ease, filter 0.2s ease, stroke 0.2s ease, stroke-width 0.2s ease;
 }
 
 .acc-map-path:hover {
-  filter: brightness(1.05) drop-shadow(0 2px 6px rgba(0,0,0,0.15));
+  filter: brightness(1.12) drop-shadow(0 3px 8px rgba(11, 87, 208, 0.35));
+  stroke: #1e293b;
+  stroke-width: 1.6;
 }
 
-.acc-map-legend {
-  margin-top: 16px;
+.acc-map-path.selected {
+  stroke: #0f172a !important;
+  stroke-width: 2.4 !important;
+  filter: drop-shadow(0 4px 10px rgba(15, 23, 42, 0.4)) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Legend Step Bar (matches Tourism Assets format)
+   -------------------------------------------------------------------------- */
+.acc-map-card .map-legend-step-bar {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin-top: 8px;
   font-size: 11px;
 }
 
-.acc-legend-title {
+[data-theme="dark"] .acc-map-card .map-legend-step-bar {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: #334155;
+}
+
+.acc-map-card .legend-label-readiness {
   font-weight: 700;
-  color: var(--text-secondary);
+  color: #1e293b;
 }
 
-.acc-legend-steps {
-  display: flex;
-  gap: 12px;
+[data-theme="dark"] .acc-map-card .legend-label-readiness {
+  color: #e2e8f0;
 }
 
-.acc-legend-chip {
+.acc-map-card .legend-scale-row {
   display: flex;
   align-items: center;
-  gap: 6px;
-  color: var(--text-secondary);
+  gap: 8px;
+}
+
+.acc-map-card .legend-bound {
+  font-size: 10.5px;
+  color: #64748b;
   font-weight: 600;
 }
 
-.acc-legend-chip i {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
-  border: 1px solid rgba(0,0,0,0.1);
+[data-theme="dark"] .acc-map-card .legend-bound {
+  color: #94a3b8;
 }
 
+.acc-map-card .legend-step-blocks {
+  display: flex;
+  gap: 3px;
+}
+
+.acc-map-card .step-block {
+  width: 24px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Tooltip
+   -------------------------------------------------------------------------- */
 .acc-floating-tooltip {
   position: fixed;
   pointer-events: none;
@@ -388,64 +595,38 @@
   background: #ffffff;
   color: #0f172a;
   padding: 10px 14px;
-  border-radius: 6px;
-  font-size: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border: 1px solid #e2e8f0;
-}
-
-/* Detail Panel */
-.acc-detail-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.acc-map-detail-panel {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: #f8fafc;
-  border: 1px solid #cbd5e1;
   border-radius: 8px;
-  padding: 24px;
-}
-
-[data-theme="dark"] .acc-map-detail-panel {
-  background: #0f172a;
-  border-color: #334155;
-}
-
-.acc-detail-header {
-  margin-bottom: 24px;
-}
-
-.acc-detail-region {
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--text-primary);
-  margin: 0 0 4px 0;
-}
-
-.acc-detail-sub {
   font-size: 12px;
-  color: var(--text-secondary);
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.12);
+  border: 1px solid #cbd5e1;
 }
 
+[data-theme="dark"] .acc-floating-tooltip {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: #334155;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+/* --------------------------------------------------------------------------
+   Accommodation Detail Panel Elements
+   -------------------------------------------------------------------------- */
 .acc-detail-kpi {
   display: flex;
   flex-direction: column;
-  margin-bottom: 16px;
-  background: #ffffff;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  padding: 12px;
+  padding: 10px 14px;
   text-align: center;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
 }
 
 [data-theme="dark"] .acc-detail-kpi {
-  background: var(--bg-card);
-  border-color: var(--border-card);
+  background: rgba(255, 255, 255, 0.03);
+  border-color: #334155;
 }
 
 .acc-kpi-val {
@@ -454,6 +635,7 @@
   color: #0f172a;
   line-height: 1;
   margin-bottom: 4px;
+  font-variant-numeric: tabular-nums;
 }
 
 [data-theme="dark"] .acc-kpi-val {
@@ -467,6 +649,10 @@
   letter-spacing: 0.5px;
 }
 
+[data-theme="dark"] .acc-kpi-lbl {
+  color: #94a3b8;
+}
+
 .acc-detail-chart {
   display: flex;
   flex-direction: column;
@@ -476,41 +662,43 @@
 .acc-chart-title {
   font-size: 13px;
   font-weight: 700;
-  color: var(--text-secondary);
-  margin-bottom: 12px;
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+
+[data-theme="dark"] .acc-chart-title {
+  color: #e2e8f0;
 }
 
 .acc-chart-svg-wrap {
   flex: 1;
   display: flex;
   align-items: flex-end;
-  background: transparent;
-  border: none;
-  padding: 12px 0 0 0;
   justify-content: center;
-}
-
-[data-theme="dark"] .acc-chart-svg-wrap {
-  background: var(--bg-card);
-  border-color: var(--border-card);
+  padding: 8px 0;
 }
 
 .acc-chart-legend {
   display: flex;
   gap: 16px;
   justify-content: center;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 .acc-chart-legend-item {
   font-size: 11px;
-  color: var(--text-secondary);
+  color: #64748b;
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+[data-theme="dark"] .acc-chart-legend-item {
+  color: #94a3b8;
 }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+

@@ -4,13 +4,35 @@ import { createElement, Info } from 'lucide';
 export class VisitorRatioBarChart {
   public readonly element: HTMLElement;
   private tooltip!: HTMLElement;
+  private selectedStateId: string | null = null;
+  private onSelectStateCallback?: (stateId: string | null) => void;
 
-  constructor() {
+  constructor(onSelectState?: (stateId: string | null) => void) {
+    this.onSelectStateCallback = onSelectState;
     this.element = document.createElement('div');
     this.element.className = 'accommodation-bar-card kpi-card';
 
     this.createTooltip();
     this.render();
+  }
+
+  public setSelectedState(stateId: string | null): void {
+    if (this.selectedStateId !== stateId) {
+      this.selectedStateId = stateId;
+      this.updateSelectedRow();
+    }
+  }
+
+  private updateSelectedRow(): void {
+    const rows = this.element.querySelectorAll<HTMLElement>('.acc-bar-row');
+    rows.forEach((row) => {
+      const code = row.getAttribute('data-state-code');
+      if (this.selectedStateId && code === this.selectedStateId) {
+        row.classList.add('selected');
+      } else {
+        row.classList.remove('selected');
+      }
+    });
   }
 
   private createTooltip(): void {
@@ -35,44 +57,42 @@ export class VisitorRatioBarChart {
 
     const header = document.createElement('div');
     header.className = 'kpi-card-header';
-    header.style.marginBottom = '20px';
-    
-    // Header content with tooltip
+    header.style.marginBottom = '14px';
+
     const titleGroup = document.createElement('div');
     titleGroup.innerHTML = `
       <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
         <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 0;">Visitor-to-Room Ratio</h3>
         <div id="ratio-info-icon" style="color: var(--text-muted); cursor: help; display: flex;"></div>
       </div>
-      <span style="font-size: 13px; color: var(--text-secondary);">Relative demand pressure on room supply</span>
+      <span style="font-size: 12px; color: var(--text-secondary);">Relative demand pressure on room supply</span>
     `;
 
     header.appendChild(titleGroup);
 
     // Calculate ratio and sort descending
-    const dataWithRatio = ACCOMMODATION_DATA.map(state => {
+    const dataWithRatio = ACCOMMODATION_DATA.map((state) => {
       const ratio = (state.visitors * 1000000) / state.rooms;
       return { ...state, ratio };
     }).sort((a, b) => b.ratio - a.ratio);
 
-    const maxRatio = Math.max(...dataWithRatio.map(d => d.ratio));
+    const maxRatio = Math.max(...dataWithRatio.map((d) => d.ratio));
 
+    // Full vertical listing: no scrollbar, show all states
     const chartContainer = document.createElement('div');
+    chartContainer.className = 'acc-bars-container';
     chartContainer.style.display = 'flex';
     chartContainer.style.flexDirection = 'column';
-    chartContainer.style.gap = '12px';
-    chartContainer.style.maxHeight = '400px';
-    chartContainer.style.overflowY = 'auto';
-    chartContainer.style.paddingRight = '8px';
+    chartContainer.style.gap = '8px';
 
     dataWithRatio.forEach((state) => {
       const row = document.createElement('div');
-      row.style.display = 'flex';
-      row.style.alignItems = 'center';
-      row.style.gap = '16px';
-      
+      row.className = `acc-bar-row ${this.selectedStateId === state.code ? 'selected' : ''}`;
+      row.setAttribute('data-state-code', state.code);
+
       // State Name
       const name = document.createElement('div');
+      name.className = 'acc-bar-name';
       name.style.width = '120px';
       name.style.fontSize = '12px';
       name.style.fontWeight = '600';
@@ -96,17 +116,16 @@ export class VisitorRatioBarChart {
       const barFill = document.createElement('div');
       barFill.style.width = `${fillPercentage}%`;
       barFill.style.height = '100%';
-      
-      // Color intensity based on Ratio (Pressure)
+
       let color = '#3b82f6';
       if (state.ratio > 800) color = '#ef4444'; // Red for very high pressure
       else if (state.ratio > 500) color = '#f59e0b'; // Yellow for moderate pressure
       else color = '#10b981'; // Green for low pressure
-      
+
       barFill.style.background = color;
       barFill.style.borderRadius = '4px';
-      barFill.style.transition = 'width 1s ease-out';
-      
+      barFill.style.transition = 'width 0.8s ease-out';
+
       barTrack.appendChild(barFill);
 
       // Value
@@ -122,17 +141,27 @@ export class VisitorRatioBarChart {
       row.appendChild(barTrack);
       row.appendChild(val);
 
+      // Clicking row toggles state selection
+      row.addEventListener('click', () => {
+        const nextState = this.selectedStateId === state.code ? null : state.code;
+        this.selectedStateId = nextState;
+        this.updateSelectedRow();
+        if (this.onSelectStateCallback) {
+          this.onSelectStateCallback(nextState);
+        }
+      });
+
       chartContainer.appendChild(row);
     });
 
     this.element.appendChild(header);
     this.element.appendChild(chartContainer);
-    
+
     // Add info icon
     const iconContainer = this.element.querySelector('#ratio-info-icon');
     if (iconContainer) {
       iconContainer.appendChild(createElement(Info, { width: 14, height: 14, 'stroke-width': 2 }));
-      
+
       iconContainer.addEventListener('mouseenter', (e) => {
         const mouseEvent = e as MouseEvent;
         this.tooltip.innerHTML = `
@@ -146,9 +175,9 @@ export class VisitorRatioBarChart {
         this.tooltip.style.display = 'block';
         this.updateTooltipPos(mouseEvent);
       });
-      
+
       iconContainer.addEventListener('mousemove', (e) => this.updateTooltipPos(e as MouseEvent));
-      
+
       iconContainer.addEventListener('mouseleave', () => {
         this.tooltip.style.display = 'none';
       });
@@ -158,5 +187,11 @@ export class VisitorRatioBarChart {
   private updateTooltipPos(e: MouseEvent): void {
     this.tooltip.style.left = `${e.clientX + 14}px`;
     this.tooltip.style.top = `${e.clientY + 14}px`;
+  }
+
+  public destroy(): void {
+    if (this.tooltip) {
+      this.tooltip.remove();
+    }
   }
 }

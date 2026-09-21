@@ -2,19 +2,26 @@ import { ACCOMMODATION_DATA } from '../../data/accommodationData';
 
 export class AccommodationMapDetail {
   public readonly element: HTMLElement;
-  private hoveredStateId: string | null = null;
+  private selectedStateId: string | null = null;
+  private onResetCallback?: () => void;
 
-  constructor() {
+  constructor(onReset?: () => void) {
+    this.onResetCallback = onReset;
     this.element = document.createElement('div');
-    this.element.className = 'acc-map-detail-panel';
+    this.element.className = 'asset-card acc-map-detail-panel';
     this.render();
   }
 
-  public setHoveredState(stateId: string | null): void {
-    if (this.hoveredStateId !== stateId) {
-      this.hoveredStateId = stateId;
+  public setSelectedState(stateId: string | null): void {
+    if (this.selectedStateId !== stateId) {
+      this.selectedStateId = stateId;
       this.render();
     }
+  }
+
+  // Backward compatibility alias
+  public setHoveredState(stateId: string | null): void {
+    this.setSelectedState(stateId);
   }
 
   private render(): void {
@@ -24,8 +31,8 @@ export class AccommodationMapDetail {
     let roomsVal = 0;
     let label = 'National Totals';
 
-    if (this.hoveredStateId) {
-      const stateData = ACCOMMODATION_DATA.find(d => d.code === this.hoveredStateId);
+    if (this.selectedStateId) {
+      const stateData = ACCOMMODATION_DATA.find((d) => d.code === this.selectedStateId);
       if (stateData) {
         visitorsVal = stateData.visitors;
         roomsVal = stateData.rooms;
@@ -40,26 +47,35 @@ export class AccommodationMapDetail {
     const visitorsTotal = visitorsVal * 1000000;
     const ratio = roomsVal > 0 ? Math.round(visitorsTotal / roomsVal) : 0;
 
-    // We will render an SVG with a dual-axis vertical bar chart.
-    // To do this simply in custom SVG, we normalize both bars to 100% of their respective maximums.
-    
-    // Find maximums for scaling. We want the bars to look good relative to their own scales.
-    // For national, the values are the maximums.
-    // For state, we scale relative to the highest state.
-    const maxStateVisitors = Math.max(...ACCOMMODATION_DATA.map(d => d.visitors));
-    const maxStateRooms = Math.max(...ACCOMMODATION_DATA.map(d => d.rooms));
-    
-    const scaleMaxVisitors = this.hoveredStateId ? maxStateVisitors : visitorsVal;
-    const scaleMaxRooms = this.hoveredStateId ? maxStateRooms : roomsVal;
+    const maxStateVisitors = Math.max(...ACCOMMODATION_DATA.map((d) => d.visitors));
+    const maxStateRooms = Math.max(...ACCOMMODATION_DATA.map((d) => d.rooms));
 
-    // Normalizing heights based on 140px max height for a 200px tall SVG
-    const heightVisitors = Math.max((visitorsVal / scaleMaxVisitors) * 140, 5);
-    const heightRooms = Math.max((roomsVal / scaleMaxRooms) * 140, 5);
+    const scaleMaxVisitors = this.selectedStateId ? maxStateVisitors : visitorsVal;
+    const scaleMaxRooms = this.selectedStateId ? maxStateRooms : roomsVal;
+
+    // Normalizing heights based on 130px max height for a 220px tall SVG
+    const heightVisitors = Math.max((visitorsVal / scaleMaxVisitors) * 130, 8);
+    const heightRooms = Math.max((roomsVal / scaleMaxRooms) * 130, 8);
 
     this.element.innerHTML = `
-      <div class="acc-detail-header">
-        <h4 class="acc-detail-region">${label}</h4>
-        <span class="acc-detail-sub">Hover map to view states</span>
+      <div class="asset-card-header" style="margin-bottom: 10px; display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;">
+        <div class="asset-card-title-group" style="flex: 1; min-width: 0;">
+          <div class="asset-card-badge">
+            <span class="asset-badge-dot" style="background-color: #059669;"></span>
+            <span>CAPACITY PRESSURE</span>
+          </div>
+          <h3 class="asset-card-title">${label}</h3>
+          <p class="asset-card-subtitle">${this.selectedStateId ? 'State-level demand vs available capacity' : 'Click a state on the map to inspect details'}</p>
+        </div>
+        ${this.selectedStateId ? `
+          <button type="button" class="asset-reset-scope-btn" title="Reset to National Totals" style="padding: 4px 8px; font-size: 11px; font-weight: 600; color: #475569; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+            <span>All States</span>
+          </button>
+        ` : ''}
       </div>
 
       <div class="acc-detail-kpi">
@@ -109,5 +125,13 @@ export class AccommodationMapDetail {
         </div>
       </div>
     `;
+
+    const resetBtn = this.element.querySelector<HTMLButtonElement>('.asset-reset-scope-btn');
+    resetBtn?.addEventListener('click', () => {
+      this.setSelectedState(null);
+      if (this.onResetCallback) {
+        this.onResetCallback();
+      }
+    });
   }
 }

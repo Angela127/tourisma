@@ -2,12 +2,34 @@ import { ACCOMMODATION_DATA } from '../../data/accommodationData';
 
 export class AccommodationRoomsBarChart {
   public readonly element: HTMLElement;
+  private selectedStateId: string | null = null;
+  private onSelectStateCallback?: (stateId: string | null) => void;
 
-  constructor() {
+  constructor(onSelectState?: (stateId: string | null) => void) {
+    this.onSelectStateCallback = onSelectState;
     this.element = document.createElement('div');
     this.element.className = 'accommodation-bar-card kpi-card';
 
     this.render();
+  }
+
+  public setSelectedState(stateId: string | null): void {
+    if (this.selectedStateId !== stateId) {
+      this.selectedStateId = stateId;
+      this.updateSelectedRow();
+    }
+  }
+
+  private updateSelectedRow(): void {
+    const rows = this.element.querySelectorAll<HTMLElement>('.acc-bar-row');
+    rows.forEach((row) => {
+      const code = row.getAttribute('data-state-code');
+      if (this.selectedStateId && code === this.selectedStateId) {
+        row.classList.add('selected');
+      } else {
+        row.classList.remove('selected');
+      }
+    });
   }
 
   private render(): void {
@@ -15,34 +37,33 @@ export class AccommodationRoomsBarChart {
 
     const header = document.createElement('div');
     header.className = 'kpi-card-header';
-    header.style.marginBottom = '20px';
+    header.style.marginBottom = '14px';
     header.innerHTML = `
       <div>
         <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 0;">Accommodation Rooms by State</h3>
-        <span style="font-size: 13px; color: var(--text-secondary);">Basic supply comparison of available room inventory</span>
+        <span style="font-size: 12px; color: var(--text-secondary);">Basic supply comparison of available room inventory</span>
       </div>
     `;
 
     // Sort data descending by rooms
     const sortedData = [...ACCOMMODATION_DATA].sort((a, b) => b.rooms - a.rooms);
-    const maxRooms = Math.max(...sortedData.map(d => d.rooms));
+    const maxRooms = Math.max(...sortedData.map((d) => d.rooms));
 
+    // Full vertical listing: no scrollbar, show all states
     const chartContainer = document.createElement('div');
+    chartContainer.className = 'acc-bars-container';
     chartContainer.style.display = 'flex';
     chartContainer.style.flexDirection = 'column';
-    chartContainer.style.gap = '12px';
-    chartContainer.style.maxHeight = '400px';
-    chartContainer.style.overflowY = 'auto';
-    chartContainer.style.paddingRight = '8px';
+    chartContainer.style.gap = '8px';
 
     sortedData.forEach((state) => {
       const row = document.createElement('div');
-      row.style.display = 'flex';
-      row.style.alignItems = 'center';
-      row.style.gap = '16px';
-      
+      row.className = `acc-bar-row ${this.selectedStateId === state.code ? 'selected' : ''}`;
+      row.setAttribute('data-state-code', state.code);
+
       // State Name
       const name = document.createElement('div');
+      name.className = 'acc-bar-name';
       name.style.width = '120px';
       name.style.fontSize = '12px';
       name.style.fontWeight = '600';
@@ -65,12 +86,10 @@ export class AccommodationRoomsBarChart {
       const barFill = document.createElement('div');
       barFill.style.width = `${(state.rooms / maxRooms) * 100}%`;
       barFill.style.height = '100%';
-      
-      // Solid blue for capacity
       barFill.style.background = '#3b82f6';
       barFill.style.borderRadius = '4px';
-      barFill.style.transition = 'width 1s ease-out';
-      
+      barFill.style.transition = 'width 0.8s ease-out';
+
       barTrack.appendChild(barFill);
 
       // Value
@@ -86,26 +105,20 @@ export class AccommodationRoomsBarChart {
       row.appendChild(barTrack);
       row.appendChild(val);
 
+      // Clicking row toggles state selection
+      row.addEventListener('click', () => {
+        const nextState = this.selectedStateId === state.code ? null : state.code;
+        this.selectedStateId = nextState;
+        this.updateSelectedRow();
+        if (this.onSelectStateCallback) {
+          this.onSelectStateCallback(nextState);
+        }
+      });
+
       chartContainer.appendChild(row);
     });
 
     this.element.appendChild(header);
     this.element.appendChild(chartContainer);
-    
-    // Add simple scrollbar styling for the container via a style block
-    const style = document.createElement('style');
-    style.textContent = `
-      .accommodation-bar-card ::-webkit-scrollbar {
-        width: 4px;
-      }
-      .accommodation-bar-card ::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      .accommodation-bar-card ::-webkit-scrollbar-thumb {
-        background: var(--border-card);
-        border-radius: 4px;
-      }
-    `;
-    this.element.appendChild(style);
   }
 }
