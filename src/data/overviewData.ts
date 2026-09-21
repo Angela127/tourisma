@@ -23,6 +23,10 @@ export interface KpiCardConfig {
 export type KpiItem = KpiCardConfig;
 
 export type QuadrantType =
+  | 'High Relative Demand / High Relative Readiness'
+  | 'High Relative Demand / Low Relative Readiness'
+  | 'Low Relative Demand / High Relative Readiness'
+  | 'Low Relative Demand / Low Relative Readiness'
   | 'High Demand / High Readiness'
   | 'High Demand / Low Readiness'
   | 'Low Demand / High Readiness'
@@ -108,15 +112,27 @@ export type ClusterInfo = QuadrantProfileSummary;
 
 export interface MonthlyPressurePoint {
   month: string;
-  currentYearM: number; // 2025/2026 in Millions
-  baselineYearM: number; // 2024 Baseline in Millions
-  // Legacy compatibility
+  currentYearM: number; // in Millions
+  baselineYearM: number; // in Millions
   currentYear: number;
   previousYear: number;
   annotation?: string;
 }
 
 export type MonthlySeasonality = MonthlyPressurePoint;
+
+export interface QuarterlyPressurePoint {
+  quarter: string; // 'Q1', 'Q2', 'Q3', 'Q4'
+  currentYearM: number; // 2025/2026 in Millions
+  baselineYearM: number; // 2024 Baseline in Millions
+  receiptsCurrentRmB: number; // RM Billion
+  receiptsBaselineRmB: number; // RM Billion
+  yoyGrowthPct: number; // YoY %
+  annotation?: string;
+  month?: string;
+  currentYear?: number;
+  previousYear?: number;
+}
 
 export interface GrowthScenarioProjection {
   targetLabel: string;
@@ -166,7 +182,7 @@ export const STATES_OVERVIEW_DATA: Record<string, StateOverviewItem> = {
     pressureScore: 68,
     bindingConstraint: 'Suburban Arterial Transit',
     pressureTrend: 'up',
-    quadrant: 'High Demand / High Readiness',
+    quadrant: 'High Relative Demand / High Relative Readiness',
     cluster: 'Mature Gateway Hubs',
     demandCategory: 'Above Median Demand',
     readinessCategory: 'Above Relative Readiness',
@@ -206,7 +222,7 @@ export const STATES_OVERVIEW_DATA: Record<string, StateOverviewItem> = {
     pressureScore: 64,
     bindingConstraint: 'City Core Peak Congestion',
     pressureTrend: 'stable',
-    quadrant: 'High Demand / High Readiness',
+    quadrant: 'High Relative Demand / High Relative Readiness',
     cluster: 'Mature Gateway Hubs',
     demandCategory: 'Above Median Demand',
     readinessCategory: 'Above Relative Readiness',
@@ -246,7 +262,7 @@ export const STATES_OVERVIEW_DATA: Record<string, StateOverviewItem> = {
     pressureScore: 62,
     bindingConstraint: 'Intercity Rail Frequency',
     pressureTrend: 'stable',
-    quadrant: 'Low Demand / High Readiness',
+    quadrant: 'Low Relative Demand / High Relative Readiness',
     cluster: 'High-Growth Emerging',
     demandCategory: 'Below Median Demand',
     readinessCategory: 'Above Relative Readiness',
@@ -286,7 +302,7 @@ export const STATES_OVERVIEW_DATA: Record<string, StateOverviewItem> = {
     pressureScore: 73,
     bindingConstraint: 'Eco-trail Footfall',
     pressureTrend: 'stable',
-    quadrant: 'High Demand / Low Readiness',
+    quadrant: 'High Relative Demand / Low Relative Readiness',
     cluster: 'High-Growth Emerging',
     demandCategory: 'Above Median Demand',
     readinessCategory: 'Below Relative Readiness',
@@ -326,7 +342,7 @@ export const STATES_OVERVIEW_DATA: Record<string, StateOverviewItem> = {
     pressureScore: 54,
     bindingConstraint: 'Hinterland Flight Frequency',
     pressureTrend: 'stable',
-    quadrant: 'High Demand / Low Readiness',
+    quadrant: 'High Relative Demand / Low Relative Readiness',
     cluster: 'Eco & Heritage Frontiers',
     demandCategory: 'Above Median Demand',
     readinessCategory: 'Below Relative Readiness',
@@ -366,7 +382,7 @@ export const STATES_OVERVIEW_DATA: Record<string, StateOverviewItem> = {
     pressureScore: 79,
     bindingConstraint: 'Airport Gate Capacity',
     pressureTrend: 'up',
-    quadrant: 'High Demand / High Readiness',
+    quadrant: 'High Relative Demand / High Relative Readiness',
     cluster: 'Eco & Heritage Frontiers',
     demandCategory: 'Above Median Demand',
     readinessCategory: 'Above Relative Readiness',
@@ -406,7 +422,7 @@ export const STATES_OVERVIEW_DATA: Record<string, StateOverviewItem> = {
     pressureScore: 84,
     bindingConstraint: 'Seasonal Concentration',
     pressureTrend: 'up',
-    quadrant: 'High Demand / High Readiness',
+    quadrant: 'High Relative Demand / High Relative Readiness',
     cluster: 'High-Growth Emerging',
     demandCategory: 'Above Median Demand',
     readinessCategory: 'Above Relative Readiness',
@@ -446,7 +462,7 @@ export const STATES_OVERVIEW_DATA: Record<string, StateOverviewItem> = {
     pressureScore: 52,
     bindingConstraint: 'Coastal Road Congestion',
     pressureTrend: 'stable',
-    quadrant: 'Low Demand / Low Readiness',
+    quadrant: 'Low Relative Demand / Low Relative Readiness',
     cluster: 'Developing Infrastructure',
     demandCategory: 'Below Median Demand',
     readinessCategory: 'Below Relative Readiness',
@@ -486,7 +502,7 @@ export const STATES_OVERVIEW_DATA: Record<string, StateOverviewItem> = {
     pressureScore: 70,
     bindingConstraint: 'Highway Ingress',
     pressureTrend: 'up',
-    quadrant: 'High Demand / High Readiness',
+    quadrant: 'High Relative Demand / High Relative Readiness',
     cluster: 'High-Growth Emerging',
     demandCategory: 'Above Median Demand',
     readinessCategory: 'Above Relative Readiness',
@@ -526,7 +542,7 @@ export const STATES_OVERVIEW_DATA: Record<string, StateOverviewItem> = {
     pressureScore: 88,
     bindingConstraint: 'Accommodation',
     pressureTrend: 'up',
-    quadrant: 'High Demand / High Readiness',
+    quadrant: 'High Relative Demand / High Relative Readiness',
     cluster: 'Mature Gateway Hubs',
     demandCategory: 'Above Median Demand',
     readinessCategory: 'Above Relative Readiness',
@@ -566,7 +582,7 @@ export const STATES_OVERVIEW_DATA: Record<string, StateOverviewItem> = {
     pressureScore: 66,
     bindingConstraint: 'Ferry Terminal Throughput',
     pressureTrend: 'stable',
-    quadrant: 'Low Demand / Low Readiness',
+    quadrant: 'Low Relative Demand / Low Relative Readiness',
     cluster: 'High-Growth Emerging',
     demandCategory: 'Below Median Demand',
     readinessCategory: 'Below Relative Readiness',
@@ -606,7 +622,7 @@ export const STATES_OVERVIEW_DATA: Record<string, StateOverviewItem> = {
     pressureScore: 58,
     bindingConstraint: 'Monsoon Off-Season Downtime',
     pressureTrend: 'down',
-    quadrant: 'Low Demand / Low Readiness',
+    quadrant: 'Low Relative Demand / Low Relative Readiness',
     cluster: 'Eco & Heritage Frontiers',
     demandCategory: 'Below Median Demand',
     readinessCategory: 'Below Relative Readiness',
@@ -646,7 +662,7 @@ export const STATES_OVERVIEW_DATA: Record<string, StateOverviewItem> = {
     pressureScore: 48,
     bindingConstraint: 'East Coast Expressway Ingress',
     pressureTrend: 'stable',
-    quadrant: 'Low Demand / Low Readiness',
+    quadrant: 'Low Relative Demand / Low Relative Readiness',
     cluster: 'Eco & Heritage Frontiers',
     demandCategory: 'Below Median Demand',
     readinessCategory: 'Below Relative Readiness',
@@ -686,7 +702,7 @@ export const STATES_OVERVIEW_DATA: Record<string, StateOverviewItem> = {
     pressureScore: 45,
     bindingConstraint: 'Quality Star-Rated Hotels',
     pressureTrend: 'stable',
-    quadrant: 'Low Demand / Low Readiness',
+    quadrant: 'Low Relative Demand / Low Relative Readiness',
     cluster: 'Developing Infrastructure',
     demandCategory: 'Below Median Demand',
     readinessCategory: 'Below Relative Readiness',
@@ -726,7 +742,7 @@ export const STATES_OVERVIEW_DATA: Record<string, StateOverviewItem> = {
     pressureScore: 42,
     bindingConstraint: 'Evening/Weekend Activations',
     pressureTrend: 'stable',
-    quadrant: 'Low Demand / High Readiness',
+    quadrant: 'Low Relative Demand / High Relative Readiness',
     cluster: 'Developing Infrastructure',
     demandCategory: 'Below Median Demand',
     readinessCategory: 'Above Relative Readiness',
@@ -766,7 +782,7 @@ export const STATES_OVERVIEW_DATA: Record<string, StateOverviewItem> = {
     pressureScore: 38,
     bindingConstraint: 'Mainland Ferry Frequency',
     pressureTrend: 'stable',
-    quadrant: 'Low Demand / Low Readiness',
+    quadrant: 'Low Relative Demand / Low Relative Readiness',
     cluster: 'Eco & Heritage Frontiers',
     demandCategory: 'Below Median Demand',
     readinessCategory: 'Below Relative Readiness',
@@ -825,7 +841,6 @@ export const NATIONAL_OVERVIEW_KPIS: KpiCardConfig[] = [
     title: 'AVG. OCCUPANCY RATE',
     value: '50.2%',
     unit: '%',
-    unitSubtitle: 'Hotel AOR (343.9K rooms)',
     change: '▲ +3.8 pp vs. 2024',
     isPositive: true,
     sparkline: [42.1, 28.5, 24.2, 41.5, 47.3, 49.8, 50.2],
@@ -897,9 +912,9 @@ export const TOP_STATES_RECEIPTS = TOP_TOURISM_RECEIPTS;
 // ----------------------------------------------------------------------------
 export const DESTINATION_PROFILES_DATA: QuadrantProfileSummary[] = [
   {
-    quadrant: 'High Demand / High Readiness',
+    quadrant: 'High Relative Demand / High Relative Readiness',
     cluster: 'Mature Gateway Hubs',
-    label: 'High Demand / High Readiness',
+    label: 'High Relative Demand / High Relative Readiness',
     count: 6,
     percentage: 37.5,
     colorClass: 'high-demand-high-cap',
@@ -909,9 +924,9 @@ export const DESTINATION_PROFILES_DATA: QuadrantProfileSummary[] = [
     states: ['W.P. Kuala Lumpur', 'Selangor', 'Sabah', 'Johor', 'Pulau Pinang', 'Melaka']
   },
   {
-    quadrant: 'High Demand / Low Readiness',
+    quadrant: 'High Relative Demand / Low Relative Readiness',
     cluster: 'High-Growth Emerging',
-    label: 'High Demand / Low Readiness',
+    label: 'High Relative Demand / Low Relative Readiness',
     count: 2,
     percentage: 12.5,
     colorClass: 'high-demand-low-cap',
@@ -921,9 +936,9 @@ export const DESTINATION_PROFILES_DATA: QuadrantProfileSummary[] = [
     states: ['Pahang', 'Sarawak']
   },
   {
-    quadrant: 'Low Demand / High Readiness',
+    quadrant: 'Low Relative Demand / High Relative Readiness',
     cluster: 'Developing Infrastructure',
-    label: 'Low Demand / High Readiness',
+    label: 'Low Relative Demand / High Relative Readiness',
     count: 2,
     percentage: 12.5,
     colorClass: 'low-demand-high-pot',
@@ -933,9 +948,9 @@ export const DESTINATION_PROFILES_DATA: QuadrantProfileSummary[] = [
     states: ['Perak', 'W.P. Putrajaya']
   },
   {
-    quadrant: 'Low Demand / Low Readiness',
+    quadrant: 'Low Relative Demand / Low Relative Readiness',
     cluster: 'Eco & Heritage Frontiers',
-    label: 'Low Demand / Low Readiness',
+    label: 'Low Relative Demand / Low Relative Readiness',
     count: 6,
     percentage: 37.5,
     colorClass: 'low-demand-low-read',
@@ -949,9 +964,52 @@ export const DESTINATION_PROFILES_DATA: QuadrantProfileSummary[] = [
 export const CLUSTERS_DATA = DESTINATION_PROFILES_DATA;
 
 // ----------------------------------------------------------------------------
-// 6. Tourism Pressure / Monthly Arrivals Trajectory (2025/2026 vs 2024 Baseline)
+// 6. Tourism Pressure / Quarterly Domestic Arrivals (DOSM Official Table A)
+// Grounded in Department of Statistics Malaysia (DOSM) Domestic Tourism
+// Survey (DTS) quarterly series: 2024 Baseline vs. 2025/2026.
 // ----------------------------------------------------------------------------
-export const MONTHLY_PRESSURE_DATA: MonthlyPressurePoint[] = [
+export const QUARTERLY_PRESSURE_DATA: QuarterlyPressurePoint[] = [
+  {
+    quarter: 'Q1',
+    currentYearM: 69.7, // 69,678k (2025 Q1) / 74,665k (2026 Q1 actual)
+    baselineYearM: 58.6, // 58,614k (2024 Q1)
+    receiptsCurrentRmB: 29.4,
+    receiptsBaselineRmB: 24.1,
+    yoyGrowthPct: 18.9,
+    annotation: 'Chinese New Year & early school break'
+  },
+  {
+    quarter: 'Q2',
+    currentYearM: 73.8, // 73,753k (2025 Q2)
+    baselineYearM: 68.4, // 68,439k (2024 Q2)
+    receiptsCurrentRmB: 29.2,
+    receiptsBaselineRmB: 28.1,
+    yoyGrowthPct: 7.8,
+    annotation: 'Hari Raya Aidilfitri & mid-year school holidays'
+  },
+  {
+    quarter: 'Q3',
+    currentYearM: 72.6, // 72,604k (2025 Q3)
+    baselineYearM: 66.3, // 66,256k (2024 Q3)
+    receiptsCurrentRmB: 29.8,
+    receiptsBaselineRmB: 25.6,
+    yoyGrowthPct: 9.6,
+    annotation: 'National Day break & September term holidays'
+  },
+  {
+    quarter: 'Q4',
+    currentYearM: 74.0, // 74,030k (2025 Q4)
+    baselineYearM: 66.8, // 66,817k (2024 Q4)
+    receiptsCurrentRmB: 32.6,
+    receiptsBaselineRmB: 29.0,
+    yoyGrowthPct: 10.8,
+    annotation: 'Year-end school holidays & festive tourism peak'
+  }
+];
+
+export const MONTHLY_PRESSURE_DATA: QuarterlyPressurePoint[] = QUARTERLY_PRESSURE_DATA;
+
+export const SEASONALITY_DATA: MonthlyPressurePoint[] = [
   { month: 'Jan', currentYearM: 22.8, baselineYearM: 19.5, currentYear: 2.28, previousYear: 1.95, annotation: 'New Year surge' },
   { month: 'Feb', currentYearM: 24.2, baselineYearM: 21.0, currentYear: 2.42, previousYear: 2.10, annotation: 'Chinese New Year' },
   { month: 'Mar', currentYearM: 21.2, baselineYearM: 18.1, currentYear: 2.12, previousYear: 1.81 },
@@ -965,8 +1023,6 @@ export const MONTHLY_PRESSURE_DATA: MonthlyPressurePoint[] = [
   { month: 'Nov', currentYearM: 25.1, baselineYearM: 20.8, currentYear: 2.51, previousYear: 2.08 },
   { month: 'Dec', currentYearM: 31.4, baselineYearM: 26.3, currentYear: 3.14, previousYear: 2.63, annotation: 'Year-End Surges' }
 ];
-
-export const SEASONALITY_DATA = MONTHLY_PRESSURE_DATA;
 
 // ----------------------------------------------------------------------------
 // 7. Growth Scenarios

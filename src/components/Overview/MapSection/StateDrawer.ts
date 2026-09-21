@@ -147,7 +147,7 @@ export class StateDrawer {
       },
       {
         label: 'Readiness Index',
-        value: (state.readinessScore / 100).toFixed(2),
+        value: Math.round(state.readinessScore).toString(),
         sub: 'Composite infrastructure index',
       },
     ];

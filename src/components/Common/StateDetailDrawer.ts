@@ -344,7 +344,7 @@ export class StateDetailDrawer {
 State: ${d.name} (${d.code})
 Region: ${d.region} Malaysia
 Cluster: ${d.cluster}
-Readiness Index: ${(d.readinessScore / 100).toFixed(2)}
+Readiness Index: ${Math.round(d.readinessScore)}
 Pressure Score: ${d.pressureScore}/100
 
 Key Metrics (2026):

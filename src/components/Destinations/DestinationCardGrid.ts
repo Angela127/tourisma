@@ -135,7 +135,7 @@ export class DestinationCardGrid {
           </div>
           <div class="dest-figure-col">
             <span class="dest-figure-label">Readiness Index</span>
-            <span class="dest-figure-val">${(dest.readinessScore / 100).toFixed(2)}</span>
+            <span class="dest-figure-val">${Math.round(dest.readinessScore)}</span>
           </div>
         </div>
 

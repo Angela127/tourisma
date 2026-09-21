@@ -137,9 +137,10 @@
 
 .map-card-header-clean {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   margin-bottom: 2px;
+  gap: 8px;
 }
 
 .map-title-left {
@@ -159,6 +160,49 @@
 .map-sub-title {
   font-size: 0.68rem;
   color: #64748b;
+}
+
+.map-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.map-mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  background: #f1f5f9;
+  padding: 2.5px;
+  border-radius: 7px;
+  gap: 2px;
+  border: 1px solid #e2e8f0;
+}
+
+.map-mode-btn {
+  padding: 3.5px 12px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  line-height: 1.25;
+}
+
+.map-mode-btn:hover {
+  color: #0f172a;
+}
+
+.map-mode-btn.active {
+  background: #ffffff;
+  color: #0b57d0;
+  font-weight: 750;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
 }
 
 .map-compass-icon {
@@ -197,11 +241,62 @@
   z-index: 50;
   background: #ffffff;
   border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  padding: 8px 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+  border-radius: 8px;
+  padding: 12px 14px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.12);
   pointer-events: none;
-  min-width: 180px;
+  min-width: 220px;
+  box-sizing: border-box;
+}
+
+.map-tooltip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.map-tooltip-title {
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: #0f172a;
+}
+
+.map-tooltip-quadrant {
+  font-size: 0.63rem;
+  font-weight: 600;
+  color: #64748b;
+  text-align: right;
+}
+
+.map-tooltip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.map-tooltip-metric-row {
+  font-size: 0.72rem;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.map-tooltip-metric-row strong {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.map-tooltip-footer {
+  font-size: 0.66rem;
+  color: #0b57d0;
+  font-weight: 700;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 6px;
+  margin-top: 4px;
 }
 
 /* Map Legend Step Bar */
@@ -211,7 +306,8 @@
   gap: 8px;
   font-size: 0.68rem;
   color: #64748b;
-  margin-top: 2px;
+  margin-top: 6px;
+  padding-bottom: 2px;
 }
 
 .legend-label-readiness {
@@ -325,12 +421,13 @@
 }
 
 /* --------------------------------------------------------------------------
-   Lower Section: 4-Column Grid (Receipts, Profiles, Pressure, Growth)
+   Lower Section: 3-Column Grid (Receipts, Profiles, Pressure)
    -------------------------------------------------------------------------- */
+.overview-lower-3col-grid,
 .overview-lower-4col-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
   width: 100%;
   flex: 1;
   min-height: 0;
@@ -445,7 +542,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.68rem;
+  gap: 6px;
+  font-size: 0.65rem;
 }
 
 .profile-cluster-title {
@@ -454,6 +552,8 @@
   gap: 6px;
   font-weight: 700;
   color: #334155;
+  line-height: 1.25;
+  min-width: 0;
 }
 
 .cluster-dot {
@@ -471,6 +571,8 @@
 .profile-cluster-pct {
   font-weight: 800;
   color: #0f172a;
+  flex-shrink: 0;
+  font-size: 0.68rem;
 }
 
 .profile-track {
@@ -493,6 +595,16 @@
 .profile-fill.low-demand-low-read { background: #8b5cf6; }
 
 /* Tourism Pressure Chart */
+.pressure-header-left {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pressure-header-left .bottom-card-subtitle {
+  white-space: nowrap;
+}
+
 .pressure-chart-legend {
   display: flex;
   align-items: center;
@@ -536,6 +648,22 @@
   display: flex;
   align-items: center;
   margin-top: 2px;
+}
+
+.pressure-chart-tooltip {
+  display: none;
+  position: absolute;
+  z-index: 50;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 10px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.14);
+  pointer-events: none;
+  white-space: nowrap;
+  min-width: 140px;
+  box-sizing: border-box;
+  transition: opacity 0.12s ease;
 }
 
 /* Growth Scenario Card */
@@ -706,7 +834,27 @@
   border-color: #3b82f6;
 }
 
-[data-theme="dark"] .map-floating-tooltip {
+[data-theme="dark"] .map-mode-toggle {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .map-mode-btn {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .map-mode-btn:hover {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .map-mode-btn.active {
+  background: #0f172a;
+  color: #60a5fa;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .map-floating-tooltip,
+[data-theme="dark"] .pressure-chart-tooltip {
   background: #131b2e;
   border-color: #334155;
   color: #f8fafc;
@@ -727,6 +875,7 @@
     grid-template-columns: 1fr;
     height: auto;
   }
+  .overview-lower-3col-grid,
   .overview-lower-4col-grid {
     grid-template-columns: repeat(2, 1fr);
     height: auto;
@@ -734,6 +883,7 @@
 }
 
 @media (max-width: 768px) {
+  .overview-lower-3col-grid,
   .overview-lower-4col-grid {
     grid-template-columns: 1fr;
     height: auto;

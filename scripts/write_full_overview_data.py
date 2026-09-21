@@ -827,7 +827,6 @@ export const NATIONAL_OVERVIEW_KPIS: KpiCardConfig[] = [
     title: 'AVG. OCCUPANCY RATE',
     value: '50.2%',
     unit: '%',
-    unitSubtitle: 'Hotel AOR (343.9K rooms)',
     change: '▲ +3.8 pp vs. 2024',
     isPositive: true,
     sparkline: [42.1, 28.5, 24.2, 41.5, 47.3, 49.8, 50.2],
@@ -951,24 +950,50 @@ export const DESTINATION_PROFILES_DATA: QuadrantProfileSummary[] = [
 export const CLUSTERS_DATA = DESTINATION_PROFILES_DATA;
 
 // ----------------------------------------------------------------------------
-// 6. Tourism Pressure / Monthly Arrivals Trajectory (2025/2026 vs 2024 Baseline)
+// 6. Tourism Pressure / Quarterly Domestic Arrivals (DOSM Official Table A)
+// Grounded in Department of Statistics Malaysia (DOSM) Domestic Tourism
+// Survey (DTS) quarterly series: 2024 Baseline vs. 2025/2026.
 // ----------------------------------------------------------------------------
-export const MONTHLY_PRESSURE_DATA: MonthlyPressurePoint[] = [
-  { month: 'Jan', currentYearM: 22.8, baselineYearM: 19.5, currentYear: 2.28, previousYear: 1.95, annotation: 'New Year surge' },
-  { month: 'Feb', currentYearM: 24.2, baselineYearM: 21.0, currentYear: 2.42, previousYear: 2.10, annotation: 'Chinese New Year' },
-  { month: 'Mar', currentYearM: 21.2, baselineYearM: 18.1, currentYear: 2.12, previousYear: 1.81 },
-  { month: 'Apr', currentYearM: 20.6, baselineYearM: 17.2, currentYear: 2.06, previousYear: 1.72, annotation: 'Hari Raya Aidilfitri' },
-  { month: 'May', currentYearM: 23.4, baselineYearM: 20.1, currentYear: 2.34, previousYear: 2.01 },
-  { month: 'Jun', currentYearM: 28.6, baselineYearM: 24.2, currentYear: 2.86, previousYear: 2.42, annotation: 'School Holidays' },
-  { month: 'Jul', currentYearM: 27.1, baselineYearM: 22.8, currentYear: 2.71, previousYear: 2.28 },
-  { month: 'Aug', currentYearM: 27.8, baselineYearM: 23.4, currentYear: 2.78, previousYear: 2.34, annotation: 'National Day' },
-  { month: 'Sep', currentYearM: 22.4, baselineYearM: 18.8, currentYear: 2.24, previousYear: 1.88 },
-  { month: 'Oct', currentYearM: 21.5, baselineYearM: 17.9, currentYear: 2.15, previousYear: 1.79 },
-  { month: 'Nov', currentYearM: 25.1, baselineYearM: 20.8, currentYear: 2.51, previousYear: 2.08 },
-  { month: 'Dec', currentYearM: 31.4, baselineYearM: 26.3, currentYear: 3.14, previousYear: 2.63, annotation: 'Year-End Surges' }
+export const QUARTERLY_PRESSURE_DATA: QuarterlyPressurePoint[] = [
+  {
+    quarter: 'Q1',
+    currentYearM: 69.7, // 69,678k (2025 Q1) / 74,665k (2026 Q1 actual)
+    baselineYearM: 58.6, // 58,614k (2024 Q1)
+    receiptsCurrentRmB: 29.4,
+    receiptsBaselineRmB: 24.1,
+    yoyGrowthPct: 18.9,
+    annotation: 'Chinese New Year & early school break'
+  },
+  {
+    quarter: 'Q2',
+    currentYearM: 73.8, // 73,753k (2025 Q2)
+    baselineYearM: 68.4, // 68,439k (2024 Q2)
+    receiptsCurrentRmB: 29.2,
+    receiptsBaselineRmB: 28.1,
+    yoyGrowthPct: 7.8,
+    annotation: 'Hari Raya Aidilfitri & mid-year school holidays'
+  },
+  {
+    quarter: 'Q3',
+    currentYearM: 72.6, // 72,604k (2025 Q3)
+    baselineYearM: 66.3, // 66,256k (2024 Q3)
+    receiptsCurrentRmB: 29.8,
+    receiptsBaselineRmB: 25.6,
+    yoyGrowthPct: 9.6,
+    annotation: 'National Day break & September term holidays'
+  },
+  {
+    quarter: 'Q4',
+    currentYearM: 74.0, // 74,030k (2025 Q4)
+    baselineYearM: 66.8, // 66,817k (2024 Q4)
+    receiptsCurrentRmB: 32.6,
+    receiptsBaselineRmB: 29.0,
+    yoyGrowthPct: 10.8,
+    annotation: 'Year-end school holidays & festive tourism peak'
+  }
 ];
 
-export const SEASONALITY_DATA = MONTHLY_PRESSURE_DATA;
+export const MONTHLY_PRESSURE_DATA: QuarterlyPressurePoint[] = QUARTERLY_PRESSURE_DATA;
 
 // ----------------------------------------------------------------------------
 // 7. Growth Scenarios

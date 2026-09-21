@@ -161,10 +161,10 @@ export class ClusterScatterChart {
       svg.appendChild(s);
     };
 
-    addQText('CAN ABSORB GROWTH', 'High Demand + High Capacity', ml + w - 8, mt + 14, 'end', '#0b57d0');
-    addQText('UNDER PRESSURE', 'High Demand + Low Capacity', ml + w - 8, mt + h - 16, 'end', '#dc2626');
-    addQText('UNDER-UTILISED POTENTIAL', 'Low Demand + High Capacity', ml + 8, mt + 14, 'start', '#16a34a');
-    addQText('NEEDS FOUNDATIONAL DEV', 'Low Demand + Low Capacity', ml + 8, mt + h - 16, 'start', '#7c3aed');
+    addQText('CAN ABSORB GROWTH', 'High Relative Demand / High Relative Readiness', ml + w - 8, mt + 14, 'end', '#0b57d0');
+    addQText('UNDER PRESSURE', 'High Relative Demand / Low Relative Readiness', ml + w - 8, mt + h - 16, 'end', '#dc2626');
+    addQText('UNDER-UTILISED POTENTIAL', 'Low Relative Demand / High Relative Readiness', ml + 8, mt + 14, 'start', '#16a34a');
+    addQText('NEEDS FOUNDATIONAL DEV', 'Low Relative Demand / Low Relative Readiness', ml + 8, mt + h - 16, 'start', '#7c3aed');
 
     // Axis Labels
     const xAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');

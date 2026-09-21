@@ -5,7 +5,6 @@ import { EconomicContributionCards } from './GdpEmployment/EconomicContributionC
 import { TopReceiptsCard } from './BottomGrid/TopReceiptsCard';
 import { DestinationProfilesCard } from './BottomGrid/DestinationProfilesCard';
 import { TourismPressureCard } from './BottomGrid/TourismPressureCard';
-import { GrowthScenarioCard } from './BottomGrid/GrowthScenarioCard';
 
 export class OverviewPage {
   public readonly element: HTMLElement;
@@ -35,21 +34,19 @@ export class OverviewPage {
     upperGrid.appendChild(rightGauges.element);
 
     // ------------------------------------------------------------------------
-    // Lower Section: 4-Column Grid (Receipts, Profiles, Pressure, Growth)
+    // Lower Section: 3-Column Grid (Receipts, Profiles, Pressure)
     // ------------------------------------------------------------------------
     const lowerGrid = document.createElement('section');
-    lowerGrid.className = 'overview-lower-4col-grid';
-    lowerGrid.setAttribute('aria-label', 'State Receipts, Profiles, Pressure, and Scenarios');
+    lowerGrid.className = 'overview-lower-3col-grid';
+    lowerGrid.setAttribute('aria-label', 'State Receipts, Destination Readiness Profiles, and Tourism Pressure');
 
     const topReceipts = new TopReceiptsCard();
     const destinationProfiles = new DestinationProfilesCard();
     const tourismPressure = new TourismPressureCard();
-    const growthScenario = new GrowthScenarioCard();
 
     lowerGrid.appendChild(topReceipts.element);
     lowerGrid.appendChild(destinationProfiles.element);
     lowerGrid.appendChild(tourismPressure.element);
-    lowerGrid.appendChild(growthScenario.element);
 
     // ------------------------------------------------------------------------
     // Bottom Data As Of Notice

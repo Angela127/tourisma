@@ -13,6 +13,7 @@ export class MalaysiaMap {
   private drawer: StateDetailDrawer;
   private tooltipElement: HTMLElement;
   private legendElement: HTMLElement;
+  private currentMode: 'demand' | 'readiness' = 'readiness';
 
   constructor() {
     this.element = document.createElement('div');
@@ -28,23 +29,35 @@ export class MalaysiaMap {
     this.tooltipElement.className = 'map-floating-tooltip';
     this.tooltipElement.style.display = 'none';
 
-    // Card Header: Title + Subtitle on Left, North Compass on Right
+    // Card Header: Title + Subtitle on Left, Demand/Readiness Toggle + North Compass on Right
     const mapHeader = document.createElement('div');
     mapHeader.className = 'map-card-header-clean';
     mapHeader.innerHTML = `
       <div class="map-title-left">
         <h3 class="map-main-title">MALAYSIA TOURISM READINESS</h3>
-        <span class="map-sub-title">Click on a state to explore diagnostic details</span>
+        <span class="map-sub-title">State infrastructure readiness index (lodging, transit & capacity)</span>
       </div>
-      <div class="map-compass-icon" title="North orientation">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="12" r="10" stroke="#93c5fd" stroke-width="1.2" />
-          <polygon points="12 4 15 12 12 10 9 12" fill="#0b57d0" />
-          <polygon points="12 20 15 12 12 14 9 12" fill="#cbd5e1" />
-          <text x="12" y="3.2" font-size="5" font-weight="900" fill="#0b57d0" text-anchor="middle">N</text>
-        </svg>
+      <div class="map-header-actions">
+        <div class="map-mode-toggle" role="radiogroup" aria-label="Demand and Readiness Mode Toggle">
+          <button type="button" class="map-mode-btn" data-mode="demand" role="radio" aria-checked="false">Demand</button>
+          <button type="button" class="map-mode-btn active" data-mode="readiness" role="radio" aria-checked="true">Readiness</button>
+        </div>
+        <div class="map-compass-icon" title="North orientation">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="#93c5fd" stroke-width="1.2" />
+            <polygon points="12 4 15 12 12 10 9 12" fill="#0b57d0" />
+            <polygon points="12 20 15 12 12 14 9 12" fill="#cbd5e1" />
+            <text x="12" y="3.2" font-size="5" font-weight="900" fill="#0b57d0" text-anchor="middle">N</text>
+          </svg>
+        </div>
       </div>
     `;
+
+    // Hook up toggle button clicks
+    const demandBtn = mapHeader.querySelector<HTMLButtonElement>('[data-mode="demand"]');
+    const readinessBtn = mapHeader.querySelector<HTMLButtonElement>('[data-mode="readiness"]');
+    demandBtn?.addEventListener('click', () => this.setMode('demand'));
+    readinessBtn?.addEventListener('click', () => this.setMode('readiness'));
 
     // Map Stage Container
     const mapStage = document.createElement('div');
@@ -57,20 +70,7 @@ export class MalaysiaMap {
     // Bottom 5-Step Legend Bar
     this.legendElement = document.createElement('div');
     this.legendElement.className = 'map-legend-step-bar';
-    this.legendElement.innerHTML = `
-      <span class="legend-label-readiness">Readiness / pressure</span>
-      <div class="legend-scale-row">
-        <span class="legend-scale-text">Low</span>
-        <div class="legend-step-blocks">
-          <span class="step-block" style="background:#bfdbfe;" title="Low (&lt;0.12)"></span>
-          <span class="step-block" style="background:#93c5fd;" title="Moderate-Low (0.12-0.19)"></span>
-          <span class="step-block" style="background:#60a5fa;" title="Moderate (0.20-0.34)"></span>
-          <span class="step-block" style="background:#2563eb;" title="High (0.35-0.59)"></span>
-          <span class="step-block" style="background:#1d4ed8;" title="Very High (0.60+)"></span>
-        </div>
-        <span class="legend-scale-text">High</span>
-      </div>
-    `;
+    this.renderLegend();
 
     mapStage.appendChild(svgWrapper);
     mapStage.appendChild(this.legendElement);
@@ -82,19 +82,107 @@ export class MalaysiaMap {
     this.attachSvgEventListeners();
   }
 
-  private getColorForScore(score: number): string {
-    if (score >= 60) return '#1d4ed8';
-    if (score >= 35) return '#2563eb';
-    if (score >= 20) return '#60a5fa';
-    if (score >= 12) return '#93c5fd';
-    return '#bfdbfe';
+  public setMode(mode: 'demand' | 'readiness'): void {
+    if (this.currentMode === mode) return;
+    this.currentMode = mode;
+
+    // 1. Toggle Button UI
+    const demandBtn = this.element.querySelector<HTMLButtonElement>('[data-mode="demand"]');
+    const readinessBtn = this.element.querySelector<HTMLButtonElement>('[data-mode="readiness"]');
+
+    if (demandBtn && readinessBtn) {
+      demandBtn.classList.toggle('active', mode === 'demand');
+      demandBtn.setAttribute('aria-checked', String(mode === 'demand'));
+      readinessBtn.classList.toggle('active', mode === 'readiness');
+      readinessBtn.setAttribute('aria-checked', String(mode === 'readiness'));
+    }
+
+    // 2. Title & Subtitle
+    const titleEl = this.element.querySelector<HTMLElement>('.map-main-title');
+    const subTitleEl = this.element.querySelector<HTMLElement>('.map-sub-title');
+    if (titleEl) {
+      titleEl.textContent = mode === 'demand' ? 'MALAYSIA TOURISM DEMAND' : 'MALAYSIA TOURISM READINESS';
+    }
+    if (subTitleEl) {
+      subTitleEl.textContent =
+        mode === 'demand'
+          ? 'Visitor demand index by state (volume, receipts & market pull)'
+          : 'State infrastructure readiness index (lodging, transit & capacity)';
+    }
+
+    // 3. Update Path Fills with smooth transition
+    MALAYSIA_GEO_DATA.forEach((geo) => {
+      const path = this.element.querySelector<SVGPathElement>(`#state-path-${geo.id}`);
+      const data = STATES_OVERVIEW_DATA[geo.id];
+      if (path && data) {
+        path.setAttribute('fill', this.getColorForScore(data, mode));
+      }
+    });
+
+    // 4. Update Legend
+    this.renderLegend();
+  }
+
+  private getColorForScore(data: StateOverviewItem | undefined, mode: 'demand' | 'readiness'): string {
+    if (!data) return mode === 'demand' ? '#e0e7ff' : '#bfdbfe';
+
+    if (mode === 'demand') {
+      const s = data.demandScore;
+      if (s >= 70) return '#3730a3'; // Indigo Very High (KL 98.8, Selangor 73.4)
+      if (s >= 40) return '#4f46e5'; // Indigo High (Pahang 47.5, Sabah 46.4, Sarawak 41.3, Johor 41.3, Penang 40.9)
+      if (s >= 25) return '#818cf8'; // Indigo Moderate (Melaka 39.8, Perak 39.2, NS 31.1, Kedah 29.6, Terengganu 25.4)
+      if (s >= 10) return '#a5b4fc'; // Indigo Moderate-Low (Kelantan 20.6)
+      return '#e0e7ff';              // Indigo Low (Perlis 4.6, Putrajaya 4.6, Labuan 0.1)
+    } else {
+      const s = data.readinessScore;
+      if (s >= 60) return '#1d4ed8'; // Royal Blue Very High (KL 99.7, Melaka 60.4)
+      if (s >= 35) return '#2563eb'; // Blue High (Putrajaya 47.5, Penang 46.7)
+      if (s >= 20) return '#60a5fa'; // Moderate Blue (Selangor 27.9, Johor 24.5)
+      if (s >= 12) return '#93c5fd'; // Light Blue (Sabah 19.8, Perak 18.3, Pahang 17.9, Sarawak 17.9, NS 17.8, Kedah 13.5)
+      return '#bfdbfe';              // Soft Blue Low (Perlis 11.6, Labuan 8.7, Terengganu 8.3, Kelantan 6.9)
+    }
+  }
+
+  private renderLegend(): void {
+    if (!this.legendElement) return;
+
+    if (this.currentMode === 'demand') {
+      this.legendElement.innerHTML = `
+        <span class="legend-label-readiness">Tourism Demand Index</span>
+        <div class="legend-scale-row">
+          <span class="legend-scale-text">Low (&lt;10)</span>
+          <div class="legend-step-blocks">
+            <span class="step-block" style="background:#e0e7ff;" title="Low (&lt;10)"></span>
+            <span class="step-block" style="background:#a5b4fc;" title="Moderate-Low (10–24)"></span>
+            <span class="step-block" style="background:#818cf8;" title="Moderate (25–39)"></span>
+            <span class="step-block" style="background:#4f46e5;" title="High (40–69)"></span>
+            <span class="step-block" style="background:#3730a3;" title="Very High (70+)"></span>
+          </div>
+          <span class="legend-scale-text">High (70+)</span>
+        </div>
+      `;
+    } else {
+      this.legendElement.innerHTML = `
+        <span class="legend-label-readiness">Readiness Index</span>
+        <div class="legend-scale-row">
+          <span class="legend-scale-text">Low (&lt;12)</span>
+          <div class="legend-step-blocks">
+            <span class="step-block" style="background:#bfdbfe;" title="Low (&lt;12)"></span>
+            <span class="step-block" style="background:#93c5fd;" title="Moderate-Low (12–19)"></span>
+            <span class="step-block" style="background:#60a5fa;" title="Moderate (20–34)"></span>
+            <span class="step-block" style="background:#2563eb;" title="High (35–59)"></span>
+            <span class="step-block" style="background:#1d4ed8;" title="Very High (60+)"></span>
+          </div>
+          <span class="legend-scale-text">High (60+)</span>
+        </div>
+      `;
+    }
   }
 
   private renderMapSvg(): string {
     const pathsSvg = MALAYSIA_GEO_DATA.map((geo) => {
       const data: StateOverviewItem | undefined = STATES_OVERVIEW_DATA[geo.id];
-      const score = data ? data.readinessScore : 20;
-      const fill = this.getColorForScore(score);
+      const fill = this.getColorForScore(data, this.currentMode);
 
       return `
         <path
@@ -106,7 +194,7 @@ export class MalaysiaMap {
           stroke="#ffffff"
           stroke-width="1.1"
           stroke-linejoin="round"
-          style="cursor: pointer; transition: fill 0.2s ease, filter 0.2s ease, stroke-width 0.2s ease;"
+          style="cursor: pointer; transition: fill 0.25s ease, filter 0.2s ease, stroke-width 0.2s ease;"
         />
       `;
     }).join('');
@@ -214,29 +302,35 @@ export class MalaysiaMap {
     const data: StateOverviewItem | undefined = STATES_OVERVIEW_DATA[stateId];
     if (!data) return;
 
+    const isDemand = this.currentMode === 'demand';
+    const activeMetricLabel = isDemand ? 'Demand Index' : 'Readiness Index';
+    const activeMetricVal = Math.round(isDemand ? data.demandScore : data.readinessScore);
+
     this.tooltipElement.innerHTML = `
-      <div style="font-weight:800; font-size:0.78rem; color:#0f172a; margin-bottom:3px; display:flex; align-items:center; gap:6px;">
-        <span>${data.name}</span>
-        <span style="font-size:0.62rem; font-weight:700; padding:1px 5px; border-radius:4px; background:#eff6ff; color:#1d4ed8;">${data.quadrant}</span>
+      <div class="map-tooltip-header">
+        <span class="map-tooltip-title">${data.name}</span>
+        <span class="map-tooltip-quadrant">${data.quadrant}</span>
       </div>
-      <div style="font-size:0.7rem; color:#475569; display:flex; justify-content:space-between; gap:12px; margin-bottom:2px;">
-        <span>Readiness Index:</span>
-        <strong style="color:#0f172a;">${(data.readinessScore / 100).toFixed(2)}</strong>
+      <div class="map-tooltip-body">
+        <div class="map-tooltip-metric-row">
+          <span>${activeMetricLabel}:</span>
+          <strong>${activeMetricVal}</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Domestic Visitors:</span>
+          <strong>${data.domesticVisitorsM}M</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Tourism Receipts:</span>
+          <strong>RM${data.receiptsRmB}B (RM${data.receiptsPerVisitor}/visitor)</strong>
+        </div>
+        <div class="map-tooltip-metric-row">
+          <span>Avg. Length of Stay:</span>
+          <strong>${data.alos} nights</strong>
+        </div>
       </div>
-      <div style="font-size:0.7rem; color:#475569; display:flex; justify-content:space-between; gap:12px; margin-bottom:2px;">
-        <span>Domestic Visitors:</span>
-        <strong style="color:#0f172a;">${data.domesticVisitorsM}M</strong>
-      </div>
-      <div style="font-size:0.7rem; color:#475569; display:flex; justify-content:space-between; gap:12px; margin-bottom:2px;">
-        <span>Tourism Receipts:</span>
-        <strong style="color:#0f172a;">RM${data.receiptsRmB}B (RM${data.receiptsPerVisitor}/visitor)</strong>
-      </div>
-      <div style="font-size:0.7rem; color:#475569; display:flex; justify-content:space-between; gap:12px; margin-bottom:4px;">
-        <span>Avg. Length of Stay:</span>
-        <strong style="color:#0f172a;">${data.alos} nights</strong>
-      </div>
-      <div style="font-size:0.64rem; color:#0b57d0; font-weight:750; border-top:1px solid #e2e8f0; padding-top:3px; margin-top:2px;">
-        👆 Click to open State Diagnostic →
+      <div class="map-tooltip-footer">
+        Click to open State Diagnostic →
       </div>
     `;
 
