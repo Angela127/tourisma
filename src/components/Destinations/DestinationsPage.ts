@@ -5,6 +5,7 @@ import { AttractionMapCard } from './AttractionMapCard';
 import { AttractionProfileCard } from './AttractionProfileCard';
 import { LocalDiagnosticCard } from './LocalDiagnosticCard';
 import { StateContextSection } from './StateContextSection';
+import { VisitorPerceptionCard } from './VisitorPerceptionCard';
 
 export class DestinationsPage {
   public readonly element: HTMLElement;
@@ -15,6 +16,7 @@ export class DestinationsPage {
   private profileCard!: AttractionProfileCard;
   private diagnosticCard!: LocalDiagnosticCard;
   private stateContextSection!: StateContextSection;
+  private visitorPerceptionCard!: VisitorPerceptionCard;
 
   constructor() {
     this.element = document.createElement('div');
@@ -33,6 +35,7 @@ export class DestinationsPage {
     this.profileCard.setAttraction(attraction);
     this.diagnosticCard.setAttraction(attraction);
     this.stateContextSection.setAttraction(attraction);
+    this.visitorPerceptionCard.setAttraction(attraction);
   }
 
   private handleSelectState(stateId: string): void {
@@ -78,6 +81,10 @@ export class DestinationsPage {
     lowerGrid.appendChild(this.diagnosticCard.element);
     lowerGrid.appendChild(this.stateContextSection.element);
     this.element.appendChild(lowerGrid);
+
+    // 4. Ground-Truth Empirical Layer: Visitor-Perceived Infrastructure Quality
+    this.visitorPerceptionCard = new VisitorPerceptionCard(this.currentAttraction);
+    this.element.appendChild(this.visitorPerceptionCard.element);
   }
 }
 
