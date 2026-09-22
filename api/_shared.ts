@@ -2,6 +2,8 @@ import dns from 'node:dns';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import process from 'node:process';
+import { Buffer } from 'node:buffer';
 
 // Force Node.js to prefer IPv4. Prevents 'socket disconnected' / 'wsasend' errors on networks with unstable IPv6 routes to Google APIs
 try {
