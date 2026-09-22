@@ -1,10 +1,202 @@
-import {
-  getGoogleCreds,
-  getGoogleAccessToken,
-  fetchWithRetry,
-  parseBody,
-  sendJson,
-} from './_shared';
+import dns from 'node:dns';
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import process from 'node:process';
+import { Buffer } from 'node:buffer';
+
+try {
+  dns.setDefaultResultOrder('ipv4first');
+} catch {}
+
+interface GoogleCreds {
+  type: string;
+  project_id: string;
+  private_key_id: string;
+  private_key: string;
+  client_email: string;
+  client_id: string;
+  auth_uri: string;
+  token_uri: string;
+  [key: string]: any;
+}
+
+let cachedAccessToken: string | null = null;
+let tokenExpiresAt = 0;
+
+function getGoogleCreds(): GoogleCreds {
+  let rawContent = '';
+
+  const envCreds =
+    process.env.GOOGLE_CREDENTIALS ||
+    process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON ||
+    process.env.GCP_SERVICE_ACCOUNT_KEY;
+
+  if (envCreds) {
+    rawContent = envCreds.trim();
+  } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+    const p = path.resolve(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+    if (fs.existsSync(p)) {
+      rawContent = fs.readFileSync(p, 'utf8');
+    }
+  } else {
+    const defaultPath = path.resolve(process.cwd(), 'credentials', 'google.json');
+    if (fs.existsSync(defaultPath)) {
+      rawContent = fs.readFileSync(defaultPath, 'utf8');
+    }
+  }
+
+  if (!rawContent) {
+    throw new Error(
+      'Google credentials not found. In Vercel, add an Environment Variable named GOOGLE_CREDENTIALS with the content of your google.json file.'
+    );
+  }
+
+  // Handle accidental wrapping quotes around env var
+  if (
+    (rawContent.startsWith("'") && rawContent.endsWith("'")) ||
+    (rawContent.startsWith('"') && rawContent.endsWith('"') && !rawContent.includes('\\"'))
+  ) {
+    rawContent = rawContent.slice(1, -1).trim();
+  }
+
+  let parsed: any;
+  try {
+    if (rawContent.startsWith('{')) {
+      parsed = JSON.parse(rawContent);
+    } else {
+      const decoded = Buffer.from(rawContent, 'base64').toString('utf8');
+      parsed = JSON.parse(decoded);
+    }
+  } catch (parseErr: any) {
+    throw new Error(`Failed to parse Google credentials JSON: ${parseErr.message}`);
+  }
+
+  if (!parsed.client_email || !parsed.private_key) {
+    throw new Error('Google credentials JSON is missing client_email or private_key');
+  }
+
+  parsed.private_key = parsed.private_key.replace(/\\n/g, '\n');
+  return parsed;
+}
+
+async function fetchWithRetry(url: string, options: RequestInit, maxRetries = 3): Promise<Response> {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 28000);
+      const res = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+      });
+      clearTimeout(timer);
+      return res;
+    } catch (err: unknown) {
+      lastError = err;
+      console.warn(`[Decision Engine] Network attempt ${attempt}/${maxRetries} failed: ${(err as Error).message}`);
+      if (attempt < maxRetries) {
+        await new Promise((resolve) => setTimeout(resolve, 800 * attempt));
+      }
+    }
+  }
+  throw lastError;
+}
+
+async function getGoogleAccessToken(forceRefresh = false): Promise<string> {
+  const now = Math.floor(Date.now() / 1000);
+  if (!forceRefresh && cachedAccessToken && now < tokenExpiresAt - 120) {
+    return cachedAccessToken;
+  }
+
+  const creds = getGoogleCreds();
+
+  const header = { alg: 'RS256', typ: 'JWT' };
+  const payload = {
+    iss: creds.client_email,
+    scope: 'https://www.googleapis.com/auth/cloud-platform',
+    aud: 'https://oauth2.googleapis.com/token',
+    exp: now + 3600,
+    iat: now,
+  };
+
+  const b64 = (obj: unknown) => Buffer.from(JSON.stringify(obj)).toString('base64url');
+  const unsignedToken = `${b64(header)}.${b64(payload)}`;
+
+  const sign = crypto.createSign('RSA-SHA256');
+  sign.update(unsignedToken);
+  const signature = sign.sign(creds.private_key, 'base64url');
+
+  const jwt = `${unsignedToken}.${signature}`;
+
+  const tokenRes = await fetchWithRetry('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+      assertion: jwt,
+    }).toString(),
+  });
+
+  if (!tokenRes.ok) {
+    const errText = await tokenRes.text();
+    cachedAccessToken = null;
+    throw new Error(`Failed to obtain Google access token (${tokenRes.status}): ${errText}`);
+  }
+
+  const json = (await tokenRes.json()) as { access_token: string; expires_in?: number };
+  if (!json.access_token) {
+    cachedAccessToken = null;
+    throw new Error('Google OAuth token response missing access_token');
+  }
+
+  cachedAccessToken = json.access_token;
+  tokenExpiresAt = now + (json.expires_in || 3600);
+  return cachedAccessToken;
+}
+
+async function parseBody(req: any): Promise<any> {
+  if ('body' in req && req.body !== undefined && req.body !== null) {
+    if (typeof req.body === 'string') {
+      try {
+        return JSON.parse(req.body);
+      } catch {
+        return {};
+      }
+    }
+    if (typeof req.body === 'object') {
+      return req.body;
+    }
+  }
+
+  if (req.readableEnded || req.complete) {
+    return {};
+  }
+
+  return new Promise((resolve) => {
+    let bodyRaw = '';
+    req.on('data', (chunk: any) => (bodyRaw += chunk));
+    req.on('end', () => {
+      try {
+        resolve(JSON.parse(bodyRaw || '{}'));
+      } catch {
+        resolve({});
+      }
+    });
+    req.on('error', () => resolve({}));
+    setTimeout(() => resolve({}), 2000);
+  });
+}
+
+function sendJson(res: any, statusCode: number, data: any) {
+  if (typeof res.status === 'function' && typeof res.json === 'function') {
+    res.status(statusCode).json(data);
+  } else {
+    res.statusCode = statusCode;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(data));
+  }
+}
 
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') {
