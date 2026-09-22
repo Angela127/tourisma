@@ -72,9 +72,6 @@ function initializeApp(): void {
       onDateRangeClick: () => {
         console.log('Date range selector clicked');
       },
-      onExportClick: () => {
-        console.log('Export button clicked');
-      },
       onNotificationClick: () => {
         console.log('Notification bell clicked');
       },
