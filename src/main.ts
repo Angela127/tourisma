@@ -11,6 +11,7 @@ import { AccessibilityPage } from './components/Accessibility/AccessibilityPage'
 import { HealthcarePage } from './components/Healthcare/HealthcarePage';
 import { SustainabilityPage } from './components/Sustainability/SustainabilityPage';
 import { DestinationsPage } from './components/Destinations/DestinationsPage';
+import { TourismPressurePage } from './components/TourismPressure/TourismPressurePage';
 import { DecisionEngineChatbot } from './components/DecisionEngine/DecisionEngineChatbot';
 
 
@@ -33,6 +34,9 @@ function initializeApp(): void {
     } else if (navId === 'tourism-demand') {
       header.setTitle('TOURISM DEMAND & ORIGINS', 'Source Market Dynamics, Seasonality Heatmaps & Predictive Forecasts');
       renderTourismDemand();
+    } else if (navId === 'tourism-pressure') {
+      header.setTitle('TOURISM PRESSURE & SCENARIO LAB', 'Current Infrastructure Pressure & What-If Stress Testing');
+      renderTourismPressure();
     } else if (navId === 'tourism-assets') {
       header.setTitle('TOURISM ASSETS', 'Core Attractions & Supporting Tourism Inventory');
       renderTourismAssets();
@@ -154,7 +158,19 @@ function initializeApp(): void {
     mainContent.appendChild(destPage.element);
   };
 
+  let activePressurePage: TourismPressurePage | null = null;
 
+  // Render tourism pressure page
+  const renderTourismPressure = () => {
+    if (activePressurePage) {
+      activePressurePage.destroy();
+      activePressurePage = null;
+    }
+    mainContent.innerHTML = '';
+    activePressurePage = new TourismPressurePage();
+    mainContent.appendChild(activePressurePage.element);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   renderOverview();
 
