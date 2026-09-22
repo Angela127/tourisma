@@ -11,6 +11,7 @@ import { AccessibilityPage } from './components/Accessibility/AccessibilityPage'
 import { HealthcarePage } from './components/Healthcare/HealthcarePage';
 import { SustainabilityPage } from './components/Sustainability/SustainabilityPage';
 import { DestinationsPage } from './components/Destinations/DestinationsPage';
+import { DecisionEngineChatbot } from './components/DecisionEngine/DecisionEngineChatbot';
 
 
 function initializeApp(): void {
@@ -167,6 +168,14 @@ function initializeApp(): void {
   appLayout.appendChild(contentWrapper);
 
   appRoot.replaceChildren(appLayout);
+
+  // Mount Decision Engine Chatbot icon at bottom-right corner
+  const existingChatbot = document.querySelector('.hc-decision-engine-root');
+  if (existingChatbot) {
+    existingChatbot.remove();
+  }
+  const decisionEngine = new DecisionEngineChatbot();
+  document.body.appendChild(decisionEngine.element);
 }
 
 // Initialize application
