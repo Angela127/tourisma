@@ -1,8 +1,8 @@
 import { defineConfig, type Plugin } from 'vite';
 import dns from 'node:dns';
-import decisionEngineHandler from './api/decision-engine.ts';
-import visitorQualityHandler from './api/places/visitor-quality.ts';
-import simulateInsightHandler from './api/pressure/simulate-insight.ts';
+import decisionEngineHandler from './api/decision-engine';
+import visitorQualityHandler from './api/places/visitor-quality';
+import simulateInsightHandler from './api/pressure/simulate-insight';
 
 // Force Node.js to prefer IPv4. Prevents 'socket disconnected' / 'wsasend' errors on networks with unstable IPv6 routes to Google APIs
 try {
