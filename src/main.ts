@@ -68,7 +68,7 @@ function initializeApp(): void {
       },
     },
     actionProps: {
-      initialDateRange: '1 Jan 2026 - 31 Dec 2026',
+      initialDateRange: '1 Jan 2025 - 31 Dec 2025',
       onDateRangeClick: () => {
         console.log('Date range selector clicked');
       },
@@ -89,7 +89,7 @@ function initializeApp(): void {
   const footer = new Footer({
     copyrightText: 'Tourisma © 2026',
     taglineText: 'Tourism Intelligence for a Better Tomorrow',
-    dataAsOfText: 'Data as of Dec 2026',
+    dataAsOfText: 'Data as of Dec 2025',
   });
 
   // Right-hand content wrapper

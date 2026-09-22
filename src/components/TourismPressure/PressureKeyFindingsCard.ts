@@ -1,4 +1,5 @@
 import type { TourismPressureStateData, SimulationResult } from './pressureData';
+import { createInfoIcon } from '../Common/InfoTooltip';
 
 interface GeminiInsightResponse {
   whatChanges: string;
@@ -139,6 +140,7 @@ export class PressureKeyFindingsCard {
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 16h5v5"></path></svg>
             Refresh
           </button>
+          <div id="findings-info-icon-slot"></div>
         </div>
       </div>
 
@@ -183,6 +185,19 @@ export class PressureKeyFindingsCard {
       `
       }
     `;
+
+    const infoSlot = this.element.querySelector('#findings-info-icon-slot');
+    if (infoSlot) {
+      const infoIcon = createInfoIcon({
+        sourceOrg: 'Tourisma AI Synthesis Engine & Google Vertex AI Gemini 2.5 Flash',
+        datasetName: 'Multi-Vector Planning Interpretations & Spatial Diagnostics',
+        referenceYear: '2026',
+        measure: 'Structured LLM-assisted policy interpretation evaluating physical demand velocities against observed spatial thresholds.',
+        formula: 'Dynamic contextual prompt synthesis grounded on empirical DOSM, NAPIC, JKR & PERHILITAN baseline metrics',
+        limitations: 'Generative planning interpretations serve as advisory intelligence; requires verification with local municipal authorities.',
+      });
+      infoSlot.replaceWith(infoIcon);
+    }
 
     const refreshBtn = this.element.querySelector<HTMLButtonElement>('#btn-refresh-findings');
     if (refreshBtn) {

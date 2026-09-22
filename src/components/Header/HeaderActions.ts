@@ -15,7 +15,7 @@ export class HeaderActions {
 
   constructor(props: HeaderActionsProps = {}) {
     const {
-      initialDateRange = '1 Jan 2026 - 31 Dec 2026',
+      initialDateRange = '1 Jan 2025 - 31 Dec 2025',
       onDateRangeClick,
       onExportClick,
       onNotificationClick,

@@ -1,6 +1,7 @@
 import { MALAYSIA_GEO_DATA } from '../../../data/malaysiaGeo';
 import { STATE_METRICS_DATA } from '../../../data/tourismDemandData';
 import { ACCOMMODATION_DATA } from '../../../data/accommodationData';
+import { createInfoIcon } from '../../Common/InfoTooltip';
 
 export type DemandMapToggleLayer = 'volume' | 'receipts' | 'aor';
 
@@ -121,8 +122,22 @@ export class DemandMap {
             <text x="12" y="3.2" font-size="5" font-weight="900" fill="#0b57d0" text-anchor="middle">N</text>
           </svg>
         </div>
+        <div class="demand-map-info-slot"></div>
       </div>
     `;
+
+    const infoSlot = mapHeader.querySelector('.demand-map-info-slot');
+    if (infoSlot) {
+      const infoIcon = createInfoIcon({
+        sourceOrg: 'Department of Statistics Malaysia (DOSM) & Tourism Malaysia',
+        datasetName: 'State-Level Tourism Volume, Expenditure & Occupancy Choropleth',
+        referenceYear: '2025',
+        measure: 'Choropleth map visualizing domestic visitors, tourism receipts, and average hotel occupancy by state.',
+        formula: 'Interactive layer switching between DTS domestic visits, expenditure, and AOR percentages',
+        limitations: 'State-level aggregation; intra-state tourist dispersal (e.g. islands vs. mainland) detailed in Destination profiles.',
+      });
+      infoSlot.replaceWith(infoIcon);
+    }
 
     const volumeBtn = mapHeader.querySelector<HTMLButtonElement>('[data-toggle="volume"]');
     const receiptsBtn = mapHeader.querySelector<HTMLButtonElement>('[data-toggle="receipts"]');

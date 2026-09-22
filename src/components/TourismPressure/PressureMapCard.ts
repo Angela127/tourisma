@@ -1,6 +1,7 @@
 import { MALAYSIA_GEO_DATA } from '../../data/malaysiaGeo';
 import { STATES_OVERVIEW_DATA } from '../../data/overviewData';
 import { getPressureStateData, type SimulationResult } from './pressureData';
+import { createInfoIcon } from '../Common/InfoTooltip';
 
 export type PressureMapMode = 'demand' | 'accommodation';
 
@@ -142,6 +143,7 @@ export class PressureMapCard {
               <text x="12" y="3.2" font-size="5" font-weight="900" fill="#0b57d0" text-anchor="middle">N</text>
             </svg>
           </div>
+          <div id="pressure-map-info-placeholder"></div>
         </div>
       </div>
 
@@ -153,6 +155,19 @@ export class PressureMapCard {
         ${this.renderLegend()}
       </div>
     `;
+
+    const infoSlot = this.element.querySelector('#pressure-map-info-placeholder');
+    if (infoSlot) {
+      const infoIcon = createInfoIcon({
+        sourceOrg: 'Tourisma Spatial Diagnostic Engine & Multi-Agency Registries',
+        datasetName: 'Geospatial Tourism Demand & Accommodation Pressure Surface',
+        referenceYear: '2025 / 2026',
+        measure: 'Geographic distribution of visitor volume and accommodation room pressure across all 16 states & federal territories.',
+        formula: 'Visitor Volume = Domestic + International Guests; Pressure Ratio = Total Annual Visitors / Registered Room Supply',
+        limitations: 'Spatial choropleth aggregated at administrative state level; localized municipal hotspots displayed in Destination tab.',
+      });
+      infoSlot.replaceWith(infoIcon);
+    }
 
     this.attachEventListeners();
     this.updateScenarioHeaderBadge();

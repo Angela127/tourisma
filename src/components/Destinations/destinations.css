@@ -869,8 +869,8 @@
 }
 
 .global-info-floating-tooltip {
-  position: absolute;
-  z-index: 99999;
+  position: fixed;
+  z-index: 999999;
   background: #ffffff;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
@@ -879,6 +879,8 @@
   font-family: inherit;
   box-sizing: border-box;
   pointer-events: none;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .info-tooltip-content {

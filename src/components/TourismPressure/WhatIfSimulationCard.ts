@@ -3,6 +3,7 @@ import {
   type SimulationResult,
   calculateScenarioSimulation,
 } from './pressureData';
+import { createInfoIcon } from '../Common/InfoTooltip';
 
 export class WhatIfSimulationCard {
   public readonly element: HTMLElement;
@@ -206,6 +207,7 @@ export class WhatIfSimulationCard {
               DEMAND + CAPACITY
             </button>
           </div>
+          <div id="whatif-info-icon-slot"></div>
         </div>
       </div>
 
@@ -436,6 +438,19 @@ export class WhatIfSimulationCard {
         </div>
       </div>
     `;
+
+    const infoSlot = this.element.querySelector('#whatif-info-icon-slot');
+    if (infoSlot) {
+      const infoIcon = createInfoIcon({
+        sourceOrg: 'Tourisma Policy Simulation Lab & Econometric Forecasting Engine',
+        datasetName: 'Tourism Pressure What-If Policy & Capacity Stress-Testing Model',
+        referenceYear: '2026 – 2030',
+        measure: 'Dynamic simulation of visitor volume velocity against accommodation room expansion pipelines.',
+        formula: 'Scenario VTR = Scenario Visitors / Scenario Rooms; Gap (pp) = % Demand Change − % Capacity Change',
+        limitations: 'What-If exploratory simulation based on empirical elasticities and NAPIC hotel pipelines. Does not forecast future AOR percentages.',
+      });
+      infoSlot.replaceWith(infoIcon);
+    }
 
     this.attachEventListeners();
   }

@@ -17,9 +17,21 @@ function ensureFloatingTooltip(): HTMLElement {
     activeFloatingTooltip = document.createElement('div');
     activeFloatingTooltip.className = 'global-info-floating-tooltip';
     activeFloatingTooltip.style.display = 'none';
+    activeFloatingTooltip.style.visibility = 'hidden';
+    activeFloatingTooltip.style.position = 'fixed';
     document.body.appendChild(activeFloatingTooltip);
+
+    window.addEventListener('scroll', hideActiveTooltip, { passive: true });
+    window.addEventListener('resize', hideActiveTooltip, { passive: true });
   }
   return activeFloatingTooltip;
+}
+
+function hideActiveTooltip(): void {
+  if (activeFloatingTooltip && activeFloatingTooltip.style.display !== 'none') {
+    activeFloatingTooltip.style.display = 'none';
+    activeFloatingTooltip.style.visibility = 'hidden';
+  }
 }
 
 export function createInfoIcon(config: InfoTooltipConfig): HTMLElement {
@@ -84,27 +96,69 @@ export function createInfoIcon(config: InfoTooltipConfig): HTMLElement {
     `;
 
     const rect = btn.getBoundingClientRect();
+    tooltip.style.position = 'fixed';
     tooltip.style.display = 'block';
+    tooltip.style.visibility = 'hidden';
 
-    const ttWidth = 280;
-    let left = rect.left + rect.width / 2 - ttWidth / 2;
-    if (left < 10) left = 10;
-    if (left + ttWidth > window.innerWidth - 10) {
-      left = window.innerWidth - ttWidth - 10;
+    const margin = 12;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    // Constrain width and height so tooltip can NEVER exceed viewport
+    const maxTooltipWidth = Math.min(300, vw - margin * 2);
+    tooltip.style.width = `${maxTooltipWidth}px`;
+    tooltip.style.maxWidth = `${maxTooltipWidth}px`;
+    tooltip.style.maxHeight = `${vh - margin * 2}px`;
+    tooltip.style.overflowY = 'auto';
+
+    // Measure exact rendered dimensions
+    const ttRect = tooltip.getBoundingClientRect();
+    const actualWidth = ttRect.width || maxTooltipWidth;
+    const actualHeight = ttRect.height;
+
+    // Horizontal placement:
+    // Center horizontally over the trigger button
+    let left = rect.left + rect.width / 2 - actualWidth / 2;
+
+    // Clamp right boundary
+    if (left + actualWidth > vw - margin) {
+      left = vw - margin - actualWidth;
+    }
+    // Clamp left boundary
+    if (left < margin) {
+      left = margin;
     }
 
-    let top = rect.bottom + 8;
-    if (top + 260 > window.innerHeight) {
-      top = rect.top - 260 - 8;
+    // Vertical placement:
+    // Prefer below the trigger button if there is enough space
+    const spaceBelow = vh - rect.bottom - 8;
+    const spaceAbove = rect.top - 8;
+
+    let top: number;
+    if (spaceBelow >= actualHeight) {
+      top = rect.bottom + 8;
+    } else if (spaceAbove >= actualHeight) {
+      top = rect.top - actualHeight - 8;
+    } else {
+      // Pick the side with more space
+      if (spaceBelow >= spaceAbove) {
+        top = rect.bottom + 8;
+      } else {
+        top = rect.top - actualHeight - 8;
+      }
     }
 
-    tooltip.style.top = `${top + window.scrollY}px`;
-    tooltip.style.left = `${left + window.scrollX}px`;
-    tooltip.style.width = `${ttWidth}px`;
+    // Strictly clamp within viewport margins
+    top = Math.max(margin, Math.min(top, vh - margin - actualHeight));
+
+    tooltip.style.top = `${Math.round(top)}px`;
+    tooltip.style.left = `${Math.round(left)}px`;
+    tooltip.style.visibility = 'visible';
   };
 
   const hide = () => {
     tooltip.style.display = 'none';
+    tooltip.style.visibility = 'hidden';
   };
 
   btn.addEventListener('mouseenter', show);
