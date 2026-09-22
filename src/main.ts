@@ -1,4 +1,5 @@
 import './style.css';
+import './components/Destinations/destinations.css';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { Header } from './components/Header/Header';
 import { Footer } from './components/Footer/Footer';
@@ -47,7 +48,7 @@ function initializeApp(): void {
       header.setTitle('ENVIRONMENT & ECOLOGICAL SENSITIVITY', 'Asset Proximity Diagnostic across Terrestrial & Marine Protected Reserves');
       renderSustainability();
     } else if (navId === 'destinations') {
-      header.setTitle('DESTINATION PROFILES & DRILL-DOWN', 'Strategic Clustering & Deep Performance Diagnostic');
+      header.setTitle('DESTINATION READINESS & DIAGNOSTIC', 'Individual Attraction Location Readiness & Local Infrastructure Exposure');
       renderDestinations();
     }
   });
