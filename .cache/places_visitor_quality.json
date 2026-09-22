@@ -3549,5 +3549,495 @@
       }
     ],
     "cachedAt": "2026-09-22T03:20:32.266Z"
+  },
+  "petronas twin towers": {
+    "place": {
+      "id": "ChIJH5xmLdE3zDERVpCKfNH9Op4",
+      "name": "Petronas Twin Towers",
+      "address": "Lower Ground (Concourse) Level, Menara Berkembar Petronas, Kuala Lumpur City Centre, 50088 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur, Malaysia",
+      "rating": 4.7,
+      "userRatingCount": 105165
+    },
+    "dimensions": {
+      "accessibility": {
+        "dimension": "accessibility",
+        "name": "Accessibility",
+        "mentions": 0,
+        "positive": 0,
+        "mixed": 0,
+        "negative": 0,
+        "positivePct": 0,
+        "mixedPct": 0,
+        "negativePct": 0,
+        "evidenceTier": "unobserved",
+        "evidenceLabel": "Unobserved",
+        "headline": "Unobserved in available reviews",
+        "subtext": "No visitor mentions in sample",
+        "evidence": []
+      },
+      "parking": {
+        "dimension": "parking",
+        "name": "Parking",
+        "mentions": 0,
+        "positive": 0,
+        "mixed": 0,
+        "negative": 0,
+        "positivePct": 0,
+        "mixedPct": 0,
+        "negativePct": 0,
+        "evidenceTier": "unobserved",
+        "evidenceLabel": "Unobserved",
+        "headline": "Unobserved in available reviews",
+        "subtext": "No visitor mentions in sample",
+        "evidence": []
+      },
+      "facilities": {
+        "dimension": "facilities",
+        "name": "Facilities",
+        "mentions": 2,
+        "positive": 1,
+        "mixed": 0,
+        "negative": 1,
+        "positivePct": 50,
+        "mixedPct": 0,
+        "negativePct": 50,
+        "evidenceTier": "limited",
+        "evidenceLabel": "Limited Evidence",
+        "headline": "Limited evidence — 2 reviews mention facilities",
+        "subtext": "Insufficient volume for percentage share",
+        "evidence": [
+          {
+            "reviewId": "rev_1",
+            "dimension": "facilities",
+            "sentiment": "positive",
+            "exactQuote": "plenty of places to sit and enjoy the view."
+          },
+          {
+            "reviewId": "rev_5",
+            "dimension": "facilities",
+            "sentiment": "negative",
+            "exactQuote": "just beware of toilets.....Two very different situation of toilet facilities for ladies!!!!"
+          }
+        ]
+      },
+      "cleanliness": {
+        "dimension": "cleanliness",
+        "name": "Cleanliness",
+        "mentions": 2,
+        "positive": 2,
+        "mixed": 0,
+        "negative": 0,
+        "positivePct": 100,
+        "mixedPct": 0,
+        "negativePct": 0,
+        "evidenceTier": "limited",
+        "evidenceLabel": "Limited Evidence",
+        "headline": "Limited evidence — 2 reviews mention cleanliness",
+        "subtext": "Insufficient volume for percentage share",
+        "evidence": [
+          {
+            "reviewId": "rev_1",
+            "dimension": "cleanliness",
+            "sentiment": "positive",
+            "exactQuote": "The area around KLCC is also well maintained, with open spaces, greenery"
+          },
+          {
+            "reviewId": "rev_2",
+            "dimension": "cleanliness",
+            "sentiment": "positive",
+            "exactQuote": "beautifully maintained KLCC Park"
+          }
+        ]
+      },
+      "crowding": {
+        "dimension": "crowding",
+        "name": "Crowding",
+        "mentions": 4,
+        "positive": 4,
+        "mixed": 0,
+        "negative": 0,
+        "positivePct": 100,
+        "mixedPct": 0,
+        "negativePct": 0,
+        "evidenceTier": "limited",
+        "evidenceLabel": "Limited Evidence",
+        "headline": "Limited evidence — 4 reviews mention crowding",
+        "subtext": "Insufficient volume for percentage share",
+        "evidence": [
+          {
+            "reviewId": "rev_2",
+            "dimension": "crowding",
+            "sentiment": "positive",
+            "exactQuote": "Entry was managed in small groups with dedicated time slots for the Skybridge and Observation Deck, making the experience comfortable without feeling overcrowded."
+          },
+          {
+            "reviewId": "rev_3",
+            "dimension": "crowding",
+            "sentiment": "positive",
+            "exactQuote": "which made the entry process smooth and hassle-free."
+          },
+          {
+            "reviewId": "rev_4",
+            "dimension": "crowding",
+            "sentiment": "positive",
+            "exactQuote": "when the area is generally less crowded."
+          },
+          {
+            "reviewId": "rev_5",
+            "dimension": "crowding",
+            "sentiment": "positive",
+            "exactQuote": "No wait."
+          }
+        ]
+      },
+      "services": {
+        "dimension": "services",
+        "name": "Services",
+        "mentions": 6,
+        "positive": 6,
+        "mixed": 0,
+        "negative": 0,
+        "positivePct": 100,
+        "mixedPct": 0,
+        "negativePct": 0,
+        "evidenceTier": "moderate",
+        "evidenceLabel": "Moderate Evidence",
+        "headline": "6 of 6 services mentions were positive",
+        "subtext": "100% positive",
+        "evidence": [
+          {
+            "reviewId": "rev_1",
+            "dimension": "services",
+            "sentiment": "positive",
+            "exactQuote": "shopping, restaurants"
+          },
+          {
+            "reviewId": "rev_2",
+            "dimension": "services",
+            "sentiment": "positive",
+            "exactQuote": "The café on Level 86 is a wonderful place to take a short break, enjoy a drink, and admire the stunning skyline before heading back down."
+          },
+          {
+            "reviewId": "rev_3",
+            "dimension": "services",
+            "sentiment": "positive",
+            "exactQuote": "souvenirs"
+          },
+          {
+            "reviewId": "rev_3",
+            "dimension": "services",
+            "sentiment": "positive",
+            "exactQuote": "for a meal and some shopping"
+          },
+          {
+            "reviewId": "rev_4",
+            "dimension": "services",
+            "sentiment": "positive",
+            "exactQuote": "shopping mall at the lower levels, which offers a wide variety of shops, including fashion, cosmetics, perfumes, lifestyle brands, restaurants, and cafés."
+          },
+          {
+            "reviewId": "rev_5",
+            "dimension": "services",
+            "sentiment": "positive",
+            "exactQuote": "Fabulous shopping centre at ground level to the towers too."
+          }
+        ]
+      }
+    },
+    "totalMentions": 14,
+    "aiInsight": "Visitor reviews consistently highlight excellent management of visitor flow, resulting in smooth entry processes and minimal waiting times, contributing to a comfortable experience. The surrounding grounds, including KLCC Park, are praised for being beautifully maintained and offering ample seating. While diverse shopping and dining services are highly rated, there is a specific negative comment regarding the quality or suitability of the toilet facilities for international visitors.",
+    "reviews": [
+      {
+        "reviewId": "rev_1",
+        "author": "John (John)",
+        "authorPhotoUri": "https://lh3.googleusercontent.com/a-/ALV-UjVWPPGUZ4YcmFYRxJx_eFnnx97zKh3zi90JNc4S1sE4D4CzyNCN=s128-c0x00000000-cc-rp-mo-ba6",
+        "authorUri": "https://www.google.com/maps/contrib/117273987700672721425/reviews",
+        "rating": 5,
+        "date": "2 weeks ago",
+        "originalText": "⭐ Petronas Twin Towers — An Icon of Kuala Lumpur\n\nOne of the most impressive landmarks in Kuala Lumpur and definitely a place worth visiting, especially for a first trip to Malaysia. The Petronas Twin Towers are instantly recognizable and give you that “I’m really in KL” feeling as soon as you see them.\n\nThe towers are especially beautiful from the outside. Their silver architectural design reflects the sunlight during the day and becomes even more impressive when illuminated at night. The area around KLCC is also well maintained, with open spaces, greenery, shopping, restaurants, and plenty of places to sit and enjoy the view.\n\n📸 Best part: Walk around the surrounding park and find different angles for photos. The towers look very different depending on where you stand.\n\n🌙 My recommendation: Visit both during the day and after sunset. The daytime view shows the architecture clearly, while the nighttime view gives the towers a completely different atmosphere.\n\nFor travelers, this is more than just a photo spot—it's one of those landmarks that represents the modern identity of Kuala Lumpur.\n\nA must-visit landmark in KL. If you're in Kuala Lumpur and haven't seen the Twin Towers yet, definitely put it on your list! 🇲🇾✨"
+      },
+      {
+        "reviewId": "rev_2",
+        "author": "Santhosh Raj",
+        "authorPhotoUri": "https://lh3.googleusercontent.com/a-/ALV-UjUEDD-BDIrJOEyLWZPZkbA_N2LzZ7FzwuMftXSHXmOv2LneKwNP=s128-c0x00000000-cc-rp-mo-ba8",
+        "authorUri": "https://www.google.com/maps/contrib/110864000022282571672/reviews",
+        "rating": 5,
+        "date": "2 months ago",
+        "originalText": "Visiting the Petronas Twin Towers was undoubtedly one of the highlights of my trip to Kuala Lumpur. The towers are even more breathtaking in person than in photographs, and seeing them transform from gleaming silver in the afternoon sunlight to beautifully illuminated at night was truly unforgettable.\n\nThe entire visit was exceptionally well organized. Entry was managed in small groups with dedicated time slots for the Skybridge and Observation Deck, making the experience comfortable without feeling overcrowded. The panoramic views of Kuala Lumpur from the top are absolutely spectacular and well worth the visit. I also enjoyed learning about the history, engineering, and architecture of this iconic landmark.\n\nThe café on Level 86 is a wonderful place to take a short break, enjoy a drink, and admire the stunning skyline before heading back down.\n\nThe area surrounding the towers is just as impressive, with the beautifully maintained KLCC Park and fountains providing plenty of space to relax and capture amazing photos from different angles.\n\nWhether you admire architecture, enjoy city viewpoints, or simply want to experience one of Malaysia’s most iconic landmarks, the Petronas Twin Towers are an absolute must-visit. I highly recommend booking your tickets in advance to avoid disappointment."
+      },
+      {
+        "reviewId": "rev_3",
+        "author": "vaasugi batumalai",
+        "authorPhotoUri": "https://lh3.googleusercontent.com/a-/ALV-UjUtEfTSDbqwxfNDbNjZqr8Ghqnwrnv6Inl2PaEfTCLT9947RzqB=s128-c0x00000000-cc-rp-mo-ba5",
+        "authorUri": "https://www.google.com/maps/contrib/107629618125210446260/reviews",
+        "rating": 4,
+        "date": "a month ago",
+        "originalText": "Visited over the weekend and had a great experience at the Skybridge, Twin Towers. We had already purchased our tickets via Klook, which made the entry process smooth and hassle-free.\n\nThe visit started at Level 41, where the Skybridge is located. The viewing time here was limited to about 10 minutes, but it was enough to take in the stunning city views and snap some nice photos. After that, we were guided to Level 86 for another 10 minutes, offering an even more breathtaking panoramic view of Kuala Lumpur.\n\nWe also stopped by Level 83, which had displays filled with interesting information, souvenirs, and exhibits. It added a nice touch to the overall experience.\n\nBefore leaving, we picked up a fridge magnet for RM16.50 as a memory of the visit. Overall, we truly enjoyed the views, the photo opportunities, and the well-organized flow of the tour. Afterward, we spent time at Suria KLCC for a meal and some shopping, which made the day even more enjoyable.\n\nA great experience and definitely worth visiting at least once!"
+      },
+      {
+        "reviewId": "rev_4",
+        "author": "veeraphong jiraphanphong",
+        "authorPhotoUri": "https://lh3.googleusercontent.com/a-/ALV-UjX1pglkD-JH8FH0gGLWjANQxLFawbP1ZeMkXAueD0H5mkXUYI7e2g=s128-c0x00000000-cc-rp-mo-ba6",
+        "authorUri": "https://www.google.com/maps/contrib/110377176960061889756/reviews",
+        "rating": 5,
+        "date": "a month ago",
+        "originalText": "The Petronas Twin Towers is definitely a must visit landmark if you come to Malaysia. The iconic towers offer an unforgettable experience, especially when you visit the Skybridge on the 41st floor, where you can enjoy a beautiful view of Kuala Lumpur and appreciate the impressive architecture of the towers.\n\nIf you go higher up to the observation deck on the 86th floor, the experience becomes even more spectacular. The panoramic 360-degree view of Kuala Lumpur is truly breathtaking, offering an amazing perspective of the city and its surrounding skyline.\n\nAfter your visit to the towers, you can explore the shopping mall at the lower levels, which offers a wide variety of shops, including fashion, cosmetics, perfumes, lifestyle brands, restaurants, and cafés. It is also a great place to relax, have a coffee, or enjoy a meal after sightseeing.\n\nI highly recommend visiting in the morning, around 10:00 a.m., when the area is generally less crowded. You will have a more comfortable experience, better opportunities to enjoy the views, and more time to take beautiful photos without too many people around.\n\nOverall, the Petronas Twin Towers is not only an architectural masterpiece but also one of the most memorable places to experience when visiting Malaysia."
+      },
+      {
+        "reviewId": "rev_5",
+        "author": "Lynn Perry",
+        "authorPhotoUri": "https://lh3.googleusercontent.com/a/ACg8ocJOCwzrldBO-HGMUqFKemK8gZQRyyOPKtn_YFu6e-SlY_3mNw=s128-c0x00000000-cc-rp-mo-ba4",
+        "authorUri": "https://www.google.com/maps/contrib/108927838993503295470/reviews",
+        "rating": 5,
+        "date": "4 months ago",
+        "originalText": "If in KL then a visit to these towers are a must. Reasonably priced. No wait. Views are amazing! So much to see and at night towers are lit and you have beautiful fountains dancing to music in front of them. Fabulous shopping centre at ground level to the towers too. If visiting from Europe,  just beware of toilets.....Two very different situation of toilet facilities for ladies!!!!"
+      }
+    ],
+    "cachedAt": "2026-09-22T08:41:39.094Z"
+  },
+  "chijh5xmlde3zdervpckfnh9op4": {
+    "place": {
+      "id": "ChIJH5xmLdE3zDERVpCKfNH9Op4",
+      "name": "Petronas Twin Towers",
+      "address": "Lower Ground (Concourse) Level, Menara Berkembar Petronas, Kuala Lumpur City Centre, 50088 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur, Malaysia",
+      "rating": 4.7,
+      "userRatingCount": 105165
+    },
+    "dimensions": {
+      "accessibility": {
+        "dimension": "accessibility",
+        "name": "Accessibility",
+        "mentions": 0,
+        "positive": 0,
+        "mixed": 0,
+        "negative": 0,
+        "positivePct": 0,
+        "mixedPct": 0,
+        "negativePct": 0,
+        "evidenceTier": "unobserved",
+        "evidenceLabel": "Unobserved",
+        "headline": "Unobserved in available reviews",
+        "subtext": "No visitor mentions in sample",
+        "evidence": []
+      },
+      "parking": {
+        "dimension": "parking",
+        "name": "Parking",
+        "mentions": 0,
+        "positive": 0,
+        "mixed": 0,
+        "negative": 0,
+        "positivePct": 0,
+        "mixedPct": 0,
+        "negativePct": 0,
+        "evidenceTier": "unobserved",
+        "evidenceLabel": "Unobserved",
+        "headline": "Unobserved in available reviews",
+        "subtext": "No visitor mentions in sample",
+        "evidence": []
+      },
+      "facilities": {
+        "dimension": "facilities",
+        "name": "Facilities",
+        "mentions": 2,
+        "positive": 1,
+        "mixed": 0,
+        "negative": 1,
+        "positivePct": 50,
+        "mixedPct": 0,
+        "negativePct": 50,
+        "evidenceTier": "limited",
+        "evidenceLabel": "Limited Evidence",
+        "headline": "Limited evidence — 2 reviews mention facilities",
+        "subtext": "Insufficient volume for percentage share",
+        "evidence": [
+          {
+            "reviewId": "rev_1",
+            "dimension": "facilities",
+            "sentiment": "positive",
+            "exactQuote": "plenty of places to sit and enjoy the view."
+          },
+          {
+            "reviewId": "rev_5",
+            "dimension": "facilities",
+            "sentiment": "negative",
+            "exactQuote": "just beware of toilets.....Two very different situation of toilet facilities for ladies!!!!"
+          }
+        ]
+      },
+      "cleanliness": {
+        "dimension": "cleanliness",
+        "name": "Cleanliness",
+        "mentions": 2,
+        "positive": 2,
+        "mixed": 0,
+        "negative": 0,
+        "positivePct": 100,
+        "mixedPct": 0,
+        "negativePct": 0,
+        "evidenceTier": "limited",
+        "evidenceLabel": "Limited Evidence",
+        "headline": "Limited evidence — 2 reviews mention cleanliness",
+        "subtext": "Insufficient volume for percentage share",
+        "evidence": [
+          {
+            "reviewId": "rev_1",
+            "dimension": "cleanliness",
+            "sentiment": "positive",
+            "exactQuote": "The area around KLCC is also well maintained, with open spaces, greenery"
+          },
+          {
+            "reviewId": "rev_2",
+            "dimension": "cleanliness",
+            "sentiment": "positive",
+            "exactQuote": "beautifully maintained KLCC Park"
+          }
+        ]
+      },
+      "crowding": {
+        "dimension": "crowding",
+        "name": "Crowding",
+        "mentions": 4,
+        "positive": 4,
+        "mixed": 0,
+        "negative": 0,
+        "positivePct": 100,
+        "mixedPct": 0,
+        "negativePct": 0,
+        "evidenceTier": "limited",
+        "evidenceLabel": "Limited Evidence",
+        "headline": "Limited evidence — 4 reviews mention crowding",
+        "subtext": "Insufficient volume for percentage share",
+        "evidence": [
+          {
+            "reviewId": "rev_2",
+            "dimension": "crowding",
+            "sentiment": "positive",
+            "exactQuote": "Entry was managed in small groups with dedicated time slots for the Skybridge and Observation Deck, making the experience comfortable without feeling overcrowded."
+          },
+          {
+            "reviewId": "rev_3",
+            "dimension": "crowding",
+            "sentiment": "positive",
+            "exactQuote": "which made the entry process smooth and hassle-free."
+          },
+          {
+            "reviewId": "rev_4",
+            "dimension": "crowding",
+            "sentiment": "positive",
+            "exactQuote": "when the area is generally less crowded."
+          },
+          {
+            "reviewId": "rev_5",
+            "dimension": "crowding",
+            "sentiment": "positive",
+            "exactQuote": "No wait."
+          }
+        ]
+      },
+      "services": {
+        "dimension": "services",
+        "name": "Services",
+        "mentions": 6,
+        "positive": 6,
+        "mixed": 0,
+        "negative": 0,
+        "positivePct": 100,
+        "mixedPct": 0,
+        "negativePct": 0,
+        "evidenceTier": "moderate",
+        "evidenceLabel": "Moderate Evidence",
+        "headline": "6 of 6 services mentions were positive",
+        "subtext": "100% positive",
+        "evidence": [
+          {
+            "reviewId": "rev_1",
+            "dimension": "services",
+            "sentiment": "positive",
+            "exactQuote": "shopping, restaurants"
+          },
+          {
+            "reviewId": "rev_2",
+            "dimension": "services",
+            "sentiment": "positive",
+            "exactQuote": "The café on Level 86 is a wonderful place to take a short break, enjoy a drink, and admire the stunning skyline before heading back down."
+          },
+          {
+            "reviewId": "rev_3",
+            "dimension": "services",
+            "sentiment": "positive",
+            "exactQuote": "souvenirs"
+          },
+          {
+            "reviewId": "rev_3",
+            "dimension": "services",
+            "sentiment": "positive",
+            "exactQuote": "for a meal and some shopping"
+          },
+          {
+            "reviewId": "rev_4",
+            "dimension": "services",
+            "sentiment": "positive",
+            "exactQuote": "shopping mall at the lower levels, which offers a wide variety of shops, including fashion, cosmetics, perfumes, lifestyle brands, restaurants, and cafés."
+          },
+          {
+            "reviewId": "rev_5",
+            "dimension": "services",
+            "sentiment": "positive",
+            "exactQuote": "Fabulous shopping centre at ground level to the towers too."
+          }
+        ]
+      }
+    },
+    "totalMentions": 14,
+    "aiInsight": "Visitor reviews consistently highlight excellent management of visitor flow, resulting in smooth entry processes and minimal waiting times, contributing to a comfortable experience. The surrounding grounds, including KLCC Park, are praised for being beautifully maintained and offering ample seating. While diverse shopping and dining services are highly rated, there is a specific negative comment regarding the quality or suitability of the toilet facilities for international visitors.",
+    "reviews": [
+      {
+        "reviewId": "rev_1",
+        "author": "John (John)",
+        "authorPhotoUri": "https://lh3.googleusercontent.com/a-/ALV-UjVWPPGUZ4YcmFYRxJx_eFnnx97zKh3zi90JNc4S1sE4D4CzyNCN=s128-c0x00000000-cc-rp-mo-ba6",
+        "authorUri": "https://www.google.com/maps/contrib/117273987700672721425/reviews",
+        "rating": 5,
+        "date": "2 weeks ago",
+        "originalText": "⭐ Petronas Twin Towers — An Icon of Kuala Lumpur\n\nOne of the most impressive landmarks in Kuala Lumpur and definitely a place worth visiting, especially for a first trip to Malaysia. The Petronas Twin Towers are instantly recognizable and give you that “I’m really in KL” feeling as soon as you see them.\n\nThe towers are especially beautiful from the outside. Their silver architectural design reflects the sunlight during the day and becomes even more impressive when illuminated at night. The area around KLCC is also well maintained, with open spaces, greenery, shopping, restaurants, and plenty of places to sit and enjoy the view.\n\n📸 Best part: Walk around the surrounding park and find different angles for photos. The towers look very different depending on where you stand.\n\n🌙 My recommendation: Visit both during the day and after sunset. The daytime view shows the architecture clearly, while the nighttime view gives the towers a completely different atmosphere.\n\nFor travelers, this is more than just a photo spot—it's one of those landmarks that represents the modern identity of Kuala Lumpur.\n\nA must-visit landmark in KL. If you're in Kuala Lumpur and haven't seen the Twin Towers yet, definitely put it on your list! 🇲🇾✨"
+      },
+      {
+        "reviewId": "rev_2",
+        "author": "Santhosh Raj",
+        "authorPhotoUri": "https://lh3.googleusercontent.com/a-/ALV-UjUEDD-BDIrJOEyLWZPZkbA_N2LzZ7FzwuMftXSHXmOv2LneKwNP=s128-c0x00000000-cc-rp-mo-ba8",
+        "authorUri": "https://www.google.com/maps/contrib/110864000022282571672/reviews",
+        "rating": 5,
+        "date": "2 months ago",
+        "originalText": "Visiting the Petronas Twin Towers was undoubtedly one of the highlights of my trip to Kuala Lumpur. The towers are even more breathtaking in person than in photographs, and seeing them transform from gleaming silver in the afternoon sunlight to beautifully illuminated at night was truly unforgettable.\n\nThe entire visit was exceptionally well organized. Entry was managed in small groups with dedicated time slots for the Skybridge and Observation Deck, making the experience comfortable without feeling overcrowded. The panoramic views of Kuala Lumpur from the top are absolutely spectacular and well worth the visit. I also enjoyed learning about the history, engineering, and architecture of this iconic landmark.\n\nThe café on Level 86 is a wonderful place to take a short break, enjoy a drink, and admire the stunning skyline before heading back down.\n\nThe area surrounding the towers is just as impressive, with the beautifully maintained KLCC Park and fountains providing plenty of space to relax and capture amazing photos from different angles.\n\nWhether you admire architecture, enjoy city viewpoints, or simply want to experience one of Malaysia’s most iconic landmarks, the Petronas Twin Towers are an absolute must-visit. I highly recommend booking your tickets in advance to avoid disappointment."
+      },
+      {
+        "reviewId": "rev_3",
+        "author": "vaasugi batumalai",
+        "authorPhotoUri": "https://lh3.googleusercontent.com/a-/ALV-UjUtEfTSDbqwxfNDbNjZqr8Ghqnwrnv6Inl2PaEfTCLT9947RzqB=s128-c0x00000000-cc-rp-mo-ba5",
+        "authorUri": "https://www.google.com/maps/contrib/107629618125210446260/reviews",
+        "rating": 4,
+        "date": "a month ago",
+        "originalText": "Visited over the weekend and had a great experience at the Skybridge, Twin Towers. We had already purchased our tickets via Klook, which made the entry process smooth and hassle-free.\n\nThe visit started at Level 41, where the Skybridge is located. The viewing time here was limited to about 10 minutes, but it was enough to take in the stunning city views and snap some nice photos. After that, we were guided to Level 86 for another 10 minutes, offering an even more breathtaking panoramic view of Kuala Lumpur.\n\nWe also stopped by Level 83, which had displays filled with interesting information, souvenirs, and exhibits. It added a nice touch to the overall experience.\n\nBefore leaving, we picked up a fridge magnet for RM16.50 as a memory of the visit. Overall, we truly enjoyed the views, the photo opportunities, and the well-organized flow of the tour. Afterward, we spent time at Suria KLCC for a meal and some shopping, which made the day even more enjoyable.\n\nA great experience and definitely worth visiting at least once!"
+      },
+      {
+        "reviewId": "rev_4",
+        "author": "veeraphong jiraphanphong",
+        "authorPhotoUri": "https://lh3.googleusercontent.com/a-/ALV-UjX1pglkD-JH8FH0gGLWjANQxLFawbP1ZeMkXAueD0H5mkXUYI7e2g=s128-c0x00000000-cc-rp-mo-ba6",
+        "authorUri": "https://www.google.com/maps/contrib/110377176960061889756/reviews",
+        "rating": 5,
+        "date": "a month ago",
+        "originalText": "The Petronas Twin Towers is definitely a must visit landmark if you come to Malaysia. The iconic towers offer an unforgettable experience, especially when you visit the Skybridge on the 41st floor, where you can enjoy a beautiful view of Kuala Lumpur and appreciate the impressive architecture of the towers.\n\nIf you go higher up to the observation deck on the 86th floor, the experience becomes even more spectacular. The panoramic 360-degree view of Kuala Lumpur is truly breathtaking, offering an amazing perspective of the city and its surrounding skyline.\n\nAfter your visit to the towers, you can explore the shopping mall at the lower levels, which offers a wide variety of shops, including fashion, cosmetics, perfumes, lifestyle brands, restaurants, and cafés. It is also a great place to relax, have a coffee, or enjoy a meal after sightseeing.\n\nI highly recommend visiting in the morning, around 10:00 a.m., when the area is generally less crowded. You will have a more comfortable experience, better opportunities to enjoy the views, and more time to take beautiful photos without too many people around.\n\nOverall, the Petronas Twin Towers is not only an architectural masterpiece but also one of the most memorable places to experience when visiting Malaysia."
+      },
+      {
+        "reviewId": "rev_5",
+        "author": "Lynn Perry",
+        "authorPhotoUri": "https://lh3.googleusercontent.com/a/ACg8ocJOCwzrldBO-HGMUqFKemK8gZQRyyOPKtn_YFu6e-SlY_3mNw=s128-c0x00000000-cc-rp-mo-ba4",
+        "authorUri": "https://www.google.com/maps/contrib/108927838993503295470/reviews",
+        "rating": 5,
+        "date": "4 months ago",
+        "originalText": "If in KL then a visit to these towers are a must. Reasonably priced. No wait. Views are amazing! So much to see and at night towers are lit and you have beautiful fountains dancing to music in front of them. Fabulous shopping centre at ground level to the towers too. If visiting from Europe,  just beware of toilets.....Two very different situation of toilet facilities for ladies!!!!"
+      }
+    ],
+    "cachedAt": "2026-09-22T08:41:39.094Z"
   }
 }

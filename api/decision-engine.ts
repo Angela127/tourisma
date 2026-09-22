@@ -108,8 +108,15 @@ Format your responses with clear markdown, bold key figures, and concise bullet 
 
     if (!vertexRes.ok) {
       const errBody = await vertexRes.text();
+      let cleanMsg = `Vertex AI error (${vertexRes.status}): ${errBody}`;
+      try {
+        const errJson = JSON.parse(errBody);
+        if (errJson.error?.message) {
+          cleanMsg = errJson.error.message;
+        }
+      } catch {}
       return sendJson(res, vertexRes.status, {
-        error: `Vertex AI error (${vertexRes.status}): ${errBody}`,
+        error: cleanMsg,
       });
     }
 

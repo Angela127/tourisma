@@ -20,12 +20,13 @@ export interface GoogleCreds {
   [key: string]: any;
 }
 
+let lastCredsKey = '';
 let cachedCreds: GoogleCreds | null = null;
 let cachedAccessToken: string | null = null;
 let tokenExpiresAt = 0;
 
 export function getGoogleCreds(): GoogleCreds {
-  if (cachedCreds) return cachedCreds;
+  let rawContent = '';
 
   // 1. Check GOOGLE_CREDENTIALS environment variable (JSON string or base64 encoded)
   const envCreds =
@@ -34,53 +35,48 @@ export function getGoogleCreds(): GoogleCreds {
     process.env.GCP_SERVICE_ACCOUNT_KEY;
 
   if (envCreds) {
+    rawContent = envCreds.trim();
+  } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+    const p = path.resolve(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+    if (fs.existsSync(p)) {
+      rawContent = fs.readFileSync(p, 'utf8');
+    }
+  } else {
+    const defaultPath = path.resolve(process.cwd(), 'credentials', 'google.json');
+    if (fs.existsSync(defaultPath)) {
+      rawContent = fs.readFileSync(defaultPath, 'utf8');
+    }
+  }
+
+  if (!rawContent) {
+    throw new Error(
+      'Google credentials not found. In Vercel, add an Environment Variable named GOOGLE_CREDENTIALS with the content of your google.json file.'
+    );
+  }
+
+  // Invalidate cached token if credentials have been updated
+  if (rawContent !== lastCredsKey || !cachedCreds) {
+    let parsed: any;
     try {
-      const trimmed = envCreds.trim();
-      let parsed: any;
-      if (trimmed.startsWith('{')) {
-        parsed = JSON.parse(trimmed);
+      if (rawContent.startsWith('{')) {
+        parsed = JSON.parse(rawContent);
       } else {
-        const decoded = Buffer.from(trimmed, 'base64').toString('utf8');
+        const decoded = Buffer.from(rawContent, 'base64').toString('utf8');
         parsed = JSON.parse(decoded);
       }
       if (parsed && parsed.private_key) {
-        // Fix newlines in private_key if escaped during env var entry
         parsed.private_key = parsed.private_key.replace(/\\n/g, '\n');
-        cachedCreds = parsed;
-        return parsed;
       }
+      cachedCreds = parsed;
+      lastCredsKey = rawContent;
+      cachedAccessToken = null;
+      tokenExpiresAt = 0;
     } catch (err: any) {
-      console.warn('[Google Auth] Failed to parse GOOGLE_CREDENTIALS env var:', err.message);
+      throw new Error(`Failed to parse Google credentials: ${err.message}`);
     }
   }
 
-  // 2. Check GOOGLE_APPLICATION_CREDENTIALS environment variable (path to file)
-  if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-    const p = path.resolve(process.env.GOOGLE_APPLICATION_CREDENTIALS);
-    if (fs.existsSync(p)) {
-      const creds = JSON.parse(fs.readFileSync(p, 'utf8'));
-      if (creds.private_key) {
-        creds.private_key = creds.private_key.replace(/\\n/g, '\n');
-      }
-      cachedCreds = creds;
-      return creds;
-    }
-  }
-
-  // 3. Fallback to local credentials/google.json
-  const defaultPath = path.resolve(process.cwd(), 'credentials', 'google.json');
-  if (fs.existsSync(defaultPath)) {
-    const creds = JSON.parse(fs.readFileSync(defaultPath, 'utf8'));
-    if (creds.private_key) {
-      creds.private_key = creds.private_key.replace(/\\n/g, '\n');
-    }
-    cachedCreds = creds;
-    return creds;
-  }
-
-  throw new Error(
-    'Google credentials not found. In Vercel, add an Environment Variable named GOOGLE_CREDENTIALS with the content of your google.json file.'
-  );
+  return cachedCreds!;
 }
 
 export async function fetchWithRetry(url: string, options: RequestInit, maxRetries = 3): Promise<Response> {

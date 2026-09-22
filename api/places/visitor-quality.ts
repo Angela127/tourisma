@@ -54,7 +54,12 @@ export default async function handler(req: any, res: any) {
 
       if (!searchRes.ok) {
         const errText = await searchRes.text();
-        throw new Error(`Google Places Text Search failed (${searchRes.status}): ${errText}`);
+        let clean = `Google Places Text Search failed (${searchRes.status}): ${errText}`;
+        try {
+          const j = JSON.parse(errText);
+          if (j.error?.message) clean = j.error.message;
+        } catch {}
+        throw new Error(clean);
       }
 
       const searchData = (await searchRes.json()) as { places?: Array<{ id: string }> };
@@ -78,7 +83,12 @@ export default async function handler(req: any, res: any) {
 
     if (!detailRes.ok) {
       const errText = await detailRes.text();
-      throw new Error(`Google Places Details failed (${detailRes.status}): ${errText}`);
+      let clean = `Google Places Details failed (${detailRes.status}): ${errText}`;
+      try {
+        const j = JSON.parse(errText);
+        if (j.error?.message) clean = j.error.message;
+      } catch {}
+      throw new Error(clean);
     }
 
     const detailData = (await detailRes.json()) as {
